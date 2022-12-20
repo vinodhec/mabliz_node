@@ -173,11 +173,13 @@
                 "fields": [
                   {
                     "label": "Role Management",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":1
                   },
                   {
                     "label": "User Management",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":2
                   }
                 ]
               },
@@ -191,19 +193,23 @@
                 "fields": [
                   {
                     "label": "Item-Add, Edit & Delete",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":1
                   },
                   {
                     "label": "Item-Purchase",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":2
                   },
                   {
                     "label": "Item-Price Update",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":3
                   },
                   {
                     "label": "Item-Inventory",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":4
                   }
                 ]
               },
@@ -217,11 +223,13 @@
                 "fields": [
                   {
                     "label": "Billing",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":1
                   },
                   {
                     "label": "Customer Orders",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":2
                   }
                 ]
               },
@@ -235,11 +243,13 @@
                 "fields": [
                   {
                     "label": "Printer - Add, Edit & Delete",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":1
                   },
                   {
                     "label": "Assign Printer",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":2
                   }
                 ]
               },
@@ -253,27 +263,34 @@
                 "fields": [
                   {
                     "label": "Sales Report",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":1
                   },
                   {
                     "label": "Tax Report",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":2
                   },
                   {
                     "label": "Fast Selling Product Report",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":3
+
                   },
                   {
                     "label": "Purchase Report",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":4
                   },
                   {
                     "label": "Shortage Report",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":5
                   },
                   {
                     "label": "Damage / Wastage Report",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "id":5
                   }
                 ]
               }

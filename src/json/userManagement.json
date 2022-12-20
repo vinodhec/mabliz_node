@@ -83,7 +83,7 @@
             "label": "Date of Birth",
             "type": "date_picker",
             "isMandatory": true,
-            "input": "tel",
+            "input": "number",
             "requestKey": "dob",
             "eligility": [
               "PARTNER"
@@ -92,7 +92,7 @@
           {
             "label": "Mobile No",
             "type": "textbox",
-            "input": "tel",
+            "input": "number",
             "isMandatory": true,
             "requestKey": "phone_number",
             "eligility": [

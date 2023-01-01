@@ -118,7 +118,8 @@ Plan.belongsToMany(Branch, { through: Planbranch });
 
 Planbranch.belongsToMany(Addon, { through: Planbranchaddon });
 Addon.belongsToMany(Planbranch, { through: Planbranchaddon });
-
+User.hasMany(Role,{ onDelete: 'cascade', hooks:true });
+Role.belongsTo(User);
 Role.belongsToMany(Permission, { through: Rolepermission });
 Permission.belongsToMany(Role, { through: Rolepermission });
 

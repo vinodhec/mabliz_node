@@ -190,11 +190,7 @@ const crudOperationsTwoTargets = async (object) => {
       let modelAddedData;
       if (target2) {
         modelListDatatemp = await sourceModel[getMixin1](targetid1Query);
-        console.log(
-          modelListDatatemp[0],
-          target2ModelName,
-          modelListDatatemp[0]["create" + target2ModelName]
-        );
+     
 
         modelAddedData = await modelListDatatemp[0][
           "create" + target2ModelName

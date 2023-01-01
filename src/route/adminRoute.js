@@ -25,6 +25,10 @@ router.all('/module/:sourceId', profileController.curdUserAssociatedTwoTargets);
 router.all('/module/:sourceId/:target1', profileController.curdUserAssociatedTwoTargets);
 router.all('/module/:sourceId/:target1/:target1Id', profileController.curdUserAssociatedTwoTargets);
 
+
+
+
+
 router.all('/validity',adminController.crudOperations)
 router.get('/plandetails',(req,res,next)=>{
     req.body ={"tax":{},"validity":{}};

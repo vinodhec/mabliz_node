@@ -83,6 +83,10 @@ const BusinessTypes = models.businesstype;
 const BusinessCategory = models.businesscategory;
 const BusinessActivity = models.businessactivity;
 const Plan = models.plan;
+const Role = models.role;
+const Permission = models.permission;
+const Rolepermission = models.rolepermission;
+
 const PlanValidity = models.planvalidity;
 
 const Planbranch = models.planbranch;
@@ -113,6 +117,10 @@ Plan.belongsToMany(Branch, { through: Planbranch });
 
 Planbranch.belongsToMany(Addon, { through: Planbranchaddon });
 Addon.belongsToMany(Planbranch, { through: Planbranchaddon });
+
+Role.belongsToMany(Permission, { through: Rolepermission });
+Permission.belongsToMany(Role, { through: Rolepermission });
+
 
 // db.sequelize.sync({force:true});
 // db.sequelize.sync({alter:true});

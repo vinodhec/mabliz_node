@@ -53,6 +53,23 @@ class ProfileController {
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
   };
 
+  updateRole = async (req, res) => {
+    const { user, body } = req;
+    const {id, permissions} =body;
+    const role = await user.getRoles({where:{id}});
+    await role?.[0].update(body);
+    console.log({ role });
+
+    const promise = await permissions.map(async({id,need_approval})=>{
+      const permission = await this.permissionService.permissionDao.findById(id);
+      await role?.[0].addPermissions(permission,{ through: { need_approval } });
+    })
+    await Promise.all(promise)
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
+  };
+
+
   getAddressRecord = async (req, res) => {
     const { id } = req.body;
     if (!id) {

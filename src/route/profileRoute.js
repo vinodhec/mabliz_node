@@ -15,6 +15,8 @@ router.get('/dashboard-details', profileController.getDashboardDetails);
 
 router.get('/user/role',profileController.getRoles);
 router.post('/user/role',profileController.addNewRoles);
+router.put('/user/role',profileController.updateRole);
+
 router.all('/user/:target', profileController.curdUserAssociated);
 router.all('/user/:target1/:target1Id', profileController.curdUserAssociatedTwoTargets);
 

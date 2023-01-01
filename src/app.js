@@ -120,8 +120,8 @@ Planbranch.belongsToMany(Addon, { through: Planbranchaddon });
 Addon.belongsToMany(Planbranch, { through: Planbranchaddon });
 User.hasMany(Role,{ onDelete: 'cascade', hooks:true });
 Role.belongsTo(User);
-Role.belongsToMany(Permission, { through: Rolepermission });
-Permission.belongsToMany(Role, { through: Rolepermission });
+Role.belongsToMany(Permission, { through: Rolepermission,onDelete: 'cascade', hooks:true });
+Permission.belongsToMany(Role, { through: Rolepermission,onDelete: 'cascade', hooks:true });
 
 
 // db.sequelize.sync({force:true});

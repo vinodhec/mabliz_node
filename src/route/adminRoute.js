@@ -14,6 +14,8 @@ router.get('/get-pending-activation-group', adminController.getActivationGroup);
 router.all('/addon',adminController.crudOperations)
 router.all('/tax',adminController.crudOperations)
 router.all('/permission',adminController.crudOperations)
+router.all('/module',adminController.crudOperations)
+
 router.all('/validity',adminController.crudOperations)
 router.get('/plandetails',(req,res,next)=>{
     req.body ={"tax":{},"validity":{}};

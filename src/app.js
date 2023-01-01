@@ -86,6 +86,7 @@ const Plan = models.plan;
 const Role = models.role;
 const Permission = models.permission;
 const Rolepermission = models.rolepermission;
+const Module = models.module;
 
 const PlanValidity = models.planvalidity;
 
@@ -105,7 +106,7 @@ BusinessTypes.hasMany(BusinessCategory);
 
 BusinessActivity.belongsTo(BusinessCategory);
 BusinessCategory.hasMany(BusinessActivity);
-
+Module.hasMany(Permission);
 Plan.hasMany(PlanValidity);
 PlanValidity.belongsTo(Plan);
 

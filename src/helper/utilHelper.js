@@ -135,6 +135,7 @@ const crudOperationsTwoTargets = async (object) => {
     id,
   } = object;
   console.log({ source, sourceId, target1, target2, target1Id, target2Id, id });
+  console.log({ source, sourceId, target1, target2, target1Id, target2Id, id })
   const target1ModelName = capitalize(target1 || "");
   const target1ModelName_plural = pluralize(target1ModelName);
   const getMixin1 = "get" + target1ModelName_plural;
@@ -207,7 +208,7 @@ const crudOperationsTwoTargets = async (object) => {
     case "PUT":
       try {
         let result;
-        console.log("body", req.body);
+        
         modelListDatatemp = await sourceModel[getMixin1](targetid1Query);
         if (target2) {
           const temp = await modelListDatatemp?.[0]?.[getMixin2](
@@ -216,7 +217,14 @@ const crudOperationsTwoTargets = async (object) => {
           console.log(temp);
           result = await temp[0].update(req.body);
         } else {
-          result = await modelListDatatemp[0].update(req.body);
+          try{
+            result = await modelListDatatemp[0].update(req.body);
+          }
+          catch(e){
+
+            result = await sourceModel.update(req.body);
+
+          }
         }
         res.json(
           responseHandler.returnSuccess(httpStatus.OK, "Success", result)

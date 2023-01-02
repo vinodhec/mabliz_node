@@ -21,7 +21,7 @@ router.all('/permission',adminController.crudOperations)
 router.all('/module', profileController.curdUserAssociatedTwoTargets);
 
 router.all('/module/:sourceId/:target1/:target1Id/:target2/', profileController.curdUserAssociatedTwoTargets);
-router.all('/module/:sourceId', profileController.curdUserAssociatedTwoTargets);
+router.all('/module/:sourceId',  profileController.curdUserAssociatedTwoTargets);
 router.all('/module/:sourceId/:target1', profileController.curdUserAssociatedTwoTargets);
 router.all('/module/:sourceId/:target1/:target1Id', profileController.curdUserAssociatedTwoTargets);
 

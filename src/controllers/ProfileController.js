@@ -44,8 +44,8 @@ class ProfileController {
     const role = await user.createRole(body);
     console.log({ role });
 
-    const promise = await permissions.map(async({id,need_approval})=>{
-      const permission = await this.permissionService.permissionDao.findById(id);
+    const promise = await permissions.map(async({name,need_approval})=>{
+      const permission = await this.permissionService.permissionDao.findByWhere({name});
       await role.addPermissions(permission,{ through: { need_approval } });
     })
     await Promise.all(promise)

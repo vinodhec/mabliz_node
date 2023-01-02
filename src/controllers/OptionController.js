@@ -1,5 +1,7 @@
 const httpStatus = require("http-status");
 const BusinessTypeService = require("../service/BusinesstypeService");
+const ModuleService = require("../service/ModuleService");
+
 const BusinesscategoryService = require("../service/BusinesscategoryService");
 const BusinessactivityService = require("../service/BusinessactivitiyService");
 const responseHandler = require("../helper/responseHandler");
@@ -35,7 +37,10 @@ class OptionController {
         await new BusinessTypeService().businessTypeDao.findAll({
           raw: true,
         });
-
+        const modules =
+        await new ModuleService().moduleDao.findAll({
+          raw: true,
+        });
       const businessCategory =
         await new BusinesscategoryService().businesscategoryDao.findAll({
           raw: true,
@@ -58,6 +63,11 @@ class OptionController {
             }
             else if(field.requestKey === "business_activities"){
               this.updateJson({jsonFile,tabIndex,groupIndex,fieldIndex,value:businessActivity})
+            }
+            else if(field.requestKey === 'permission'){
+              console.log({tabIndex,groupIndex,fieldIndex})
+              this.updateJson({jsonFile,tabIndex,groupIndex,fieldIndex,value:modules})
+
             }
           });
         });

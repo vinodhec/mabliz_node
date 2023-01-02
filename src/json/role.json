@@ -1,11 +1,11 @@
 [
   {
     "title": "Role ",
-    "eligility": ["ADMIN","PARTNER"],
+    "eligility": ["ADMIN", "PARTNER"],
     "details": [
       {
         "title": "Role",
-        "eligility": ["PARTNER","PARTNER"],
+        "eligility": ["PARTNER", "PARTNER"],
         "fields": [
           {
             "label": "Role Name",
@@ -13,66 +13,62 @@
             "input": "text",
             "isMandatory": true,
             "requestKey": "role",
-            "eligility": ["ADMIN","PARTNER"]
-          }         
+            "eligility": ["ADMIN", "PARTNER"]
+          }
         ]
-      }]},
+      }
+    ]
+  },
+  {
+    "title": "Business (If have) ",
+    "eligility": ["PARTNER"],
+    "details": [
       {
-        "title": "Business (If have) ",
-        "eligility": ["PARTNER"],
-        "details": [{
         "title": "Business",
-        "eligility": [
-            "PARTNER"
-        ],
+        "eligility": ["PARTNER"],
         "fields": [
-            {
-                "type": "grid",
-                "subType": "chip",
+          {
+            "type": "grid",
+            "subType": "chip",
             "isMandatory": true,
-                "eligility": [
-                    "PARTNER"
-                ],
-                "requestKey": "business_type",
-                "fields": [
-                    {
-                        "id": 1,
-                        "label": "Food"
-                    },
-                    {
-                        "id": 2,
-                        "label": "Grocery"
-                    },
-                    {
-                        "id": 3,
-                        "label": "Dry Fruits"
-                    }
-                ]
-            }
+            "eligility": ["PARTNER"],
+            "requestKey": "business_type",
+            "fields": [
+              {
+                "id": 1,
+                "label": "Food"
+              },
+              {
+                "id": 2,
+                "label": "Grocery"
+              },
+              {
+                "id": 3,
+                "label": "Dry Fruits"
+              }
+            ]
+          }
         ]
-    }]},
-    {
-      "title": "Access",
-      "eligility": [
-          "ADMIN","PARTNER"
-      ],
-      "details":   [
+      }
+    ]
+  },
+  {
+    "title": "Access",
+    "eligility": ["ADMIN", "PARTNER"],
+    "details": [
       {
         "eligility": ["ADMIN", "PARTNER"],
         "title": "Permission / Access Details",
-        "type":"accordion",
-        "fields":
-        [
-            {
-                "eligility":
-                [
-                    "ADMIN", "PARTNER"
-                ],
-                "type": "accordion",
-                "requestKey":"permission"
-            }
+        "type": "accordion",
+        "fields": [
+          {
+            "eligility": ["ADMIN", "PARTNER"],
+            "type": "accordion",
+            "requestKey": "permission",
+            "fields": []
+          }
         ]
       }
-      
     ]
-    }]
+  }
+]

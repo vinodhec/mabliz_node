@@ -64,7 +64,7 @@ class OptionController {
             else if(field.requestKey === "business_activities"){
               this.updateJson({jsonFile,tabIndex,groupIndex,fieldIndex,value:businessActivity})
             }
-            else if(field.requestKey === 'permission'){
+            else if(field.requestKey === 'permissions'){
               console.log({tabIndex,groupIndex,fieldIndex})
               this.updateJson({jsonFile,tabIndex,groupIndex,fieldIndex,value:modules})
 

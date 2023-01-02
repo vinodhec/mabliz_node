@@ -64,7 +64,7 @@
           {
             "eligility": ["ADMIN", "PARTNER"],
             "type": "accordion",
-            "requestKey": "permission",
+            "requestKey": "permissions",
             "fields": []
           }
         ]

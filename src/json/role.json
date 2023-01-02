@@ -12,7 +12,7 @@
             "type": "textbox",
             "input": "text",
             "isMandatory": true,
-            "requestKey": "role",
+            "requestKey": "name",
             "eligility": ["ADMIN", "PARTNER"]
           }
         ]

@@ -1,9 +1,11 @@
 const express = require('express');
 const AdminController = require('../controllers/AdminController');
+const ProfileController = require('../controllers/ProfileController');
 
 const router = express.Router();
 
 const adminController = new AdminController();
+const profileController = new ProfileController();
 const auth = require('../middlewares/auth');
 router.use(auth(true));
 
@@ -13,6 +15,20 @@ router.use(auth(true));
 router.get('/get-pending-activation-group', adminController.getActivationGroup);
 router.all('/addon',adminController.crudOperations)
 router.all('/tax',adminController.crudOperations)
+router.all('/permission',adminController.crudOperations)
+// router.all('/module',adminController.crudOperations)
+
+router.all('/module', profileController.curdUserAssociatedTwoTargets);
+
+router.all('/module/:sourceId/:target1/:target1Id/:target2/', profileController.curdUserAssociatedTwoTargets);
+router.all('/module/:sourceId', profileController.curdUserAssociatedTwoTargets);
+router.all('/module/:sourceId/:target1', profileController.curdUserAssociatedTwoTargets);
+router.all('/module/:sourceId/:target1/:target1Id', profileController.curdUserAssociatedTwoTargets);
+
+
+
+
+
 router.all('/validity',adminController.crudOperations)
 router.get('/plandetails',(req,res,next)=>{
     req.body ={"tax":{},"validity":{}};

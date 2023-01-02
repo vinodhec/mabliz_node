@@ -83,6 +83,11 @@ const BusinessTypes = models.businesstype;
 const BusinessCategory = models.businesscategory;
 const BusinessActivity = models.businessactivity;
 const Plan = models.plan;
+const Role = models.role;
+const Permission = models.permission;
+const Rolepermission = models.rolepermission;
+const Module = models.module;
+
 const PlanValidity = models.planvalidity;
 
 const Planbranch = models.planbranch;
@@ -90,18 +95,18 @@ const Addon = models.addon;
 
 const Planbranchaddon = models.planbranchaddon;
 
-User.hasMany(Business);
+User.hasMany(Business,{ onDelete: 'cascade', hooks:true });
 Business.belongsTo(User);
 BusinessTypes.belongsTo(User);
 User.hasMany(BusinessTypes);
-Business.hasMany(Branch);
+Business.hasMany(Branch,{ onDelete: 'cascade', hooks:true });
 Branch.belongsTo(Business);
 BusinessCategory.belongsTo(BusinessTypes);
 BusinessTypes.hasMany(BusinessCategory);
 
 BusinessActivity.belongsTo(BusinessCategory);
 BusinessCategory.hasMany(BusinessActivity);
-
+Module.hasMany(Permission);
 Plan.hasMany(PlanValidity);
 PlanValidity.belongsTo(Plan);
 
@@ -113,6 +118,11 @@ Plan.belongsToMany(Branch, { through: Planbranch });
 
 Planbranch.belongsToMany(Addon, { through: Planbranchaddon });
 Addon.belongsToMany(Planbranch, { through: Planbranchaddon });
+User.hasMany(Role,{ onDelete: 'cascade', hooks:true });
+Role.belongsTo(User);
+Role.belongsToMany(Permission, { through: Rolepermission});
+Permission.belongsToMany(Role, { through: Rolepermission});
+
 
 // db.sequelize.sync({force:true});
 // db.sequelize.sync({alter:true});

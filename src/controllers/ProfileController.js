@@ -2,6 +2,8 @@ const httpStatus = require("http-status");
 const AuthService = require("../service/AuthService");
 const TokenService = require("../service/TokenService");
 const BranchService = require("../service/BranchService");
+const PermissionService = require("../service/PermissionService");
+
 const { Op } = require("sequelize");
 
 const UserService = require("../service/UserService");
@@ -23,7 +25,65 @@ class ProfileController {
     this.tokenService = new TokenService();
     this.branchService = new BranchService();
     this.authService = new AuthService();
+    this.permissionService = new PermissionService();
   }
+
+  getRoles = async (req, res) => {
+    const { user } = req;
+
+    const roles = await user.getRoles({
+      include: this.permissionService.permissionDao.Model,
+    });
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
+  };
+
+  addNewRoles = async (req, res) => {
+    const { user, body } = req;
+    const {permissions} =body;
+    const role = await user.createRole(body);
+    console.log({ role });
+
+    const promise = await permissions.map(async({id,need_approval})=>{
+      const permission = await this.permissionService.permissionDao.findById(id);
+      await role.addPermissions(permission,{ through: { need_approval } });
+    })
+    await Promise.all(promise)
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
+  };
+
+  updateRole = async (req, res) => {
+    const { user, body } = req;
+    const {id, permissions} =body;
+    const role = await user.getRoles({where:{id}});
+    await role?.[0].update(body);
+    console.log({ role });
+
+    const promise = await permissions.map(async({id,need_approval})=>{
+      const permission = await this.permissionService.permissionDao.findById(id);
+      await role?.[0].addPermissions(permission,{ through: { need_approval } });
+    })
+    await Promise.all(promise)
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
+  };
+
+  deleteRole = async (req, res) => {
+    const { user, body } = req;
+    const {id, permissions} =body;
+    const role = await user.getRoles({where:{id}});
+    await role?.[0].destroy();
+    // console.log({ role });
+
+    // const promise = await permissions.map(async({id,need_approval})=>{
+    //   const permission = await this.permissionService.permissionDao.findById(id);
+    //   await role?.[0].addPermissions(permission,{ through: { need_approval } });
+    // })
+    // await Promise.all(promise)
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
+  };
 
   getAddressRecord = async (req, res) => {
     const { id } = req.body;

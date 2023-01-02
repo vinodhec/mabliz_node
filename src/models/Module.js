@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       permission_suffix:DataTypes.STRING,
-      category:DataTypes.STRING
+      category:DataTypes.STRING,
+      has_addon:DataTypes.BOOLEAN
+
     },
 
     {

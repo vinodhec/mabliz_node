@@ -12,6 +12,7 @@
             "type": "textbox",
             "input": "text",
             "isMandatory": true,
+            "error":"Please enter a valid role name",
             "requestKey": "name",
             "eligility": ["ADMIN", "PARTNER"]
           }

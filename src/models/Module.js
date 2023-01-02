@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
   Module.init(
     {
       name: DataTypes.STRING,
-      permission_suffix:DataTypes.STRING
+      permission_suffix:DataTypes.STRING,
+      category:DataTypes.STRING
     },
 
     {

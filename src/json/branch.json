@@ -3,13 +3,13 @@
   {
     "title": "Branch Details",
     "eligility": [
-      "PARTNER"
+      "ADMIN","PARTNER"
     ],
     "details": [
        {
         "title": "Business Category",
         "eligility": [
-            "PARTNER"
+           "ADMIN", "PARTNER"
         ],
         "fields": [
             {
@@ -18,7 +18,7 @@
                 "input": "select",
                 "requestKey": "business_category",
                 "eligility": [
-                    "PARTNER"
+                    "ADMIN","PARTNER"
                 ],
                 "fields": [
                     {
@@ -63,13 +63,13 @@
       {
         "title": "Business Activities",
         "eligility": [
-          "PARTNER"
+         "ADMIN", "PARTNER"
         ],
         "fields": [
           {
             "type": "grid",
             "eligility": [
-              "PARTNER"
+             "ADMIN", "PARTNER"
             ],
             "subType": "chip",
             "requestKey": "business_activities",
@@ -96,7 +96,7 @@
       {
         "title": "Food Type",
         "eligility": [
-            "ADMIN"
+            "ADMIN","PARTNER"
         ],
         "fields": [
             {
@@ -106,7 +106,7 @@
                 "error": "Please Select your Food Type",
                 "requestKey": "food_type",
                 "eligility": [
-                    "ADMIN"
+                    "ADMIN","PARTNER"
                 ],
                 "fields": [
                     {
@@ -136,7 +136,7 @@
             "type": "text",
             "value": "Mabliz",
             "eligility": [
-              "PARTNER"
+             "ADMIN", "PARTNER"
             ]
           }
         ]
@@ -144,13 +144,13 @@
       {
         "title": "Price Type (Service Type)",
         "eligility": [
-          "PARTNER"
+         "ADMIN", "PARTNER"
         ],
         "fields": [
           {
             "type": "grid",
             "eligility": [
-              "PARTNER"
+             "ADMIN", "PARTNER"
             ],
             "subType": "chip",
             "requestKey": "service_type",
@@ -160,7 +160,7 @@
                 "id": 1,
                 "servicetypeid": 1,
                 "eligility": [
-                  "PARTNER"
+                 "ADMIN", "PARTNER"
                 ]
               },
               {
@@ -168,7 +168,7 @@
                 "id": 2,
                 "servicetypeid": 2,
                 "eligility": [
-                  "PARTNER"
+                 "ADMIN", "PARTNER"
                 ]
               },
               {
@@ -176,7 +176,7 @@
                 "id": 3,
                 "servicetypeid": 3,
                 "eligility": [
-                  "PARTNER"
+                 "ADMIN", "PARTNER"
                 ]
               },
               {
@@ -184,7 +184,7 @@
                 "id": 4,
                 "servicetypeid": 4,
                 "eligility": [
-                  "PARTNER"
+                 "ADMIN", "PARTNER"
                 ]
               },
               {
@@ -192,7 +192,7 @@
                 "id": 5,
                 "servicetypeid": 5,
                 "eligility": [
-                  "PARTNER"
+                 "ADMIN", "PARTNER"
                 ]
               },
               {
@@ -200,7 +200,7 @@
                 "id": 6,
                 "servicetypeid": 6,
                 "eligility": [
-                  "PARTNER"
+                 "ADMIN", "PARTNER"
                 ]
               },
               {
@@ -208,7 +208,7 @@
                 "id": 7,
                 "servicetypeid": 7,
                 "eligility": [
-                  "PARTNER"
+                 "ADMIN", "PARTNER"
                 ]
               }
             ]
@@ -265,13 +265,13 @@
   {
     "title": "Licence & Legal",
     "eligility": [
-      "PARTNER"
+     "ADMIN", "PARTNER"
     ],
     "details": [
       {
         "title": "GST",
         "eligility": [
-          "PARTNER"
+         "ADMIN", "PARTNER"
         ],
         "fields": [
           {
@@ -281,7 +281,7 @@
             "requestKey": "gst_number",
             "imageKey": "gst_image",
             "eligility": [
-              "PARTNER"
+             "ADMIN", "PARTNER"
             ]
           }
         ]
@@ -289,7 +289,7 @@
       {
         "title": "Licence",
         "eligility": [
-          "PARTNER"
+         "ADMIN", "PARTNER"
         ],
         "fields": [
           {
@@ -299,7 +299,7 @@
             "requestKey": "licence_number",
             "imageKey": "license_image",
             "eligility": [
-              "PARTNER"
+             "ADMIN", "PARTNER"
             ]
           },
           {
@@ -307,7 +307,7 @@
             "type": "date_picker",
             "requestKey": "licence_expiry_date",
             "eligility": [
-              "PARTNER"
+             "ADMIN", "PARTNER"
             ]
           }
         ]
@@ -315,7 +315,7 @@
       {
         "title": "FSSAI",
         "eligility": [
-          "PARTNER"
+         "ADMIN", "PARTNER"
         ],
         "fields": [
           {
@@ -325,7 +325,7 @@
             "requestKey": "fssai_number",
             "imageKey": "fssai_image",
             "eligility": [
-              "PARTNER"
+             "ADMIN", "PARTNER"
             ]
           },
           {
@@ -333,7 +333,7 @@
             "type": "date_picker",
             "requestKey": "fssai_expiry_date",
             "eligility": [
-              "PARTNER"
+             "ADMIN", "PARTNER"
             ]
           }
         ]

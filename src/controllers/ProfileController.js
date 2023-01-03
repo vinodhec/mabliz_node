@@ -44,8 +44,8 @@ class ProfileController {
     const role = await user.createRole(body);
     console.log({ role });
 
-    const promise = await permissions.map(async({name,need_approval})=>{
-      const permission = await this.permissionService.permissionDao.findByWhere({name});
+    const promise = await permissions.map(async({permission_suffix,need_approval})=>{
+      const permission = await this.permissionService.permissionDao.findByWhere({permission_suffix});
       await role.addPermissions(permission,{ through: { need_approval } });
     })
     await Promise.all(promise)
@@ -60,8 +60,8 @@ class ProfileController {
     await role?.[0].update(body);
     console.log({ role });
 
-    const promise = await permissions.map(async({id,need_approval})=>{
-      const permission = await this.permissionService.permissionDao.findById(id);
+    const promise = await permissions.map(async({permission_suffix,need_approval})=>{
+      const permission = await this.permissionService.permissionDao.findById(permission_suffix);
       await role?.[0].addPermissions(permission,{ through: { need_approval } });
     })
     await Promise.all(promise)
@@ -71,7 +71,7 @@ class ProfileController {
 
   deleteRole = async (req, res) => {
     const { user, body } = req;
-    const {id, permissions} =body;
+    const {id} =body;
     const role = await user.getRoles({where:{id}});
     await role?.[0].destroy();
     // console.log({ role });

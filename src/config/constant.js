@@ -1,6 +1,7 @@
 const userConstant = {
   STATUS_ACTIVE: 1,
   STATUS_INACTIVE: 0,
+  STATUS_DISABLED: -1,
   STATUS_REMOVED: 2,
 };
 

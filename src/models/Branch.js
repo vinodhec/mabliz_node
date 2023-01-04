@@ -38,9 +38,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSON,
 
         set: function (val) {
-          this.setDataValue("branch_type_label", val.label);
+          this.setDataValue("service_type_label", val.label);
 
-          return this.setDataValue("branch_type_id", val.id);
+          return this.setDataValue("service_type_id", val.id);
         },
       },
       branch_type_id: {

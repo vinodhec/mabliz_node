@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       uuid: DataTypes.UUID,
       name: DataTypes.STRING,
-      // lastName: DataTypes.STRING,
-      // middleName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
+      middleName: DataTypes.STRING,
       dob: DataTypes.STRING,
       idProofType: DataTypes.STRING,
       idProofNumber: DataTypes.STRING,
@@ -35,10 +35,31 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: userConstant.STATUS_INACTIVE,
       },
-      phone_number: DataTypes.STRING,
+
+      branch_ids:{
+        type:DataTypes.JSON,
+        get: function () {
+          const value = this.getDataValue("branch_ids")
+          // console.log({value})
+          return JSON.parse(!value || value === "" ? "[]" : value);
+        },
+      },
+      branches: {
+        type: DataTypes.JSON,
+
+        set: function (val) {
+         
+
+          return  this.setDataValue("branch_ids", JSON.stringify(val.label.map((vv)=>vv.id) || []));
+        },
+
+      },
+
+      phone_number: {
+        type:DataTypes.STRING},
       isAdmin: {
         defaultValue: false,
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.BOOLEAN
       },
       mode: {
         type: DataTypes.STRING,

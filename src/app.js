@@ -97,6 +97,10 @@ const Planbranchaddon = models.planbranchaddon;
 
 User.hasMany(Business,{ onDelete: 'cascade', hooks:true });
 Business.belongsTo(User);
+
+User.hasMany(User,{ onDelete: 'cascade', hooks:true });
+User.belongsTo(User);
+
 BusinessTypes.belongsTo(User);
 User.hasMany(BusinessTypes);
 Business.hasMany(Branch,{ onDelete: 'cascade', hooks:true });

@@ -213,7 +213,6 @@ class ProfileController {
     const { source, target } = req.params;
     const { id } = req.body;
     req.body = omit(req.body, [
-      "phone_number",
       "mpin",
       "id",
       "isAdmin",
@@ -228,7 +227,6 @@ class ProfileController {
       req.params;
     const { id } = req.body;
     req.body = omit(req.body, [
-      "phone_number",
       "mpin",
       "id",
       "business_id",

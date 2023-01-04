@@ -54,7 +54,34 @@ module.exports = (sequelize, DataTypes) => {
         },
 
       },
+      reporting: {
+        type: DataTypes.JSON,
 
+        set: function (val) {
+          this.setDataValue("reporting_user_name", val.name);
+
+          return this.setDataValue("reporting_user_id", val.id);
+        },
+      },
+      role_id:DataTypes.INTEGER,
+      role: {
+        type: DataTypes.JSON,
+
+        set: function (val) {
+          this.setDataValue("role_name", val.name);
+
+          return this.setDataValue("role_id", val.id);
+        },
+      },
+      role_name: {
+        type: DataTypes.STRING,
+      },
+      reporting_user_id: {
+        type: DataTypes.INTEGER,
+      },
+      reporting_user_name: {
+        type: DataTypes.STRING,
+      },
       phone_number: {
         type:DataTypes.STRING},
       isAdmin: {

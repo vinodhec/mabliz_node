@@ -24,12 +24,16 @@ module.exports = (sequelize, DataTypes) => {
       idProofType: DataTypes.STRING,
       idProofNumber: DataTypes.STRING,
       idProofImage: DataTypes.STRING,
+      salary:DataTypes.FLOAT,
+      salary_frequency:DataTypes.STRING,
       addressProofType: DataTypes.STRING,
       addressProofNumber: DataTypes.STRING,
       addressProofImage: DataTypes.STRING,
       photo: DataTypes.STRING,
       email: DataTypes.STRING,
       mpin: DataTypes.STRING,
+      pfNo:DataTypes.STRING,
+ESI:DataTypes.STRING,
 
       user_status: {
         type: DataTypes.INTEGER,

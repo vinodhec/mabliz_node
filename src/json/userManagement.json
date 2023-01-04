@@ -1,129 +1,90 @@
 [
   {
-    "title": "User Management",
+    "title": "User Details",
     "eligility": [
       "PARTNER"
     ],
     "details": [
       {
-        "title": "Role",
+        "title": "User Personal Details",
         "eligility": [
           "PARTNER"
         ],
-        "fields": [
-          {
-            "eligility": [
-              "PARTNER"
-            ],
-            "label": "Role",
-            "type": "drop_down_image_picker",
-            "input": "option",
-            "isMandatory": true,
-            "requestKey": "role",
-            "fields": [
-              {
-                "label": "Partner",
-                "id": 1
-              },
-              {
-                "label": "GM",
-                "id": 2
-              },
-              {
-                "label": "Manager",
-                "id": 3
-              },
-              {
-                "label": "Accounts",
-                "id": 4
-              },
-              {
-                "label": "Sales Man",
-                "id": 5
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "eligility": [
-          "PARTNER"
-        ],
-        "title": "Employee / Personal Details",
         "fields": [
           {
             "label": "First Name",
             "type": "textbox",
             "input": "text",
             "isMandatory": true,
-            "requestKey": "first_name",
+            "error": "Please enter your Name",
+            "requestKey": "name",
             "eligility": [
-              "PARTNER"
+                "ADMIN"
             ]
-          },
-          {
-            "label": "Middle Name",
-            "type": "textbox",
-            "input": "text",
-            "requestKey": "middle_name",
-            "eligility": [
-              "PARTNER"
-            ]
-          },
-          {
-            "label": "Last Name",
-            "type": "textbox",
-            "input": "text",
-            "requestKey": "last_name",
-            "eligility": [
-              "PARTNER"
-            ]
-          },
-          {
-            "label": "Date of Birth",
-            "type": "date_picker",
-            "isMandatory": true,
-            "input": "tel",
-            "requestKey": "dob",
-            "eligility": [
-              "PARTNER"
-            ]
-          },
-          {
-            "label": "Mobile No",
-            "type": "textbox",
-            "input": "tel",
-            "isMandatory": true,
-            "requestKey": "phone_number",
-            "eligility": [
-              "PARTNER"
-            ]
-          },
-          {
-            "label": "Email ID",
-            "type": "textbox",
-            "input": "email",
-            "isMandatory": true,
-            "requestKey": "email",
-            "eligility": [
-              "PARTNER"
-            ]
-          }
+        }, {
+          "label": "Middle Name",
+          "type": "textbox",
+          "input": "text",
+          "requestKey": "middleName",
+          "eligility": [
+              "ADMIN"
+          ]
+      }, {
+        "label": "Last Name",
+        "type": "textbox",
+        "input": "text",
+        "requestKey": "lastName",
+        "eligility": [
+            "ADMIN"
+        ]
+    }, {
+      "label": "Date of Birth",
+      "type": "date_picker",
+      "isMandatory": true,
+      "error": "Please enter your Date of Birth",
+      "requestKey": "dob",
+      "eligility": [
+          "ADMIN"
+      ]
+  },{
+    "label": "Mobile No",
+    "type": "textbox",
+    "input": "number",
+    "isMandatory": true,
+    "error": "Please enter your Mobile No",
+    "requestKey": "phone_number",
+    "eligility": [
+        "ADMIN"
+    ]
+},{
+  "label": "Email ID",
+  "type": "textbox",
+  "input": "email",
+  "requestKey": "email",
+  "eligility": [
+      "ADMIN"
+  ]
+}
         ]
       },
+      
       {
-        "title": "Address & ID Proof",
+        "title": "ID Proof",
         "eligility": [
           "PARTNER"
         ],
         "fields": [
           {
             "label": "ID Proof",
-            "type": "textbox_image_picker",
-            "input": "option",
-            "requestKey": "id_proof",
+            "type": "drop_down_image_picker",
+            "input": "select",
+            "requestKey": "idProofType",
             "isMandatory": true,
-            "imageKey": "id_proof_image",
+    "error": "Please select your ID Proof",
+            "imageKey": "idProofImage",
+            "eligility": [
+              "PARTNER"
+            ],
             "fields": [
               {
                 "label": "None",
@@ -137,18 +98,35 @@
                 "label": "Ration ID",
                 "id": 3
               }
-            ],
+            ]
+            
+          },
+          { "label": "ID Proof Number",
+          "type": "textbox",
+          "input": "text",
+          "requestKey": "idProofNumber",
+          "isMandatory": true,
+          "error": "Please Enter ID Proof Number",
+          "eligility": [
+            "PARTNER"
+          ]
+        }]},
+
+          { "title": "Address Proof",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [{
+            "label": "Address Proof",
+            "type": "drop_down_image_picker",
+            "input": "select",
+            "requestKey": "addressProofType",
+            "isMandatory": true,
+            "error":"Please select your Address Proof ",
+            "imageKey": "addressProofImage",
             "eligility": [
               "PARTNER"
-            ]
-          },
-          {
-            "label": "Address Proof",
-            "type": "textbox_image_picker",
-            "input": "option",
-            "requestKey": "address_proof",
-            "isMandatory": true,
-            "imageKey": "address_proof_image",
+            ],
             "fields": [
               {
                 "label": "None",
@@ -162,13 +140,90 @@
                 "label": "Voter ID",
                 "id": 3
               }
-            ],
-            "eligility": [
-              "PARTNER"
             ]
-          }
+            
+          },
+          { "label": "Address Proof Number",
+          "type": "textbox",
+          "input": "text",
+          "requestKey": "addressProofNumber",
+          "isMandatory": true,
+          "error": "Please Enter Address Proof Number",
+          "eligility": [
+            "PARTNER"
+          ]
+        }
         ]
       },
+      { "title": "Police Clearance",
+      "eligility": [
+        "PARTNER"
+      ],
+      "fields": [{
+          "label": "Police Clearance",
+          "type": "drop_down_image_picker",
+          "input": "select",
+          "requestKey": "policeClearance",
+          "isMandatory": true,
+          "error":"Please select your Police Clearance ",
+          "imageKey": "",
+          "eligility": [
+            "PARTNER"
+          ],
+          "fields": [
+            {
+              "label": "None",
+              "id": 1
+            },
+            {
+              "label": "Police Clearance or Yes",
+              "id": 2
+            }
+          ]
+          
+        },
+        { "label": "Police Clearance Number",
+        "type": "textbox",
+        "input": "text",
+        "requestKey": "",
+        "isMandatory": true,
+        "error": "Please Enter Police Clearance Number",
+        "eligility": [
+          "PARTNER"
+        ]
+      },
+       { "label": "Police Clearance Expiry Date",
+       "type": "date_picker",
+      "requestKey": "",
+      "isMandatory": true,
+      "error": "Please Enter Police Clearance Expiry Date",
+      "eligility": [
+        "PARTNER"
+      ]
+    }
+      ]
+    }, { "title": "Photo",
+    "eligility": [
+      "PARTNER"
+    ],
+    "fields": [{
+      
+      "label": "Photo",
+    "type": "image_picker",
+    "input": "image",
+    "requestKey": "photo",
+    "eligility": [
+      "PARTNER"
+    ]
+  }]}
+    ]
+  },
+  {
+    "title": "Salary & Other Details",
+    "eligility": [
+      "PARTNER"
+    ],
+    "details": [
       {
         "title": "Salary",
         "eligility": [
@@ -179,7 +234,9 @@
             "label": "Salary",
             "type": "textbox",
             "input": "number",
-            "requestKey": "salary",
+            "isMandatory": true,
+            "error": "Please Enter your Salary",
+            "requestKey": "",
             "eligility": [
               "PARTNER"
             ]
@@ -187,9 +244,13 @@
           {
             "label": "Pay",
             "type": "drop_down",
-            "input": "option",
-            "requestKey": "pay_besed",
+            "input": "select",
+            "requestKey": "",
             "isMandatory": true,
+            "error": "Please select your Pay Basis",
+            "eligility": [
+              "PARTNER"
+            ],
             "fields": [
               {
                 "label": "Daily",
@@ -203,29 +264,142 @@
                 "label": "Monthly",
                 "id": 3
               }
-            ],
-            "eligility": [
-              "PARTNER"
             ]
           }
         ]
       },
       {
-        "title": "Photo",
+        "title": "Joining Date",
         "eligility": [
           "PARTNER"
         ],
         "fields": [
           {
-            "label": "Photo",
-            "type": "textbox_image_picker",
-            "requestKey": "photo",
+            "label": "Joining Date",
+            "type": "date_picker",
+            "isMandatory": true,
+            "error": "Please enter your Joining Date",
+            "requestKey": "",
             "eligility": [
-              "PARTNER"
+                "ADMIN"
             ]
-          }
+        }
+        ]
+      },{
+        "title": "PF Details",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "PF",
+            "type": "textbox",
+            "input": "text",
+            "requestKey": "",
+            "eligility": [
+                "ADMIN"
+            ]
+        }
+        ]
+      },{
+        "title": "ESI Details",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "ESI",
+            "type": "textbox",
+            "input": "text",
+            "requestKey": "",
+            "eligility": [
+                "ADMIN"
+            ]
+        }
         ]
       }
     ]
-  }
+  },{
+    "title": "Assign Role",
+    "eligility": [
+      "PARTNER"
+    ],
+    "details": [
+      {
+        "title": "Role",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          
+              {
+                "label": "Select Role",
+                "type": "drop_down",
+                "input": "select",
+                "isMandatory": true,
+                "error": "Please Select your Role",
+                "requestKey": "",
+                "eligility": [
+                    "ADMIN"
+                ],
+                "fields":[ {
+                  "label": "Partner",
+                  "id": 1
+                },
+                {
+                  "label": "GM",
+                  "id": 2
+                },
+                {
+                  "label": "Manager",
+                  "id": 3
+                }
+                ]
+            }
+        ]}
+        ]},
+        
+        {
+          "title": "Reporting & Approval",
+          "eligility": [
+            "PARTNER"
+          ],
+          "details": [
+            {
+              "title": "Role",
+              "eligility": [
+                "PARTNER"
+              ],
+              "fields": [
+                {
+                  "label": "Reporting and Approval *",
+                  "type": "drop_down",
+                  "input": "select",
+                  "isMandatory": true,
+                  "error": "Please Select Reporting and Approval",
+                  "requestKey": "",
+                  "eligility": [
+                      "ADMIN"
+                  ],
+                  "fields":[ 
+                    {
+                      "label": "Owner",
+                      "id": 1
+                    },
+                    {
+                    "label": "Partner",
+                    "id": 2
+                  },
+                  {
+                    "label": "GM",
+                    "id": 3
+                  },
+                  {
+                    "label": "Manager",
+                    "id": 4
+                  }
+                  ]
+              }
+
+              ]}]}
 ]

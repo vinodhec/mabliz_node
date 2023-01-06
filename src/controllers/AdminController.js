@@ -305,9 +305,7 @@ class AdminController {
     const { params, body } = req;
     const { businesstype_id:id } = params;
     const businessType = (await this.getBusinessType(id))
-    console.log(businessType)
     const modules = await businessType[0].getModules();
-    console.log(modules);
     return res.json(responseHandler.returnSuccess(httpStatus.OK, "success",modules))
   };
 
@@ -316,8 +314,7 @@ class AdminController {
     const { businesstype_id:id } = params;
     const {modules} = body;
     const businessType = (await this.getBusinessType(id))
-    console.log(businessType)
-    console.log(modules);
+ 
     const promises = modules.map(async({id})=>{
       const moduleModel = await this.moduleService.moduleDao.Model.findAll({where:id})
       await businessType[0].addModules(moduleModel)
@@ -333,8 +330,7 @@ class AdminController {
     const { businesstype_id:id } = params;
     const {modules} = body;
     const businessType = (await this.getBusinessType(id))
-    console.log(businessType)
-    console.log(modules);
+
     const promises = modules.map(async({id})=>{
       const moduleModel = await this.BusinesstypemoduleService.businesstypemoduleDao.Model.findAll({where:{moduleId:id}})
       await moduleModel[0].destroy();

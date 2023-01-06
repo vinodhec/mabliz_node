@@ -5,7 +5,6 @@ const BusinesstypeService = require("../service/BusinesstypeService");
 const UserService = require("../service/UserService");
 const PlanService = require("../service/PlanService");
 const AddonService = require("../service/AddonService");
-const TaxService = require("../service/TaxService");
 const ModuleService = require("../service/ModuleService");
 const BusinesstypemoduleService = require("../service/BusinesstypemoduleService");
 
@@ -19,8 +18,6 @@ const { basicCrudOperations } = require("../helper/utilHelper");
 const addDays = require("date-fns/addDays");
 
 const logger = require("../config/logger");
-const { tokenTypes } = require("../config/tokens");
-const { createNewOTP } = require("../helper/otpHelper");
 const responseHandler = require("../helper/responseHandler");
 const { omit } = require("lodash");
 class AdminController {
@@ -70,7 +67,6 @@ class AdminController {
     const expiryDate = addDays(start_date_formatted, planValidity.validity);
     let plan_charges_per_day = 0;
     let plan_tax_per_day = 0;
-    let total_plan_charges = 0;
     const discountDifference = differenceInCalendarDays(
       parse(planValidity.discount_expiry, "yyyy-MM-dd", new Date()),
       new Date()
@@ -85,25 +81,7 @@ class AdminController {
       plan_charges_per_day = price / planValidity.validity;
       plan_tax_per_day = (price * (plan.tax / 100)) / planValidity.validity;
     }
-    total_plan_charges =
-      plan_charges_per_day * planValidity.validity +
-      plan_tax_per_day * planValidity.validity;
 
-    const branchPlanId = await branch.addPlan(plan, {
-      through: {
-        start_date: start_date_formatted,
-        end_date: expiryDate,
-        tax: plan.tax,
-        price,
-        plan_validity_id,
-        validity: planValidity.validity,
-        screenshot,
-        transaction_id,
-        received_amount,
-        plan_tax_per_day,
-        plan_charges_per_day,
-      },
-    });
 
     const branchPlan = (
       await this.planbranchService.planbranchDao.findByWhere({
@@ -175,7 +153,7 @@ class AdminController {
 
       addons.forEach((addon) => {
         const { planbranchaddon } = addon;
-        const { total_addon_charges, tax } = planbranchaddon;
+        const { tax } = planbranchaddon;
 
         const totalValue = addon.price * tt.value * dateDiff;
         let total_balance_addon_charges = 0;
@@ -302,7 +280,7 @@ class AdminController {
   }
 
   getModulesForBusinessType = async (req, res) => {
-    const { params, body } = req;
+    const { params } = req;
     const { businesstype_id:id } = params;
     const businessType = (await this.getBusinessType(id))
     const modules = await businessType[0].getModules();
@@ -329,7 +307,6 @@ class AdminController {
     const { params, body } = req;
     const { businesstype_id:id } = params;
     const {modules} = body;
-    const businessType = (await this.getBusinessType(id))
 
     const promises = modules.map(async({id})=>{
       const moduleModel = await this.BusinesstypemoduleService.businesstypemoduleDao.Model.findAll({where:{moduleId:id}})

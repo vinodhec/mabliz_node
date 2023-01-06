@@ -25,7 +25,9 @@ router.all('/module/:sourceId',  profileController.curdUserAssociatedTwoTargets)
 router.all('/module/:sourceId/:target1', profileController.curdUserAssociatedTwoTargets);
 router.all('/module/:sourceId/:target1/:target1Id', profileController.curdUserAssociatedTwoTargets);
 
-
+router.get('/businessType/:businesstype_id/module',adminController.getModulesForBusinessType)
+router.post('/businessType/:businesstype_id/module',adminController.addModulesToBusinessType)
+router.delete('/businessType/:businesstype_id/module',adminController.deleteModulesToBusinessType)
 
 
 

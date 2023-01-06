@@ -87,7 +87,7 @@ const Role = models.role;
 const Permission = models.permission;
 const Rolepermission = models.rolepermission;
 const Module = models.module;
-
+const Businesstypemodule = models.businesstypemodule;
 const PlanValidity = models.planvalidity;
 
 const Planbranch = models.planbranch;
@@ -127,7 +127,7 @@ Role.belongsTo(User);
 // User.hasOne(Role);
 Role.belongsToMany(Permission, { through: Rolepermission});
 Permission.belongsToMany(Role, { through: Rolepermission});
-
+BusinessTypes.belongsToMany(Module,{through:Businesstypemodule});
 
 // db.sequelize.sync({force:true});
 // db.sequelize.sync({alter:true});

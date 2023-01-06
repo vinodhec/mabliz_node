@@ -6,6 +6,8 @@ const UserService = require("../service/UserService");
 const PlanService = require("../service/PlanService");
 const AddonService = require("../service/AddonService");
 const TaxService = require("../service/TaxService");
+const ModuleService = require("../service/ModuleService");
+const BusinesstypemoduleService = require("../service/BusinesstypemoduleService");
 
 const parse = require("date-fns/parse");
 const differenceInCalendarDays = require("date-fns/differenceInCalendarDays");
@@ -31,16 +33,18 @@ class AdminController {
     this.planvalidityService = new PlanvalidityService();
     this.planbranchService = new PlanbranchService();
     this.addonService = new AddonService();
+    this.moduleService = new ModuleService();
+    this.BusinesstypemoduleService = new BusinesstypemoduleService();
   }
 
   multipleCrudOperations = async (req, res) => {
     const { body, method } = req;
     const paths = Object.keys(body);
-    const updatedValues ={}
-    const promises = paths.map(async(value) => {
-     const result =  await basicCrudOperations({ method }, { method }, value);
-     updatedValues[value] = result;
-     return result;
+    const updatedValues = {}
+    const promises = paths.map(async (value) => {
+      const result = await basicCrudOperations({ method }, { method }, value);
+      updatedValues[value] = result;
+      return result;
     });
     await Promise.all(promises)
     res.json(updatedValues);
@@ -291,6 +295,54 @@ class AdminController {
   crudOperations = async (req, res) => {
     basicCrudOperations(req, res);
   };
+
+  getBusinessType = async (id) => {
+    return await this.businesstypeService.businessTypeDao.Model.findAll({where:{id}});
+
+  }
+
+  getModulesForBusinessType = async (req, res) => {
+    const { params, body } = req;
+    const { businesstype_id:id } = params;
+    const businessType = (await this.getBusinessType(id))
+    console.log(businessType)
+    const modules = await businessType[0].getModules();
+    console.log(modules);
+    return res.json(responseHandler.returnSuccess(httpStatus.OK, "success",modules))
+  };
+
+  addModulesToBusinessType = async (req, res) => {
+    const { params, body } = req;
+    const { businesstype_id:id } = params;
+    const {modules} = body;
+    const businessType = (await this.getBusinessType(id))
+    console.log(businessType)
+    console.log(modules);
+    const promises = modules.map(async({id})=>{
+      const moduleModel = await this.moduleService.moduleDao.Model.findAll({where:id})
+      await businessType[0].addModules(moduleModel)
+    });
+    await Promise.all(promises)
+    return res.json(responseHandler.returnSuccess(httpStatus.OK, "success",modules))
+  };
+
+
+
+  deleteModulesToBusinessType = async (req, res) => {
+    const { params, body } = req;
+    const { businesstype_id:id } = params;
+    const {modules} = body;
+    const businessType = (await this.getBusinessType(id))
+    console.log(businessType)
+    console.log(modules);
+    const promises = modules.map(async({id})=>{
+      const moduleModel = await this.BusinesstypemoduleService.businesstypemoduleDao.Model.findAll({where:{moduleId:id}})
+      await moduleModel[0].destroy();
+    });
+    await Promise.all(promises)
+    return res.json(responseHandler.returnSuccess(httpStatus.OK, "success",modules))
+  };
+
 
   deletePlans = async (req, res) => {
     const plan = (

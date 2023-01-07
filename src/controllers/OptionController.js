@@ -6,7 +6,10 @@ const BusinesscategoryService = require("../service/BusinesscategoryService");
 const BusinessactivityService = require("../service/BusinessactivitiyService");
 const BusinessService = require("../service/BusinessService");
 const BranchService = require("../service/BranchService");
+const AdminController = require('./AdminController');
 
+
+const adminController = new AdminController();
 const responseHandler = require("../helper/responseHandler");
 const { omit } = require("lodash");
 class OptionController {
@@ -29,7 +32,7 @@ class OptionController {
 
 
   getFields = async (req, res) => {
-    const { type } = req.query;
+    const { type,businesstypeId } = req.query;
     if (!type) {
       res.json(
         responseHandler.returnError(httpStatus.OK, "type param is mandatory")
@@ -41,10 +44,7 @@ class OptionController {
         await new BusinessTypeService().businessTypeDao.findAll({
           raw: true,
         });
-      const modules =
-        await new ModuleService().moduleDao.findAll({
-          raw: true,
-        });
+   
       const businessCategory =
         await new BusinesscategoryService().businesscategoryDao.findAll({
           raw: true,
@@ -83,7 +83,6 @@ class OptionController {
               else if (field.requestKey === "branch_id") {
 
                 const pp = req.user.getBusinesses({include:new BranchService().branchDao.Model}).then((business) => {
-                  console.log({business},business?.map(({branches})=>branches?.[0]))
                   this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value:business?.map(({branches})=>branches?.[0]?.dataValues) })
   
                 });
@@ -91,8 +90,17 @@ class OptionController {
               }
             
             else if (field.requestKey === 'permissions') {
-              console.log({ tabIndex, groupIndex, fieldIndex })
-              this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: modules })
+
+             
+
+              const pp = adminController.utilgetModulesForBusinessType(businesstypeId).then((modules) => {
+                console.log({modules})
+                
+                this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: modules.map(({dataValues})=>dataValues) })
+
+              });
+              return await pp;
+
 
             }
             else {

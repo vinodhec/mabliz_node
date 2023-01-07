@@ -279,11 +279,16 @@ class AdminController {
 
   }
 
+  utilgetModulesForBusinessType = async(id)=>{
+    const businessType = (await this.getBusinessType(id))
+    const modules = await businessType[0].getModules();
+    return modules
+  }
+
   getModulesForBusinessType = async (req, res) => {
     const { params } = req;
     const { businesstype_id:id } = params;
-    const businessType = (await this.getBusinessType(id))
-    const modules = await businessType[0].getModules();
+   const modules = await this.utilgetModulesForBusinessType(id);
     return res.json(responseHandler.returnSuccess(httpStatus.OK, "success",modules))
   };
 

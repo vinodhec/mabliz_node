@@ -26,6 +26,15 @@ class ProfileController {
     this.branchService = new BranchService();
     this.authService = new AuthService();
     this.permissionService = new PermissionService();
+  
+  }
+
+  getBusinessTypes = async(req,res)=>{
+
+    const businessTypes = req.user.getBusinesses({attributes:['business_type_label','business_type_id']})
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", businessTypes));
+
   }
 
   getRoles = async (req, res) => {

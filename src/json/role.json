@@ -17,62 +17,8 @@
             "eligility": ["ADMIN", "PARTNER"]
           }
         ]
-      },
-      {
-        "title": "Business",
-        "eligility": ["PARTNER"],
-                    "requestKey": "business_id",
-
-        "fields": [
-          {
-            "type": "grid",
-            "subType": "chip",
-            "isMandatory": true,
-            "eligility": ["PARTNER"],
-            "requestKey": "business_id",
-            "fields": [
-              {
-                "id": 1,
-                "label": "Food"
-              },
-              {
-                "id": 2,
-                "label": "Grocery"
-              },
-              {
-                "id": 3,
-                "label": "Dry Fruits"
-              }
-            ]
-          }
-        ]
-      }, {
-        "title": "Branch",
-        "eligility": ["PARTNER"],
-        "fields": [
-          {
-            "type": "grid",
-            "subType": "chip",
-            "isMandatory": true,
-            "eligility": ["PARTNER"],
-            "requestKey": "branch_id",
-            "fields": [
-              {
-                "id": 1,
-                "label": "Food"
-              },
-              {
-                "id": 2,
-                "label": "Grocery"
-              },
-              {
-                "id": 3,
-                "label": "Dry Fruits"
-              }
-            ]
-          }
-        ]
       }
+     
     ]
   },
  

@@ -24,16 +24,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       branch_ids:{
-        type: DataTypes.JSON,
+        type: DataTypes.TEXT,
         get: function () {
-          console.log(this.getDataValue("branch_ids"));
-          return JSON.parse(this.getDataValue("branch_ids") || "{}");
+          console.log(typeof JSON.parse(this.getDataValue("branch_ids")));
+          return JSON.parse(this.getDataValue("branch_ids") || "[]");
         },
         set: function (value) {
-          // this.setDataValue('open_timing',value[0].time[0].start_time);
-          // this.setDataValue('open_timing',value[0].time[value[0].time.length-1].end_time);
-
-          this.setDataValue("branch_ids", JSON.stringify(value || {}));
+      
+console.log(value,typeof value)
+          this.setDataValue("branch_ids", JSON.stringify(value || []));
         },
 
       }

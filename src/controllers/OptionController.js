@@ -32,7 +32,7 @@ class OptionController {
 
 
   getFields = async (req, res) => {
-    const { type,businesstypeId } = req.query;
+    const { type, businesstypeId } = req.query;
     if (!type) {
       res.json(
         responseHandler.returnError(httpStatus.OK, "type param is mandatory")
@@ -44,7 +44,7 @@ class OptionController {
         await new BusinessTypeService().businessTypeDao.findAll({
           raw: true,
         });
-   
+
       const businessCategory =
         await new BusinesscategoryService().businesscategoryDao.findAll({
           raw: true,
@@ -79,22 +79,22 @@ class OptionController {
               });
               return await pp;
             }
-            
-              else if (field.requestKey === "branch_id") {
 
-                const pp = req.user.getBusinesses({include:new BranchService().branchDao.Model}).then((business) => {
-                  this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value:business?.map(({branches})=>branches?.[0]?.dataValues) })
-  
-                });
-                return await pp;
-              }
-            
+            else if (field.requestKey === "branch_id") {
+
+              const pp = req.user.getBusinesses({ include: new BranchService().branchDao.Model }).then((business) => {
+                this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: business?.map(({ branches }) => branches?.[0]?.dataValues) })
+
+              });
+              return await pp;
+            }
+
             else if (field.requestKey === 'permissions') {
 
               const pp = adminController.utilgetModulesForBusinessType(businesstypeId).then((modules) => {
-                console.log({modules})
-                
-                this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: modules.map(({dataValues})=>dataValues) })
+                console.log({ modules })
+
+                this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: modules.map(({ dataValues }) => dataValues) })
 
               });
               return await pp;
@@ -113,7 +113,31 @@ class OptionController {
       });
       console.log(promises.flat(1))
       await Promise.all(promises.flat(1));
+      if (type === 'role') {
 
+        const businesses = await req.user.getBusinesses({include:new BranchService().branchDao.Model});
+        businesses.forEach((business) => {
+          console.log(business)
+          jsonFile[0].details.push({ title: business.dataValues?.business_name,
+          
+            "eligility": ["PARTNER"],
+    
+            "fields": [
+              {
+                "type": "grid",
+                "subType": "chip",
+                "isMandatory": true,
+                "eligility": ["PARTNER"],
+                "requestKey": "branch_ids",
+                "fields":  business.dataValues?.branches
+              }
+            ]
+          })
+
+        })
+
+
+      }
       res.json(
         responseHandler.returnSuccess(httpStatus.OK, "Success", jsonFile)
       );

@@ -91,8 +91,6 @@ class OptionController {
             
             else if (field.requestKey === 'permissions') {
 
-             
-
               const pp = adminController.utilgetModulesForBusinessType(businesstypeId).then((modules) => {
                 console.log({modules})
                 

@@ -31,7 +31,7 @@ class ProfileController {
 
   getBusinessTypes = async (req, res) => {
 
-    const businessTypes = req.user.getBusinesses({ attributes: ['business_type_label', 'business_type_id'] })
+    const businessTypes = await req.user.getBusinesses({ attributes: ['business_type_label', 'business_type_id'] })
 
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", businessTypes));
 

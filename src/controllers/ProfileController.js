@@ -54,7 +54,7 @@ class ProfileController {
     }
     if (user) {
       const hash = await createNewOTP(phone_number);
-      res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", {phone_number:user.phone_number.slice(0, 2) + user.phone_number.slice(2).replace(/.(?=...)/g, '*'),hash}))
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", { phone_number: user.phone_number.slice(0, 2) + user.phone_number.slice(2).replace(/.(?=...)/g, '*'), hash }))
 
     }
     else {

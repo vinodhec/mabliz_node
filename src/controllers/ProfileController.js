@@ -38,7 +38,7 @@ class ProfileController {
 
   }
 
-  getUser = async (req, res) => {
+  findUser = async (req, res) => {
 
     const { id, phone_number, id_proof_type, id_proof_no } = req.body;
     let user;

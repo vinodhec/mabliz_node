@@ -24,16 +24,16 @@ module.exports = (sequelize, DataTypes) => {
       idProofType: DataTypes.STRING,
       idProofNumber: DataTypes.STRING,
       idProofImage: DataTypes.STRING,
-      salary:DataTypes.FLOAT,
-      salary_frequency:DataTypes.STRING,
+      salary: DataTypes.FLOAT,
+      salary_frequency: DataTypes.STRING,
       addressProofType: DataTypes.STRING,
       addressProofNumber: DataTypes.STRING,
       addressProofImage: DataTypes.STRING,
       photo: DataTypes.STRING,
       email: DataTypes.STRING,
       mpin: DataTypes.STRING,
-      pfNo:DataTypes.STRING,
-ESI:DataTypes.STRING,
+      pfNo: DataTypes.STRING,
+      ESI: DataTypes.STRING,
 
       user_status: {
         type: DataTypes.INTEGER,
@@ -45,9 +45,9 @@ ESI:DataTypes.STRING,
         type: DataTypes.JSON,
 
         set: function (val) {
-         
 
-          return  this.setDataValue("branch_ids", JSON.stringify(val.label.map((vv)=>vv.id) || []));
+
+          return this.setDataValue("branch_ids", JSON.stringify(val.label.map((vv) => vv.id) || []));
         },
 
       },
@@ -60,7 +60,7 @@ ESI:DataTypes.STRING,
           return this.setDataValue("reporting_user_id", val.id);
         },
       },
-      role_id:DataTypes.INTEGER,
+      role_id: DataTypes.INTEGER,
       role: {
         type: DataTypes.JSON,
 
@@ -80,7 +80,8 @@ ESI:DataTypes.STRING,
         type: DataTypes.STRING,
       },
       phone_number: {
-        type:DataTypes.STRING},
+        type: DataTypes.STRING
+      },
       isAdmin: {
         defaultValue: false,
         type: DataTypes.BOOLEAN

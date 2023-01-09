@@ -12,28 +12,6 @@
         ],
         "fields": [
           {
-          "label": "Title",
-          "type": "drop_down",
-          "input": "select",
-          "isMandatory": true,
-          "error": "Please select your Title",
-          "requestKey": "",
-          "eligility": [
-              "ADMIN"
-          ], "fields": [
-            {
-                "label": "Mr",
-                "id": 1
-            },
-            {
-                "label": "Mrs",
-                "id": 2
-            },{
-              "label": "Miss",
-              "id": 3
-          }]
-      },
-          {
             "label": "First Name",
             "type": "textbox",
             "input": "text",
@@ -86,27 +64,6 @@
   "eligility": [
       "ADMIN"
   ]
-},{
-  "label": "Nationality",
-  "type": "drop_down",
-  "input": "select",
-  "isMandatory": true,
-  "error": "Please select your Nationality",
-  "requestKey": "",
-  "eligility": [
-      "ADMIN"
-  ], "fields": [
-    {
-        "label": "Mr",
-        "id": 1
-    },
-    {
-        "label": "Mrs",
-        "id": 2
-    },{
-      "label": "Miss",
-      "id": 3
-  }]
 }
         ]
       },

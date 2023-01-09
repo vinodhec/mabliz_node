@@ -5,6 +5,7 @@ const BranchService = require("../service/BranchService");
 const PermissionService = require("../service/PermissionService");
 
 const { Op } = require("sequelize");
+const { createNewOTP } = require("../helper/otpHelper");
 
 const UserService = require("../service/UserService");
 const logger = require("../config/logger");
@@ -34,6 +35,34 @@ class ProfileController {
     const businessTypes = await req.user.getBusinesses({ attributes: ['business_type_label', 'business_type_id'] })
 
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", businessTypes));
+
+  }
+
+  findUser = async (req, res) => {
+
+    const { id, phone_number, id_proof_type, id_proof_no } = req.body;
+    let user;
+    if (id) {
+      user = await this.userService.userDao.findById(id);
+    }
+    else if (phone_number) {
+      user = await this.userService.userDao.findByPhoneNumber(phone_number);
+    }
+    else if (id_proof_type) {
+      user = await this.userService.userDao.findOneByWhere({ [id_proof_type]: id_proof_no });
+
+    }
+    if (user) {
+      const hash = await createNewOTP(phone_number);
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", { phone_number: user.phone_number.slice(0, 2) + user.phone_number.slice(2).replace(/.(?=...)/g, '*'), hash }))
+
+    }
+    else {
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "User not found"))
+
+    }
+
+
 
   }
 

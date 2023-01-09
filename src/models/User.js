@@ -40,14 +40,7 @@ ESI:DataTypes.STRING,
         defaultValue: userConstant.STATUS_INACTIVE,
       },
 
-      branch_ids:{
-        type:DataTypes.JSON,
-        get: function () {
-          const value = this.getDataValue("branch_ids")
-          // console.log({value})
-          return JSON.parse(!value || value === "" ? "[]" : value);
-        },
-      },
+
       branches: {
         type: DataTypes.JSON,
 

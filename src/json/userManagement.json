@@ -12,29 +12,30 @@
         ],
         "fields": [
           {
-          "label": "Title",
-          "type": "drop_down",
-          "input": "select",
-          "isMandatory": true,
-          "error": "Please select your Title",
-          "requestKey": "",
-          "eligility": [
-              "ADMIN"
-          ], "fields": [
-            {
-                "label": "Mr",
-                "id": 1
-            },
-            {
-                "label": "Mrs",
-                "id": 2
-            },{
-              "label": "Miss",
-              "id": 3
-          }]
-      },
+            "label": "Title *",
+            "type": "drop_down",
+            "input": "select",
+            "isMandatory": true,
+            "error": "Please select your Title",
+            "requestKey": "",
+            "eligility": [
+                "ADMIN"
+            ], "fields": [
+              {
+                  "label": "Mr",
+                  "id": 1
+              },
+              {
+                  "label": "Mrs",
+                  "id": 2
+              }, {
+                "label": "Miss",
+                "id": 3
+            }
+            ]
+        },
           {
-            "label": "First Name",
+            "label": "First Name *",
             "type": "textbox",
             "input": "text",
             "isMandatory": true,
@@ -60,7 +61,7 @@
             "ADMIN"
         ]
     }, {
-      "label": "Date of Birth",
+      "label": "Date of Birth *",
       "type": "date_picker",
       "isMandatory": true,
       "error": "Please enter your Date of Birth",
@@ -69,7 +70,7 @@
           "ADMIN"
       ]
   },{
-    "label": "Mobile No",
+    "label": "Mobile No *",
     "type": "textbox",
     "input": "number",
     "isMandatory": true,
@@ -86,8 +87,8 @@
   "eligility": [
       "ADMIN"
   ]
-},{
-  "label": "Nationality",
+},  {
+  "label": "Nationality *",
   "type": "drop_down",
   "input": "select",
   "isMandatory": true,
@@ -97,16 +98,14 @@
       "ADMIN"
   ], "fields": [
     {
-        "label": "Mr",
+        "label": "Indian",
         "id": 1
     },
     {
-        "label": "Mrs",
+        "label": "Nepal",
         "id": 2
-    },{
-      "label": "Miss",
-      "id": 3
-  }]
+    }
+  ]
 }
         ]
       },
@@ -118,13 +117,12 @@
         ],
         "fields": [
           {
-            "label": "ID Proof",
-            "type": "drop_down_image_picker",
+            "label": "ID Proof *",
+            "type": "drop_down",
             "input": "select",
             "requestKey": "idProofType",
             "isMandatory": true,
     "error": "Please select your ID Proof",
-            "imageKey": "idProofImage",
             "eligility": [
               "PARTNER"
             ],
@@ -145,28 +143,27 @@
             
           },
           { "label": "ID Proof Number",
-          "type": "textbox",
+          "type": "textbox_image_picker",
           "input": "text",
           "requestKey": "idProofNumber",
           "isMandatory": true,
           "error": "Please Enter ID Proof Number",
+          "imageKey": "idProofImage",
           "eligility": [
             "PARTNER"
           ]
         }]},
-
           { "title": "Address Proof",
         "eligility": [
           "PARTNER"
         ],
         "fields": [{
             "label": "Address Proof",
-            "type": "drop_down_image_picker",
+            "type": "drop_down",
             "input": "select",
             "requestKey": "addressProofType",
             "isMandatory": true,
             "error":"Please select your Address Proof ",
-            "imageKey": "addressProofImage",
             "eligility": [
               "PARTNER"
             ],
@@ -187,50 +184,52 @@
             
           },
           { "label": "Address Proof Number",
-          "type": "textbox",
+          "type": "textbox_image_picker",
           "input": "text",
           "requestKey": "addressProofNumber",
           "isMandatory": true,
           "error": "Please Enter Address Proof Number",
+          "imageKey": "addressProofImage",
           "eligility": [
             "PARTNER"
           ]
         }
         ]
       },
+
       { "title": "Police Clearance",
       "eligility": [
         "PARTNER"
       ],
       "fields": [{
-          "label": "Police Clearance",
-          "type": "drop_down_image_picker",
+          "label": "Police Clearance *",
+          "type": "drop_down",
           "input": "select",
           "requestKey": "policeClearance",
           "isMandatory": true,
           "error":"Please select your Police Clearance ",
-          "imageKey": "",
           "eligility": [
             "PARTNER"
           ],
           "fields": [
             {
-              "label": "None",
+              "label": "Yes",
               "id": 1
             },
             {
-              "label": "Police Clearance or Yes",
+              "label": "No",
               "id": 2
             }
           ]
           
         },
         { "label": "Police Clearance Number",
-        "type": "textbox",
+        "type": "textbox_image_picker",
         "input": "text",
         "requestKey": "",
         "isMandatory": true,
         "error": "Please Enter Police Clearance Number",
+        "imageKey": "",
         "eligility": [
           "PARTNER"
         ]
@@ -260,7 +259,181 @@
     ]
   }]}
     ]
-  },
+  },{
+     "title": "Previous Organisation Details",
+  "eligility": [
+    "PARTNER"
+  ],
+  "details": [
+    {
+      "title": "Previous Organization Details",
+      "eligility": [
+        "PARTNER"
+      ],
+      "fields": [
+        {
+        "label": "Organization Name",
+        "type": "textbox",
+        "input": "text",
+        "requestKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }, {
+        "label": "Location",
+        "type": "textbox",
+        "input": "text",
+        "isMandatory": true,
+        "error": "Please Enter Town / City, State, Country Name",
+        "requestKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }, {
+        "label": "Address Proof *",
+        "type": "drop_down",
+        "input": "select",
+        "isMandatory": true,
+        "error": "Please select your Address Proof",
+        "requestKey": "",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "None",
+            "id": 1
+          },
+          {
+            "label": "Joining Letter",
+            "id": 2
+          }, {
+            "label": "Appointment Letter",
+            "id": 2
+          }
+        ]
+      }, {
+        "label": "Joining Date",
+        "type": "date_picker_image_picker",
+        "isMandatory": true,
+        "error": "Please select your Joining Date",
+        "requestKey": "",
+        "imageKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      },{
+        "label": "Address Proof *",
+        "type": "drop_down",
+        "input": "select",
+        "isMandatory": true,
+        "error": "Please select your Address Proof",
+        "requestKey": "",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "None",
+            "id": 1
+          },
+          {
+            "label": "Reliving Letter",
+            "id": 2
+          }
+        ]
+      }, {
+        "label": "Reliving Date",
+        "type": "date_picker_image_picker",
+        "isMandatory": true,
+        "error": "Please select your Reliving Date",
+        "requestKey": "",
+        "imageKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }]
+    },{
+      "title": "Pay Slip Details (Last 3 Months)",
+      "eligility": [
+        "PARTNER"
+      ],
+      "fields": [
+        {
+        "label": "1st Month Pay Slip",
+        "type": "date_picker_image_picker",
+        "isMandatory": true,
+        "error": "Please Enter Pay Slip Date",
+        "requestKey": "",
+        "imageKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }, {
+        "label": "2nd Month Pay Slip",
+        "type": "date_picker_image_picker",
+        "isMandatory": true,
+        "error": "Please Enter Pay Slip Date",
+        "requestKey": "",
+        "imageKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }, {
+        "label": "3rd Month Pay Slip",
+        "type": "date_picker_image_picker",
+        "isMandatory": true,
+        "error": "Please Enter Pay Slip Date",
+        "requestKey": "",
+        "imageKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }
+    ]
+
+    },{
+      "title": "Bank Statment (Last 3 Months)",
+      "eligility": [
+        "PARTNER"
+      ],
+      "fields": [
+        {
+        "label": "1st Month Bank Statement",
+        "type": "date_picker_image_picker",
+        "isMandatory": true,
+        "error": "Please Enter Bank Statement Date",
+        "requestKey": "",
+        "imageKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }, {
+        "label": "2nd Month Bank Statement",
+        "type": "date_picker_image_picker",
+        "isMandatory": true,
+        "error": "Please Enter Bank Statement Date",
+        "requestKey": "",
+        "imageKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }, {
+        "label": "3rd Month Bank Statement",
+        "type": "date_picker_image_picker",
+        "isMandatory": true,
+        "error": "Please Enter Bank Statement Date",
+        "requestKey": "",
+        "imageKey": "",
+        "eligility": [
+          "PARTNER"
+        ]
+      }
+    ]
+
+    }
+  ]
+},
   {
     "title": "Salary & Other Details",
     "eligility": [
@@ -274,7 +447,7 @@
         ],
         "fields": [
           {
-            "label": "Salary",
+            "label": "Salary *",
             "type": "textbox",
             "input": "number",
             "isMandatory": true,
@@ -283,15 +456,19 @@
             "eligility": [
               "PARTNER"
             ]
+
+    
+  
           },
           {
-            "label": "Pay",
+            "label": "Pay *",
             "type": "drop_down",
             "input": "select",
             "requestKey": "salary_frequency",
             "isMandatory": true,
             "error": "Please select your Pay Basis",
             "eligility": [
+  
               "PARTNER"
             ],
             "fields": [
@@ -318,7 +495,7 @@
         ],
         "fields": [
           {
-            "label": "Joining Date",
+            "label": "Joining Date *",
             "type": "date_picker",
             "isMandatory": true,
             "error": "Please enter your Joining Date",
@@ -326,6 +503,7 @@
             "eligility": [
                 "ADMIN"
             ]
+
         }
         ]
       },{
@@ -342,6 +520,7 @@
             "eligility": [
                 "ADMIN"
             ]
+
         }
         ]
       },{
@@ -354,10 +533,16 @@
             "label": "ESI",
             "type": "textbox",
             "input": "text",
-            "requestKey": "esi",
+            "requestKey": "ESI",
             "eligility": [
                 "ADMIN"
             ]
+
+    
+        
+          
+    
+  
         }
         ]
       }
@@ -376,7 +561,7 @@
         "fields": [
           
               {
-                "label": "Select Role",
+                "label": "Select Role *",
                 "type": "drop_down",
                 "input": "select",
                 "isMandatory": true,
@@ -385,6 +570,8 @@
                 "eligility": [
                     "ADMIN"
                 ],
+
+  
                 "fields":[ {
                   "label": "Partner",
                   "id": 1
@@ -443,6 +630,5 @@
                   }
                   ]
               }
-
               ]}]}
 ]

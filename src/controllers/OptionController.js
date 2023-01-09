@@ -129,7 +129,7 @@ class OptionController {
                 "isMandatory": true,
                 "eligility": ["PARTNER"],
                 "requestKey": "branch_ids",
-                "fields":  business.dataValues?.branches
+                "fields":  business.dataValues?.branches.map(({dataValues:branch})=>({...branch, label:branch.branch_name}))
               }
             ]
           })

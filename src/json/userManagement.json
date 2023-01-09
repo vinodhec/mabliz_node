@@ -279,7 +279,7 @@
             "input": "number",
             "isMandatory": true,
             "error": "Please Enter your Salary",
-            "requestKey": "",
+            "requestKey": "salary",
             "eligility": [
               "PARTNER"
             ]
@@ -288,7 +288,7 @@
             "label": "Pay",
             "type": "drop_down",
             "input": "select",
-            "requestKey": "",
+            "requestKey": "salary_frequency",
             "isMandatory": true,
             "error": "Please select your Pay Basis",
             "eligility": [
@@ -322,7 +322,7 @@
             "type": "date_picker",
             "isMandatory": true,
             "error": "Please enter your Joining Date",
-            "requestKey": "",
+            "requestKey": "joining_date",
             "eligility": [
                 "ADMIN"
             ]
@@ -338,7 +338,7 @@
             "label": "PF",
             "type": "textbox",
             "input": "text",
-            "requestKey": "",
+            "requestKey": "pfNo",
             "eligility": [
                 "ADMIN"
             ]
@@ -354,7 +354,7 @@
             "label": "ESI",
             "type": "textbox",
             "input": "text",
-            "requestKey": "",
+            "requestKey": "esi",
             "eligility": [
                 "ADMIN"
             ]
@@ -381,7 +381,7 @@
                 "input": "select",
                 "isMandatory": true,
                 "error": "Please Select your Role",
-                "requestKey": "",
+                "requestKey": "role",
                 "eligility": [
                     "ADMIN"
                 ],
@@ -420,7 +420,7 @@
                   "input": "select",
                   "isMandatory": true,
                   "error": "Please Select Reporting and Approval",
-                  "requestKey": "",
+                  "requestKey": "reporting",
                   "eligility": [
                       "ADMIN"
                   ],

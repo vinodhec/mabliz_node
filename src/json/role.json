@@ -18,41 +18,10 @@
           }
         ]
       }
+     
     ]
   },
-  {
-    "title": "Business (If have) ",
-    "eligility": ["PARTNER"],
-    "details": [
-      {
-        "title": "Business",
-        "eligility": ["PARTNER"],
-        "fields": [
-          {
-            "type": "grid",
-            "subType": "chip",
-            "isMandatory": true,
-            "eligility": ["PARTNER"],
-            "requestKey": "business_type",
-            "fields": [
-              {
-                "id": 1,
-                "label": "Food"
-              },
-              {
-                "id": 2,
-                "label": "Grocery"
-              },
-              {
-                "id": 3,
-                "label": "Dry Fruits"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
+ 
   {
     "title": "Access",
     "eligility": ["ADMIN", "PARTNER"],

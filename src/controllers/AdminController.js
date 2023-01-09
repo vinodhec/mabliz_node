@@ -5,7 +5,8 @@ const BusinesstypeService = require("../service/BusinesstypeService");
 const UserService = require("../service/UserService");
 const PlanService = require("../service/PlanService");
 const AddonService = require("../service/AddonService");
-const TaxService = require("../service/TaxService");
+const ModuleService = require("../service/ModuleService");
+const BusinesstypemoduleService = require("../service/BusinesstypemoduleService");
 
 const parse = require("date-fns/parse");
 const differenceInCalendarDays = require("date-fns/differenceInCalendarDays");
@@ -17,8 +18,6 @@ const { basicCrudOperations } = require("../helper/utilHelper");
 const addDays = require("date-fns/addDays");
 
 const logger = require("../config/logger");
-const { tokenTypes } = require("../config/tokens");
-const { createNewOTP } = require("../helper/otpHelper");
 const responseHandler = require("../helper/responseHandler");
 const { omit } = require("lodash");
 class AdminController {
@@ -31,16 +30,18 @@ class AdminController {
     this.planvalidityService = new PlanvalidityService();
     this.planbranchService = new PlanbranchService();
     this.addonService = new AddonService();
+    this.moduleService = new ModuleService();
+    this.BusinesstypemoduleService = new BusinesstypemoduleService();
   }
 
   multipleCrudOperations = async (req, res) => {
     const { body, method } = req;
     const paths = Object.keys(body);
-    const updatedValues ={}
-    const promises = paths.map(async(value) => {
-     const result =  await basicCrudOperations({ method }, { method }, value);
-     updatedValues[value] = result;
-     return result;
+    const updatedValues = {}
+    const promises = paths.map(async (value) => {
+      const result = await basicCrudOperations({ method }, { method }, value);
+      updatedValues[value] = result;
+      return result;
     });
     await Promise.all(promises)
     res.json(updatedValues);
@@ -66,7 +67,6 @@ class AdminController {
     const expiryDate = addDays(start_date_formatted, planValidity.validity);
     let plan_charges_per_day = 0;
     let plan_tax_per_day = 0;
-    let total_plan_charges = 0;
     const discountDifference = differenceInCalendarDays(
       parse(planValidity.discount_expiry, "yyyy-MM-dd", new Date()),
       new Date()
@@ -81,25 +81,7 @@ class AdminController {
       plan_charges_per_day = price / planValidity.validity;
       plan_tax_per_day = (price * (plan.tax / 100)) / planValidity.validity;
     }
-    total_plan_charges =
-      plan_charges_per_day * planValidity.validity +
-      plan_tax_per_day * planValidity.validity;
 
-    const branchPlanId = await branch.addPlan(plan, {
-      through: {
-        start_date: start_date_formatted,
-        end_date: expiryDate,
-        tax: plan.tax,
-        price,
-        plan_validity_id,
-        validity: planValidity.validity,
-        screenshot,
-        transaction_id,
-        received_amount,
-        plan_tax_per_day,
-        plan_charges_per_day,
-      },
-    });
 
     const branchPlan = (
       await this.planbranchService.planbranchDao.findByWhere({
@@ -171,7 +153,7 @@ class AdminController {
 
       addons.forEach((addon) => {
         const { planbranchaddon } = addon;
-        const { total_addon_charges, tax } = planbranchaddon;
+        const { tax } = planbranchaddon;
 
         const totalValue = addon.price * tt.value * dateDiff;
         let total_balance_addon_charges = 0;
@@ -291,6 +273,54 @@ class AdminController {
   crudOperations = async (req, res) => {
     basicCrudOperations(req, res);
   };
+
+  getBusinessType = async (id) => {
+    return await this.businesstypeService.businessTypeDao.Model.findAll({where:{id}});
+
+  }
+
+  utilgetModulesForBusinessType = async(id)=>{
+    const businessType = (await this.getBusinessType(id))
+    const modules = await businessType[0].getModules();
+    return modules
+  }
+
+  getModulesForBusinessType = async (req, res) => {
+    const { params } = req;
+    const { businesstype_id:id } = params;
+   const modules = await this.utilgetModulesForBusinessType(id);
+    return res.json(responseHandler.returnSuccess(httpStatus.OK, "success",modules))
+  };
+
+  addModulesToBusinessType = async (req, res) => {
+    const { params, body } = req;
+    const { businesstype_id:id } = params;
+    const {modules} = body;
+    const businessType = (await this.getBusinessType(id))
+ 
+    const promises = modules.map(async({id})=>{
+      const moduleModel = await this.moduleService.moduleDao.Model.findAll({where:id})
+      await businessType[0].addModules(moduleModel)
+    });
+    await Promise.all(promises)
+    return res.json(responseHandler.returnSuccess(httpStatus.OK, "success",modules))
+  };
+
+
+
+  deleteModulesToBusinessType = async (req, res) => {
+    const { params, body } = req;
+    const { businesstype_id:id } = params;
+    const {modules} = body;
+
+    const promises = modules.map(async({id})=>{
+      const moduleModel = await this.BusinesstypemoduleService.businesstypemoduleDao.Model.findAll({where:{moduleId:id}})
+      await moduleModel[0].destroy();
+    });
+    await Promise.all(promises)
+    return res.json(responseHandler.returnSuccess(httpStatus.OK, "success",modules))
+  };
+
 
   deletePlans = async (req, res) => {
     const plan = (

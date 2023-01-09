@@ -26,27 +26,40 @@ class ProfileController {
     this.branchService = new BranchService();
     this.authService = new AuthService();
     this.permissionService = new PermissionService();
+
+  }
+
+  getBusinessTypes = async (req, res) => {
+
+    const businessTypes = await req.user.getBusinesses({ attributes: ['business_type_label', 'business_type_id'] })
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", businessTypes));
+
   }
 
   getRoles = async (req, res) => {
-    const { user } = req;
-
-    const roles = await user.getRoles({
+    const { user, query } = req;
+    const { business_type_id } = query;
+    let option = {
       include: this.permissionService.permissionDao.Model,
-    });
+    }
+    if (business_type_id) {
+      option['where'] = { business_type_id }
+    }
+    const roles = await user.getRoles(option);
 
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
   };
 
   addNewRoles = async (req, res) => {
     const { user, body } = req;
-    const {permissions} =body;
+    const { permissions } = body;
     const role = await user.createRole(body);
     console.log({ role });
 
-    const promise = await permissions.map(async({permission_suffix,need_approval})=>{
-      const permission = await this.permissionService.permissionDao.findByWhere({permission_suffix});
-      await role.addPermissions(permission,{ through: { need_approval } });
+    const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
+      const permission = await this.permissionService.permissionDao.findByWhere({ name: permission_suffix });
+      await role.addPermissions(permission, { through: { need_approval } });
     })
     await Promise.all(promise)
 
@@ -55,14 +68,14 @@ class ProfileController {
 
   updateRole = async (req, res) => {
     const { user, body } = req;
-    const {id, permissions} =body;
-    const role = await user.getRoles({where:{id}});
+    const { id, permissions } = body;
+    const role = await user.getRoles({ where: { id } });
     await role?.[0].update(body);
     console.log({ role });
 
-    const promise = await permissions.map(async({permission_suffix,need_approval})=>{
+    const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
       const permission = await this.permissionService.permissionDao.findById(permission_suffix);
-      await role?.[0].addPermissions(permission,{ through: { need_approval } });
+      await role?.[0].addPermissions(permission, { through: { need_approval } });
     })
     await Promise.all(promise)
 
@@ -71,8 +84,8 @@ class ProfileController {
 
   deleteRole = async (req, res) => {
     const { user, body } = req;
-    const {id} =body;
-    const role = await user.getRoles({where:{id}});
+    const { id } = body;
+    const role = await user.getRoles({ where: { id } });
     await role?.[0].destroy();
     // console.log({ role });
 

@@ -39,7 +39,7 @@ class OptionController {
       );
     }
     try {
-      const jsonFile = require(`../json/${type}.json`);
+      const jsonFile = require(`../json/${type}.json`).slice();
       const businessType =
         await new BusinessTypeService().businessTypeDao.findAll({
           raw: true,

@@ -5,7 +5,7 @@ const BranchService = require("../service/BranchService");
 const PermissionService = require("../service/PermissionService");
 
 const { Op } = require("sequelize");
-const { createNewOTP } = require("../helper/otpHelper");
+const { createNewOTP, verifyOTP } = require("../helper/otpHelper");
 
 const UserService = require("../service/UserService");
 const logger = require("../config/logger");
@@ -53,16 +53,41 @@ class ProfileController {
 
     }
     if (user) {
+      const phone_number = user.phone_number?.slice(0, 2) + user.phone_number?.slice(2).replace(/.(?=...)/g, '*')
       const hash = await createNewOTP(phone_number);
-      res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", { phone_number: user.phone_number.slice(0, 2) + user.phone_number.slice(2).replace(/.(?=...)/g, '*'), hash }))
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", { id: user.id,phone_number , hash }))
 
     }
     else {
       res.json(responseHandler.returnSuccess(httpStatus.OK, "User not found"))
 
     }
+  }
 
+  getUser = async (req, res) => {
 
+    const { hash, phone_number, otp, id } = req.body;
+
+    if (!verifyOTP(phone_number, hash, otp)) {
+
+      return res.json(responseHandler.returnError(
+        httpStatus.BAD_REQUEST,
+        "Invalid OTP"
+      ));
+    }
+
+    const user = await this.userService.userDao.findById(id);
+    if (user == null) {
+      return res.json(responseHandler.returnError(
+        httpStatus.OK,
+        "User not found"
+      ));
+    }
+    return res.json(responseHandler.returnSuccess(
+      httpStatus.OK,
+      "User found",
+      user
+    ));
 
   }
 

@@ -132,12 +132,11 @@ updateAdminActivation = async(req,res)=>{
       const user = await this.authService.loginWithOtp(
         phone_number , hash,otp
       );
-      const { message } = user.response;
-      const { data } = user.response;
-      const { status } = user.response;
+      const { message,data,status } = user.response;
+     
       const code = user.statusCode;
       let tokens = {};
-      if (user.response.status) {
+      if (status) {
         // if(!user.mode.includes(mode)){
         //   console.log({user});
         // }

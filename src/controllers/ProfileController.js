@@ -37,6 +37,27 @@ class ProfileController {
 
   }
 
+  getUser = async (req, res) => {
+
+    const { id, phone_number, id_proof_type, id_proof_no } = req.body;
+    let user;
+    if (id) {
+      user = await this.userService.userDao.findById(id);
+    }
+    else if (phone_number) {
+      user = await this.userService.userDao.findByPhoneNumber(phone_number);
+    }
+    else if (id_proof_type) {
+      user = await this.userService.userDao.findOneByWhere({ [id_proof_type]: id_proof_no });
+
+    }
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", user))
+
+
+
+  }
+
   getRoles = async (req, res) => {
     const { user, query } = req;
     const { business_type_id } = query;

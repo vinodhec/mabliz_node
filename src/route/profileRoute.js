@@ -17,6 +17,7 @@ router.get('/user/role',profileController.getRoles);
 router.post('/user/role',profileController.addNewRoles);
 router.put('/user/role',profileController.updateRole);
 router.delete('/user/role',profileController.deleteRole);
+router.post('/getUser',profileController.getUser);
 
 router.get('/businessTypes',profileController.getBusinessTypes)
 router.all('/user/:target', profileController.curdUserAssociated);

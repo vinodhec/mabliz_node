@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
           return this.setDataValue("business_type_id", val.id);
         },
       },
-      is_approval_authority:DataTypes.BOOLEAN,
+      is_approval_authority:DataTypes.STRING,
       business_type_id: {
         type: DataTypes.INTEGER,
       },

@@ -34,6 +34,28 @@ module.exports = (sequelize, DataTypes) => {
       mpin: DataTypes.STRING,
       pfNo: DataTypes.STRING,
       ESI: DataTypes.STRING,
+      p_organization_name :DataTypes.STRING,
+      p_organization_location :DataTypes.STRING,
+      p_organization_joining_proof :DataTypes.STRING,
+      p_organization_joining_date :DataTypes.DATE,
+      p_organization_reliving_proof :DataTypes.STRING,
+      p_organization_joining_date :DataTypes.DATE,
+      p_organization_payslip_1_date :DataTypes.DATE,
+      p_organization_payslip_2_date :DataTypes.DATE,
+      p_organization_payslip_3_date :DataTypes.DATE,
+
+      p_organization_payslip_1 :DataTypes.STRING,
+      p_organization_payslip_2 :DataTypes.STRING,
+      p_organization_payslip_3 :DataTypes.STRING,
+
+
+      p_organization_bankstatement_1_date :DataTypes.DATE,
+      p_organization_bankstatement_2_date :DataTypes.DATE,
+      p_organization_bankstatement_3_date :DataTypes.DATE,
+
+      p_organization_bankstatement_1 :DataTypes.STRING,
+      p_organization_bankstatement_2 :DataTypes.STRING,
+      p_organization_bankstatement_3 :DataTypes.STRING,
 
       user_status: {
         type: DataTypes.INTEGER,

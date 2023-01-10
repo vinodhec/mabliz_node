@@ -5,7 +5,7 @@
     "details": [
       {
         "title": "Role",
-        "eligility": ["PARTNER", "PARTNER"],
+        "eligility": ["ADMIN", "PARTNER"],
         "fields": [
           {
             "label": "Role Name",
@@ -15,6 +15,30 @@
             "error":"Please enter a valid role name",
             "requestKey": "name",
             "eligility": ["ADMIN", "PARTNER"]
+          }
+        ]
+      },{
+        "title": "Hierarchical Level of Role",
+        "eligility": ["ADMIN", "PARTNER"],
+        "fields": [
+          {
+            "label": "Hierarchical Leve",
+            "type": "drop_down",
+            "input": "select",
+            "isMandatory": true,
+            "error":"Please select Hierarchical Level",
+      
+            "requestKey": "is_approval_authority",
+            "eligility": ["ADMIN", "PARTNER"], 
+            "fields": [
+              {
+                "label": "Yes",
+                "id": 1
+              },
+              {
+                "label": "No",
+                "id": 2
+              }]
           }
         ]
       }

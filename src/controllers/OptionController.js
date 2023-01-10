@@ -135,7 +135,6 @@ class OptionController {
 
 
       }
-      console.log(jsonFile[0].details)
 
       res.json(
         responseHandler.returnSuccess(httpStatus.OK, "Success", jsonFile)

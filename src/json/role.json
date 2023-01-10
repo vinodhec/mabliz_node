@@ -27,7 +27,8 @@
             "input": "select",
             "isMandatory": true,
             "error":"Please select Hierarchical Level",
-            "requestKey": "",
+      
+            "requestKey": "is_approval_authority",
             "eligility": ["ADMIN", "PARTNER"], 
             "fields": [
               {

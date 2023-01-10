@@ -40,6 +40,7 @@ class OptionController {
     }
     try {
       const jsonFile = require(`../json/${type}.json`).slice();
+      console.log({jsonFile})
       const businessType =
         await new BusinessTypeService().businessTypeDao.findAll({
           raw: true,
@@ -56,7 +57,6 @@ class OptionController {
         return tab.details.map(async (group, groupIndex) => {
           const promises = group.fields.map(async (field, fieldIndex) => {
             if (field.requestKey === "business_type") {
-              console.log(tabIndex, groupIndex, fieldIndex);
               this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: businessType })
             }
             else if (field.requestKey === "business_category") {
@@ -92,7 +92,6 @@ class OptionController {
             else if (field.requestKey === 'permissions') {
 
               const pp = adminController.utilgetModulesForBusinessType(businesstypeId).then((modules) => {
-                console.log({ modules })
 
                 this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: modules.map(({ dataValues }) => dataValues) })
 
@@ -111,14 +110,12 @@ class OptionController {
           return await Promise.all(promises);
         });
       });
-      console.log(promises.flat(1))
       await Promise.all(promises.flat(1));
       if (type === 'role') {
 
         const businesses = await req.user.getBusinesses({include:new BranchService().branchDao.Model});
         businesses.forEach((business) => {
-          console.log(business)
-          jsonFile[0].details.push({ title: business.dataValues?.business_name,
+          jsonFile[0].details[2] =({ title: business.dataValues?.business_name,
           
             "eligility": ["PARTNER"],
     
@@ -138,6 +135,7 @@ class OptionController {
 
 
       }
+
       res.json(
         responseHandler.returnSuccess(httpStatus.OK, "Success", jsonFile)
       );

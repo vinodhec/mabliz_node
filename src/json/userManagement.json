@@ -259,7 +259,181 @@
     ]
   }]}
     ]
-  },
+  }, {
+    "title": "Previous Organisation Details",
+ "eligility": [
+   "PARTNER"
+ ],
+ "details": [
+   {
+     "title": "Previous Organization Details",
+     "eligility": [
+       "PARTNER"
+     ],
+     "fields": [
+       {
+       "label": "Organization Name",
+       "type": "textbox",
+       "input": "text",
+       "requestKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }, {
+       "label": "Location",
+       "type": "textbox",
+       "input": "text",
+       "isMandatory": true,
+       "error": "Please Enter Town / City, State, Country Name",
+       "requestKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }, {
+       "label": "Address Proof *",
+       "type": "drop_down",
+       "input": "select",
+       "isMandatory": true,
+       "error": "Please select your Address Proof",
+       "requestKey": "",
+       "eligility": [
+         "PARTNER"
+       ],
+       "fields": [
+         {
+           "label": "None",
+           "id": 1
+         },
+         {
+           "label": "Joining Letter",
+           "id": 2
+         }, {
+           "label": "Appointment Letter",
+           "id": 2
+         }
+       ]
+     }, {
+       "label": "Joining Date",
+       "type": "date_picker_image_picker",
+       "isMandatory": true,
+       "error": "Please select your Joining Date",
+       "requestKey": "",
+       "imageKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     },{
+       "label": "Address Proof *",
+       "type": "drop_down",
+       "input": "select",
+       "isMandatory": true,
+       "error": "Please select your Address Proof",
+       "requestKey": "",
+       "eligility": [
+         "PARTNER"
+       ],
+       "fields": [
+         {
+           "label": "None",
+           "id": 1
+         },
+         {
+           "label": "Reliving Letter",
+           "id": 2
+         }
+       ]
+     }, {
+       "label": "Reliving Date",
+       "type": "date_picker_image_picker",
+       "isMandatory": true,
+       "error": "Please select your Reliving Date",
+       "requestKey": "",
+       "imageKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }]
+   },{
+     "title": "Pay Slip Details (Last 3 Months)",
+     "eligility": [
+       "PARTNER"
+     ],
+     "fields": [
+       {
+       "label": "1st Month Pay Slip",
+       "type": "date_picker_image_picker",
+       "isMandatory": true,
+       "error": "Please Enter Pay Slip Date",
+       "requestKey": "",
+       "imageKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }, {
+       "label": "2nd Month Pay Slip",
+       "type": "date_picker_image_picker",
+       "isMandatory": true,
+       "error": "Please Enter Pay Slip Date",
+       "requestKey": "",
+       "imageKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }, {
+       "label": "3rd Month Pay Slip",
+       "type": "date_picker_image_picker",
+       "isMandatory": true,
+       "error": "Please Enter Pay Slip Date",
+       "requestKey": "",
+       "imageKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }
+   ]
+
+   },{
+     "title": "Bank Statment (Last 3 Months)",
+     "eligility": [
+       "PARTNER"
+     ],
+     "fields": [
+       {
+       "label": "1st Month Bank Statement",
+       "type": "date_picker_image_picker",
+       "isMandatory": true,
+       "error": "Please Enter Bank Statement Date",
+       "requestKey": "",
+       "imageKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }, {
+       "label": "2nd Month Bank Statement",
+       "type": "date_picker_image_picker",
+       "isMandatory": true,
+       "error": "Please Enter Bank Statement Date",
+       "requestKey": "",
+       "imageKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }, {
+       "label": "3rd Month Bank Statement",
+       "type": "date_picker_image_picker",
+       "isMandatory": true,
+       "error": "Please Enter Bank Statement Date",
+       "requestKey": "",
+       "imageKey": "",
+       "eligility": [
+         "PARTNER"
+       ]
+     }
+   ]
+
+   }
+ ]
+},
   {
     "title": "Salary & Other Details",
     "eligility": [

@@ -56,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
       p_organization_bankstatement_1 :DataTypes.STRING,
       p_organization_bankstatement_2 :DataTypes.STRING,
       p_organization_bankstatement_3 :DataTypes.STRING,
+      
 
       user_status: {
         type: DataTypes.INTEGER,
@@ -82,12 +83,13 @@ module.exports = (sequelize, DataTypes) => {
           return this.setDataValue("reporting_user_id", val.id);
         },
       },
+      is_owner:DataTypes.BOOLEAN,
       role_id: DataTypes.INTEGER,
       role: {
         type: DataTypes.JSON,
 
         set: function (val) {
-          this.setDataValue("role_name", val.name);
+          this.setDataValue("role_name", val.label);
 
           return this.setDataValue("role_id", val.id);
         },

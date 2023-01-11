@@ -19,7 +19,7 @@ class UserService {
      * @returns {Object}
      */
     createUser = async (tempUserBody) => {
-        const userBody = omit(tempUserBody, ['isAdmin','status']);
+        const userBody = omit(tempUserBody, ['isAdmin','status','is_owner','role']);
 
         try {
             let message = 'Business registration successful,pending for activation. We will get back on 48 hours';
@@ -35,7 +35,8 @@ class UserService {
                 userBody.mpin = bcrypt.hashSync(userBody.mpin, 8);
             }
             userBody.uuid = uuid;
-
+            userBody.is_owner = true;
+            userBody.role={id:0,label:'OWNER'}
             let userData = await this.userDao.create({...userBody,status: userConstant.STATUS_ACTIVE});
            
 

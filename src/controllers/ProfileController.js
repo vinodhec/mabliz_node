@@ -3,6 +3,8 @@ const AuthService = require("../service/AuthService");
 const TokenService = require("../service/TokenService");
 const BranchService = require("../service/BranchService");
 const PermissionService = require("../service/PermissionService");
+const ModuleService = require("../service/ModuleService");
+const RolepermissionService = require("../service/RolepermissionService");
 
 const { Op } = require("sequelize");
 const { createNewOTP, verifyOTP } = require("../helper/otpHelper");
@@ -27,6 +29,8 @@ class ProfileController {
     this.branchService = new BranchService();
     this.authService = new AuthService();
     this.permissionService = new PermissionService();
+    this.moduleService = new ModuleService();
+    this.rolePermissionService = new RolepermissionService();
 
   }
 
@@ -55,7 +59,7 @@ class ProfileController {
     if (user) {
       const phone_number = user.phone_number?.slice(0, 2) + user.phone_number?.slice(2).replace(/.(?=...)/g, '*')
       const hash = await createNewOTP(phone_number);
-      res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", { id: user.id,phone_number , hash }))
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", { id: user.id, phone_number, hash }))
 
     }
     else {
@@ -93,17 +97,45 @@ class ProfileController {
 
   getRoles = async (req, res) => {
     const { user, query } = req;
-    const { business_type_id } = query;
+    const { business_type_id, is_approval_authority } = query;
     let option = {
       include: this.permissionService.permissionDao.Model,
+
+
+      // attributes:['id','name','is_approval_authority','business_type_id','business_type_label','userId']
     }
     if (business_type_id) {
       option['where'] = { business_type_id }
+    }
+    if (is_approval_authority) {
+      option['where'] = { is_approval_authority }
+
     }
     const roles = await user.getRoles(option);
 
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
   };
+
+  getModulesForRole = async (req, res) => {
+    const { user, query } = req;
+    const { roleId } = query;
+
+    const rolePermission = await this.rolePermissionService.rolepermissionDao.Model.findAll({
+      attributes:['module'],
+      raw:true,
+      where: { roleId }
+    })
+
+    console.log({rolePermission})
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", rolePermission.map(({module})=>module)))
+
+  }
+
+  getUsersForRole = async(req,res)=>{
+    const { user, query } = req;
+    const { roleId } = query;
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", query))
+  }
 
   addNewRoles = async (req, res) => {
     const { user, body } = req;
@@ -113,7 +145,7 @@ class ProfileController {
 
     const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
       const permission = await this.permissionService.permissionDao.findByWhere({ name: permission_suffix });
-      await role.addPermissions(permission, { through: { need_approval } });
+      await role.addPermissions(permission, { through: { need_approval,module:permission_suffix.split("_")[0] } });
     })
     await Promise.all(promise)
 

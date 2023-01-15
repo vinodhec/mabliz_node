@@ -97,7 +97,8 @@ class ProfileController {
 
   addUser = async (req, res) => {
 
-    const { user, query, body } = req;
+    try {
+      const { user, query, body } = req;
 
     const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
     let data = null;
@@ -109,7 +110,12 @@ class ProfileController {
     }
     const emp = await data.createEmployment({ ...body, joined_by: user.dataValues.id });
 
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", data))
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", data)) 
+    } catch (error) {
+      
+      res.json(responseHandler.returnError(httpStatus.BAD_REQUEST,'Error',error))
+    }
+   
   }
 
   getRolesForUser = async (user, business_type_id, is_approval_authority) => {

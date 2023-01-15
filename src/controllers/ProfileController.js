@@ -101,15 +101,15 @@ class ProfileController {
 
     const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
     let data = null;
-    if(userbyPhone){
-     data = await userbyPhone.update(body);
+    if (userbyPhone) {
+      data = await userbyPhone.update(body);
     }
-    else{
-     data = await user.createUser(body);
+    else {
+      data = await user.createUser(body);
     }
-    const emp = await data.createEmployment({...body,joined_by:user.dataValues.id});
+    const emp = await data.createEmployment({ ...body, joined_by: user.dataValues.id });
 
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", emp))
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", data))
   }
 
   getRolesForUser = async (user, business_type_id, is_approval_authority) => {

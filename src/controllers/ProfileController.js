@@ -95,9 +95,25 @@ class ProfileController {
 
   }
 
-  getRoles = async (req, res) => {
-    const { user, query } = req;
-    const { business_type_id, is_approval_authority } = query;
+  addUser = async (req, res) => {
+
+    const { user, query, body } = req;
+
+    const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
+    let data = null;
+    if(userbyPhone){
+     data = await userbyPhone.update(body);
+    }
+    else{
+     data = await user.createUser(body);
+    }
+    const emp = await data.createEmployment({...body,joined_by:user.dataValues.id});
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", emp))
+  }
+
+  getRolesForUser = async (user, business_type_id, is_approval_authority) => {
+
     let option = {
       include: this.permissionService.permissionDao.Model,
 
@@ -112,7 +128,12 @@ class ProfileController {
 
     }
     const roles = await user.getRoles(option);
-
+    return roles;
+  }
+  getRoles = async (req, res) => {
+    const { user, query } = req;
+    const { business_type_id, is_approval_authority } = query;
+    const roles = await this.getRolesForUser(user, business_type_id, is_approval_authority)
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
   };
 
@@ -121,17 +142,17 @@ class ProfileController {
     const { roleId } = query;
 
     const rolePermission = await this.rolePermissionService.rolepermissionDao.Model.findAll({
-      attributes:['module'],
-      raw:true,
+      attributes: ['module'],
+      raw: true,
       where: { roleId }
     })
 
-    console.log({rolePermission})
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", rolePermission.map(({module})=>module)))
+    console.log({ rolePermission })
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", rolePermission.map(({ module }) => module)))
 
   }
 
-  getUsersForRole = async(req,res)=>{
+  getUsersForRole = async (req, res) => {
     const { user, query } = req;
     const { roleId } = query;
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", query))
@@ -145,7 +166,7 @@ class ProfileController {
 
     const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
       const permission = await this.permissionService.permissionDao.findByWhere({ name: permission_suffix });
-      await role.addPermissions(permission, { through: { need_approval,module:permission_suffix.split("_")[0] } });
+      await role.addPermissions(permission, { through: { need_approval, module: permission_suffix.split("_")[0] } });
     })
     await Promise.all(promise)
 

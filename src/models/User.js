@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
   User.init(
     {
       uuid: DataTypes.UUID,
+      policeClearance:DataTypes.STRING,
+      policeClearanceNumber:DataTypes.STRING,
+      policeClearanceExpiryDate: DataTypes.DATEONLY,
       name: DataTypes.STRING,
       lastName: DataTypes.STRING,
       middleName: DataTypes.STRING,
@@ -30,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
       addressProofNumber: DataTypes.STRING,
       addressProofImage: DataTypes.STRING,
       photo: DataTypes.STRING,
-      email: DataTypes.STRING,
+      email: {type:DataTypes.STRING,
+        unique:true},
       mpin: DataTypes.STRING,
       pfNo: DataTypes.STRING,
       ESI: DataTypes.STRING,
@@ -39,19 +43,19 @@ module.exports = (sequelize, DataTypes) => {
       p_organization_joining_proof :DataTypes.STRING,
       p_organization_joining_date :DataTypes.DATE,
       p_organization_reliving_proof :DataTypes.STRING,
-      p_organization_joining_date :DataTypes.DATE,
-      p_organization_payslip_1_date :DataTypes.DATE,
-      p_organization_payslip_2_date :DataTypes.DATE,
-      p_organization_payslip_3_date :DataTypes.DATE,
+      p_organization_reliving_date :DataTypes.DATE,
+      p_organization_payslip_1_date :DataTypes.DATEONLY,
+      p_organization_payslip_2_date :DataTypes.DATEONLY,
+      p_organization_payslip_3_date :DataTypes.DATEONLY,
 
       p_organization_payslip_1 :DataTypes.STRING,
       p_organization_payslip_2 :DataTypes.STRING,
       p_organization_payslip_3 :DataTypes.STRING,
 
 
-      p_organization_bankstatement_1_date :DataTypes.DATE,
-      p_organization_bankstatement_2_date :DataTypes.DATE,
-      p_organization_bankstatement_3_date :DataTypes.DATE,
+      p_organization_bankstatement_1_date :DataTypes.DATEONLY,
+      p_organization_bankstatement_2_date :DataTypes.DATEONLY,
+      p_organization_bankstatement_3_date :DataTypes.DATEONLY,
 
       p_organization_bankstatement_1 :DataTypes.STRING,
       p_organization_bankstatement_2 :DataTypes.STRING,
@@ -78,11 +82,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSON,
 
         set: function (val) {
-          this.setDataValue("reporting_user_name", val.name);
+          this.setDataValue("reporting_user_name", val.label);
 
           return this.setDataValue("reporting_user_id", val.id);
         },
       },
+      nationality:DataTypes.STRING,
       is_owner:DataTypes.BOOLEAN,
       role_id: DataTypes.INTEGER,
       role: {
@@ -104,7 +109,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       phone_number: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        unique:true
       },
       isAdmin: {
         defaultValue: false,

@@ -7,9 +7,11 @@ const BusinessactivityService = require("../service/BusinessactivitiyService");
 const BusinessService = require("../service/BusinessService");
 const BranchService = require("../service/BranchService");
 const AdminController = require('./AdminController');
+const ProfileController = require('./ProfileController');
 
 
 const adminController = new AdminController();
+const profileController = new ProfileController();
 const responseHandler = require("../helper/responseHandler");
 const { omit } = require("lodash");
 class OptionController {
@@ -99,6 +101,16 @@ class OptionController {
               return await pp;
 
 
+            }
+            else if(field.requestKey === 'reporting'){
+
+
+              const pp = profileController.getRolesForUser(req.user, businesstypeId, 'yes').then((modules) => {
+
+                this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: [{label:'OWNER',id:0},...modules.map(({ dataValues }) => ({label:dataValues.name,id:dataValues.id }))]})
+
+              });
+              return await pp;
             }
             else {
               return await this.someFn

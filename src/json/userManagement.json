@@ -17,7 +17,7 @@
             "input": "select",
             "isMandatory": true,
             "error": "Please select your Title",
-            "requestKey": "",
+            "requestKey": "title",
             "eligility": [
                 "ADMIN"
             ], "fields": [
@@ -93,7 +93,7 @@
   "input": "select",
   "isMandatory": true,
   "error": "Please select your Nationality",
-  "requestKey": "",
+  "requestKey": "nationality",
   "eligility": [
       "ADMIN"
   ], "fields": [
@@ -127,18 +127,7 @@
               "PARTNER"
             ],
             "fields": [
-              {
-                "label": "None",
-                "id": 1
-              },
-              {
-                "label": "Pan Card",
-                "id": 2
-              },
-              {
-                "label": "Ration ID",
-                "id": 3
-              }
+              "PAN Card", "Ration ID"
             ]
             
           },
@@ -168,18 +157,8 @@
               "PARTNER"
             ],
             "fields": [
-              {
-                "label": "None",
-                "id": 1
-              },
-              {
-                "label": "Aadhar Card",
-                "id": 2
-              },
-              {
-                "label": "Voter ID",
-                "id": 3
-              }
+              "Aadhar Card","Voter ID"
+             
             ]
             
           },
@@ -212,21 +191,14 @@
             "PARTNER"
           ],
           "fields": [
-            {
-              "label": "Yes",
-              "id": 1
-            },
-            {
-              "label": "No",
-              "id": 2
-            }
+           "Yes","No"
           ]
           
         },
         { "label": "Police Clearance Number",
         "type": "textbox_image_picker",
         "input": "text",
-        "requestKey": "",
+        "requestKey": "policeClearanceNumber",
         "isMandatory": true,
         "error": "Please Enter Police Clearance Number",
         "imageKey": "",
@@ -236,7 +208,7 @@
       },
        { "label": "Police Clearance Expiry Date",
        "type": "date_picker",
-      "requestKey": "",
+      "requestKey": "policeClearanceExpiryDate",
       "isMandatory": true,
       "error": "Please Enter Police Clearance Expiry Date",
       "eligility": [
@@ -275,7 +247,7 @@
        "label": "Organization Name",
        "type": "textbox",
        "input": "text",
-       "requestKey": "",
+       "requestKey": "p_organization_name",
        "eligility": [
          "PARTNER"
        ]
@@ -285,69 +257,54 @@
        "input": "text",
        "isMandatory": true,
        "error": "Please Enter Town / City, State, Country Name",
-       "requestKey": "",
+       "requestKey": "p_organization_location",
        "eligility": [
          "PARTNER"
        ]
      }, {
-       "label": "Address Proof *",
+       "label": "Employment Joining Proof *",
        "type": "drop_down",
        "input": "select",
        "isMandatory": true,
-       "error": "Please select your Address Proof",
-       "requestKey": "",
+       "error": "Please select your Employment Joining Proof",
+       "requestKey": "p_organization_joining_proof",
        "eligility": [
          "PARTNER"
        ],
        "fields": [
-         {
-           "label": "None",
-           "id": 1
-         },
-         {
-           "label": "Joining Letter",
-           "id": 2
-         }, {
-           "label": "Appointment Letter",
-           "id": 2
-         }
+         "Joining Letter","Appointment Letter"
+        
        ]
      }, {
        "label": "Joining Date",
        "type": "date_picker_image_picker",
        "isMandatory": true,
        "error": "Please select your Joining Date",
-       "requestKey": "",
+       "requestKey": "p_organization_joining_date",
        "imageKey": "",
        "eligility": [
          "PARTNER"
        ]
      },{
-       "label": "Address Proof *",
+       "label": "Employment Relieving Proof *",
        "type": "drop_down",
        "input": "select",
        "isMandatory": true,
-       "error": "Please select your Address Proof",
-       "requestKey": "",
+       "error": "Please select your Employment Relieving Proof",
+       "requestKey": "p_organization_reliving_proof",
        "eligility": [
          "PARTNER"
        ],
        "fields": [
-         {
-           "label": "None",
-           "id": 1
-         },
-         {
-           "label": "Reliving Letter",
-           "id": 2
-         }
+         "Reliving Letter","None"
+        
        ]
      }, {
        "label": "Reliving Date",
        "type": "date_picker_image_picker",
        "isMandatory": true,
        "error": "Please select your Reliving Date",
-       "requestKey": "",
+       "requestKey": "p_organization_reliving_date",
        "imageKey": "",
        "eligility": [
          "PARTNER"
@@ -364,7 +321,7 @@
        "type": "date_picker_image_picker",
        "isMandatory": true,
        "error": "Please Enter Pay Slip Date",
-       "requestKey": "",
+       "requestKey": "p_organization_payslip_1",
        "imageKey": "",
        "eligility": [
          "PARTNER"
@@ -374,7 +331,7 @@
        "type": "date_picker_image_picker",
        "isMandatory": true,
        "error": "Please Enter Pay Slip Date",
-       "requestKey": "",
+       "requestKey": "p_organization_payslip_2",
        "imageKey": "",
        "eligility": [
          "PARTNER"
@@ -384,7 +341,7 @@
        "type": "date_picker_image_picker",
        "isMandatory": true,
        "error": "Please Enter Pay Slip Date",
-       "requestKey": "",
+       "requestKey": "p_organization_payslip_3",
        "imageKey": "",
        "eligility": [
          "PARTNER"
@@ -403,7 +360,7 @@
        "type": "date_picker_image_picker",
        "isMandatory": true,
        "error": "Please Enter Bank Statement Date",
-       "requestKey": "",
+       "requestKey": "p_organization_bankstatement_1_date",
        "imageKey": "",
        "eligility": [
          "PARTNER"
@@ -413,7 +370,7 @@
        "type": "date_picker_image_picker",
        "isMandatory": true,
        "error": "Please Enter Bank Statement Date",
-       "requestKey": "",
+       "requestKey": "p_organization_bankstatement_2_date",
        "imageKey": "",
        "eligility": [
          "PARTNER"
@@ -423,7 +380,7 @@
        "type": "date_picker_image_picker",
        "isMandatory": true,
        "error": "Please Enter Bank Statement Date",
-       "requestKey": "",
+       "requestKey": "p_organization_bankstatement_3_date",
        "imageKey": "",
        "eligility": [
          "PARTNER"
@@ -472,18 +429,8 @@
               "PARTNER"
             ],
             "fields": [
-              {
-                "label": "Daily",
-                "id": 1
-              },
-              {
-                "label": "Weekly",
-                "id": 2
-              },
-              {
-                "label": "Monthly",
-                "id": 3
-              }
+              "Daily","Weekly","Monthly"
+            
             ]
           }
         ]
@@ -553,34 +500,10 @@
         "eligility": [
           "PARTNER"
         ],
+        "requestKey": "role",
         "fields": [
           
-              {
-                "label": "Select Role *",
-                "type": "drop_down",
-                "input": "select",
-                "isMandatory": true,
-                "error": "Please Select your Role",
-                "requestKey": "role",
-                "eligility": [
-                    "ADMIN"
-                ],
-
-  
-                "fields":[ {
-                  "label": "Partner",
-                  "id": 1
-                },
-                {
-                  "label": "GM",
-                  "id": 2
-                },
-                {
-                  "label": "Manager",
-                  "id": 3
-                }
-                ]
-            }
+            
         ]}
         ]},
         

@@ -20,6 +20,8 @@ router.delete('/user/role',profileController.deleteRole);
 
 router.get('/user/get-modules-for-role',profileController.getModulesForRole);
 
+router.post('/user',profileController.addUser);
+
 router.post('/findUser',profileController.findUser);
 router.post('/getUser',profileController.getUser);
 

@@ -92,9 +92,12 @@ const PlanValidity = models.planvalidity;
 
 const Planbranch = models.planbranch;
 const Addon = models.addon;
-
+const Rolemoduleuser = models.rolemoduleuser;
 const Planbranchaddon = models.planbranchaddon;
+const Employment = models.employment;
 
+User.hasMany(Employment);
+Employment.belongsTo(User);
 User.hasMany(Business,{ onDelete: 'cascade', hooks:true });
 Business.belongsTo(User);
 
@@ -132,8 +135,10 @@ User.belongsTo(User)
 Role.belongsToMany(Permission, { through: Rolepermission});
 Permission.belongsToMany(Role, { through: Rolepermission});
 BusinessTypes.belongsToMany(Module,{through:Businesstypemodule});
-
 // db.sequelize.sync({force:true});
+Role.belongsToMany(Module,{through:Rolemoduleuser})
+Module.belongsToMany(Role,{through:Rolemoduleuser})
+
 // db.sequelize.sync({alter:true});
 
 db.sequelize.sync();

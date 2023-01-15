@@ -79,5 +79,24 @@
 	  ""
 	],
 	"description": ""
-  }
+  },
+  "expressfun": {
+  "prefix": "expressfun",
+  "body": [
+    " = async (req, res) => {",
+    "",
+    "",
+    "    try {",
+    "",
+    "      res.json(responseHandler.returnSuccess(httpStatus.OK, \"Success\", {}))",
+    "",
+    "    } catch (error) {",
+    "      res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Error', error))",
+    "",
+    "    }",
+    "",
+    "  }"
+  ],
+  "description": ""
+}
 }

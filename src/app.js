@@ -95,7 +95,7 @@ const Addon = models.addon;
 const Rolemoduleuser = models.rolemoduleuser;
 const Planbranchaddon = models.planbranchaddon;
 const Employment = models.employment;
-
+const Attendance = models.attendance;
 User.hasMany(Employment);
 Employment.belongsTo(User);
 User.hasMany(Business,{ onDelete: 'cascade', hooks:true });
@@ -130,7 +130,7 @@ Role.belongsTo(User);
 
 User.hasMany(User);
 User.belongsTo(User)
-
+User.hasMany(Attendance)
 // User.hasOne(Role);
 Role.belongsToMany(Permission, { through: Rolepermission});
 Permission.belongsToMany(Role, { through: Rolepermission});

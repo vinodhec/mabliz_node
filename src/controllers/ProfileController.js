@@ -245,13 +245,18 @@ class ProfileController {
 
       const { id, action } = body;
       const approval = await this.approvalService.approvalDao.Model.findByPk(id);
-      if (user.id !== approval?.approver_id && false) {
+      if (user.id !== approval?.approver_id) {
         console.log(user.id,approval.approver_id)
         res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'Not authorized to action this request'))
         return;
       }
-      if (action === approvalStatus.STATUS_APPROVED) {
-        const { models } = approval.get();
+      const { models,status } = approval.get();
+      if(status !== approvalStatus.STATUS_PENDING){
+        res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Status is not pending'))
+        return; 
+      }
+
+      if (action === approvalStatus.STATUS_APPROVED ) {
         console.log(typeof models)
         let ids=[]
 
@@ -279,6 +284,7 @@ class ProfileController {
    
 
       }
+     
 
       await approval.update({ status: action })
       res.json(responseHandler.returnSuccess(httpStatus.OK, "Success"))

@@ -13,7 +13,7 @@ const capitalize = require("capitalize");
 
 const UserService = require("../service/UserService");
 const logger = require("../config/logger");
-const { branchStatus, approvalStatus , userStatus } = require("../config/constant");
+const { branchStatus, approvalStatus, userConstant } = require("../config/constant");
 const pluralize = require("pluralize");
 const sequelize = require("sequelize");
 const {
@@ -118,20 +118,82 @@ class ProfileController {
 
 
 
-  deleteUser = async(req,res)=>{
+  deleteUser = async (req, res) => {
+
+    let approval;
+    try {
+      let { user, query, body } = req;
+      body = { role_id:'',role_name:'',branch_id:'',businessId_:"" }
+      const isApproval = true
+
+      const userById = await this.userService.userDao.Model.findByPk(body.id);
+      let models = [];
+      if (userById) {
+
+        if (isApproval) {
+          models.push({ id: userById.id, name: 'user', action: 'update', value: body })
+
+        }
+        else {
+          data = await userById.update(body);
+
+        }
+      }
+
+      if (isApproval) {
+        approval = await user.createApproval({ approver_id: user.reporting_user_id, models, status: approvalStatus.STATUS_PENDING })
+      }
+      let data = isApproval ? { status: 'Pending with approval', approval_id: approval.id } : null;
+
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", data))
+    } catch (error) {
+      console.error(error);
+      res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Error', error))
+    }
 
   }
-disableUser = async(req,res)=>{
+  disableUser = async (req, res) => {
+
+    let approval;
+    try {
+      let { user, query, body } = req;
+      body = { status: userConstant.STATUS_DISABLED }
+      const isApproval = true
+
+      const userById = await this.userService.userDao.Model.findByPk(body.id);
+      let models = [];
+      if (userById) {
+
+        if (isApproval) {
+          models.push({ id: userById.id, name: 'user', action: 'update', value: body })
+
+        }
+        else {
+          data = await userById.update(body);
+
+        }
+      }
+
+      if (isApproval) {
+        approval = await user.createApproval({ approver_id: user.reporting_user_id, models, status: approvalStatus.STATUS_PENDING })
+      }
+      let data = isApproval ? { status: 'Pending with approval', approval_id: approval.id } : null;
+
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", data))
+    } catch (error) {
+      console.error(error);
+      res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Error', error))
+    }
 
 
-  
-}
+
+  }
 
   addUser = async (req, res) => {
 
     try {
       let { user, query, body } = req;
-      body = {...body, status:userStatus.STATUS_ACTIVE}
+      body = { ...body, status: userConstant.STATUS_ACTIVE }
       const isApproval = true
 
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
@@ -241,7 +303,7 @@ disableUser = async(req,res)=>{
     const Dao = require("./../dao/" + capitalize(modelName) + "Dao");
     const model = new Dao().Model;
     const modelInstance = await model.findByPk(id);
-    
+
     return modelInstance
 
   }
@@ -254,45 +316,45 @@ disableUser = async(req,res)=>{
       const { id, action } = body;
       const approval = await this.approvalService.approvalDao.Model.findByPk(id);
       if (user.id !== approval?.approver_id) {
-        console.log(user.id,approval.approver_id)
+        console.log(user.id, approval.approver_id)
         res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'Not authorized to action this request'))
         return;
       }
-      const { models,status } = approval.get();
-      if(status !== approvalStatus.STATUS_PENDING){
+      const { models, status } = approval.get();
+      if (status !== approvalStatus.STATUS_PENDING) {
         res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Status is not pending'))
-        return; 
+        return;
       }
 
-      if (action === approvalStatus.STATUS_APPROVED ) {
+      if (action === approvalStatus.STATUS_APPROVED) {
         console.log(typeof models)
-        let ids=[]
+        let ids = []
 
         console.log('begin');
         let index = 0
         for (let item of models) {
-         const  { id, name, action, value } = item;
-         let updatedId = id;
-          if(typeof(id) === 'string' && id?.includes('PREVIOUS_CHAIN')){
-            const chainid = id.split('PREVIOUS_CHAIN')?.[1] ||  1;
+          const { id, name, action, value } = item;
+          let updatedId = id;
+          if (typeof (id) === 'string' && id?.includes('PREVIOUS_CHAIN')) {
+            const chainid = id.split('PREVIOUS_CHAIN')?.[1] || 1;
             updatedId = ids[index - chainid]
-            console.log(ids,updatedId,index,chainid,index - chainid)
+            console.log(ids, updatedId, index, chainid, index - chainid)
           }
           const modelInstance = await this.getModelInstance(updatedId, name);
-           await modelInstance[action](value).then((a)=>{
-            console.log(a.id,ids)
+          await modelInstance[action](value).then((a) => {
+            console.log(a.id, ids)
             ids.push(a.id);
-            console.log(a.id,ids)
+            console.log(a.id, ids)
             return a;
           })
-          index +=1;
+          index += 1;
 
         }
         console.log('finished');
-   
+
 
       }
-     
+
 
       await approval.update({ status: action })
       res.json(responseHandler.returnSuccess(httpStatus.OK, "Success"))

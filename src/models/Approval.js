@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     Approval.init(
         {
             approver_id: DataTypes.INTEGER,
+            reason_id:DataTypes.INTEGER,
+            reason:DataTypes.TEXT,
             waiting_time: {
                 type: DataTypes.VIRTUAL,
                 get() {
@@ -24,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
               },
             module:DataTypes.STRING,
             action:DataTypes.STRING,
+
             models: {
                 type: DataTypes.TEXT,
                 get: function () {

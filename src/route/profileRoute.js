@@ -22,6 +22,8 @@ router.get('/user/get-modules-for-role',profileController.getModulesForRole);
 router.get('/user/get-reporting-users',profileController.getReportingUsers);
 router.get('/user/get-pending-list-for-approval',profileController.getPendingListForApproval);
 router.put('/user/approve',profileController.approveRejectApprovalRequest);
+router.put('/user/disable-user',profileController.disableUser);
+router.delete('/user/delete-user',profileController.deleteUser);
 
 router.post('/user',profileController.addUser);
 

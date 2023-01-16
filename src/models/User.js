@@ -68,16 +68,8 @@ module.exports = (sequelize, DataTypes) => {
       },
 
 
-      branches: {
-        type: DataTypes.JSON,
-
-        set: function (val) {
-
-
-          return this.setDataValue("branch_ids", JSON.stringify(val.label.map((vv) => vv.id) || []));
-        },
-
-      },
+      branch_id:DataTypes.INTEGER, 
+      business_id:DataTypes.INTEGER, 
       reporting: {
         type: DataTypes.JSON,
 
@@ -116,6 +108,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
         type: DataTypes.BOOLEAN
       },
+      approval_id:DataTypes.INTEGER,
+      approval_operation:DataTypes.STRING,
       mode: {
         type: DataTypes.STRING,
         allowNull: false,

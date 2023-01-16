@@ -13,7 +13,7 @@ const capitalize = require("capitalize");
 
 const UserService = require("../service/UserService");
 const logger = require("../config/logger");
-const { branchStatus, approvalStatus } = require("../config/constant");
+const { branchStatus, approvalStatus , userStatus } = require("../config/constant");
 const pluralize = require("pluralize");
 const sequelize = require("sequelize");
 const {
@@ -119,15 +119,19 @@ class ProfileController {
 
 
   deleteUser = async(req,res)=>{
-    
-  }
 
+  }
+disableUser = async(req,res)=>{
+
+
+  
+}
 
   addUser = async (req, res) => {
 
     try {
-      const { user, query, body } = req;
-
+      let { user, query, body } = req;
+      body = {...body, status:userStatus.STATUS_ACTIVE}
       const isApproval = true
 
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);

@@ -12,6 +12,18 @@ module.exports = (sequelize, DataTypes) => {
     Approval.init(
         {
             approver_id: DataTypes.INTEGER,
+            waiting_time: {
+                type: DataTypes.VIRTUAL,
+                get() {
+                  console.log(this.getDataValue("createdAt"));
+                  return differenceInMinutes(
+                    new Date(),
+                    this.getDataValue("createdAt")
+                  );
+                },
+              },
+            module:DataTypes.STRING,
+            action:DataTypes.STRING,
             models: {
                 type: DataTypes.TEXT,
                 get: function () {

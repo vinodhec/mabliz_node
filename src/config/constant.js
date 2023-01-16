@@ -12,6 +12,13 @@ const branchStatus = {
   STATUS_ACTIVE: 3,
 };
 
+
+const approvalStatus = {
+  STATUS_PENDING: 0,
+  STATUS_APPROVED: 1,
+  STATUS_REJECT: -1
+};
+
 const businessStatus = {
   STATUS_INACTIVE: 0,
   STATUS_VERFIED: 1,
@@ -31,4 +38,5 @@ module.exports = {
   verificationCodeConstant,
   branchStatus,
   businessStatus,
+  approvalStatus
 };

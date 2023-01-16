@@ -5,13 +5,15 @@ const BranchService = require("../service/BranchService");
 const PermissionService = require("../service/PermissionService");
 const ModuleService = require("../service/ModuleService");
 const RolepermissionService = require("../service/RolepermissionService");
+const ApprovalService = require("../service/ApprovalService");
 
 const { Op } = require("sequelize");
 const { createNewOTP, verifyOTP } = require("../helper/otpHelper");
+const capitalize = require("capitalize");
 
 const UserService = require("../service/UserService");
 const logger = require("../config/logger");
-const { branchStatus } = require("../config/constant");
+const { branchStatus, approvalStatus } = require("../config/constant");
 const pluralize = require("pluralize");
 const sequelize = require("sequelize");
 const {
@@ -31,6 +33,7 @@ class ProfileController {
     this.permissionService = new PermissionService();
     this.moduleService = new ModuleService();
     this.rolePermissionService = new RolepermissionService();
+    this.approvalService = new ApprovalService();
 
   }
 
@@ -101,7 +104,7 @@ class ProfileController {
     try {
 
       const { query, user } = req;
-      console.log(user.dataValues?.id )
+      console.log(user.dataValues?.id)
       const data = await this.userService.userDao.findAll({ where: { reporting_user_id: user.dataValues?.id } })
 
       res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", data))
@@ -121,19 +124,50 @@ class ProfileController {
     try {
       const { user, query, body } = req;
 
+      const isApproval = true
+
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
-      let data = null;
+      let models = [];
+      let data = isApproval ? { status: 'Pending with approval' } : null;
       if (userbyPhone) {
-        data = await userbyPhone.update(body);
+
+        if (isApproval) {
+          models.push({ id: userbyPhone.id, name: 'user', action: 'update', value: body })
+
+        }
+        else {
+          data = await userbyPhone.update(body);
+
+        }
       }
       else {
-        data = await user.createUser(body);
-      }
-      const emp = await data.createEmployment({ ...body, joined_by: user.dataValues.id });
+        if (isApproval) {
 
+          models.push({ id: user.id, name: 'user', action: 'createUser', value: body })
+        }
+        else {
+          data = await user.createUser(body);
+
+        }
+
+      }
+      const emp_data = { ...body, joined_by: user.dataValues.id }
+      if (isApproval) {
+        models.push({ id: 'PREVIOUS_CHAIN', name: 'user', action: 'createEmployment', value: emp_data })
+
+      }
+      else {
+        await data.createEmployment(emp_data);
+
+      }
+
+
+      if (isApproval) {
+        await user.createApproval({ approver_id: user.reporting_user_id, models, status: approvalStatus.STATUS_PENDING })
+      }
       res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", data))
     } catch (error) {
-
+      console.error(error);
       res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Error', error))
     }
 
@@ -183,6 +217,77 @@ class ProfileController {
     const { user, query } = req;
     const { roleId } = query;
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", query))
+  }
+
+
+  getPendingListForApproval = async (req, res) => {
+    const { user } = req;
+    const approvals = await this.approvalService.approvalDao.Model.findAll({
+      attributes: { exclude: ['models'] },
+      approver_id: user.id
+    })
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", approvals))
+  }
+
+  getModelInstance = async (id, modelName) => {
+    const Dao = require("./../dao/" + capitalize(modelName) + "Dao");
+    const model = new Dao().Model;
+    const modelInstance = await model.findByPk(id);
+    
+    return modelInstance
+
+  }
+  approveRejectApprovalRequest = async (req, res) => {
+
+    try {
+
+      const { body, user } = req;
+
+      const { id, action } = body;
+      const approval = await this.approvalService.approvalDao.Model.findByPk(id);
+      if (user.id !== approval?.approver_id && false) {
+        console.log(user.id,approval.approver_id)
+        res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'Not authorized to action this request'))
+        return;
+      }
+      if (action === approvalStatus.STATUS_APPROVED) {
+        const { models } = approval.get();
+        console.log(typeof models)
+        let ids=[]
+
+        console.log('begin');
+        let index = 0
+        for (let item of models) {
+         const  { id, name, action, value } = item;
+         let updatedId = id;
+          if(typeof(id) === 'string' && id?.includes('PREVIOUS_CHAIN')){
+            const chainid = id.split('PREVIOUS_CHAIN')?.[1] ||  1;
+            updatedId = ids[index - chainid]
+            console.log(ids,updatedId,index,chainid,index - chainid)
+          }
+          const modelInstance = await this.getModelInstance(updatedId, name);
+           await modelInstance[action](value).then((a)=>{
+            console.log(a.id,ids)
+            ids.push(a.id);
+            console.log(a.id,ids)
+            return a;
+          })
+          index +=1;
+
+        }
+        console.log('finished');
+   
+
+      }
+
+      await approval.update({ status: action })
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "Success"))
+
+    } catch (error) {
+      console.log(error)
+      res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Error', error))
+
+    }
   }
 
   addNewRoles = async (req, res) => {

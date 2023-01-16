@@ -96,8 +96,14 @@ const Rolemoduleuser = models.rolemoduleuser;
 const Planbranchaddon = models.planbranchaddon;
 const Employment = models.employment;
 const Attendance = models.attendance;
+const Approval = models.approval;
+
 User.hasMany(Employment);
 Employment.belongsTo(User);
+
+User.hasMany(Approval);
+Approval.belongsTo(User);
+
 User.hasMany(Business,{ onDelete: 'cascade', hooks:true });
 Business.belongsTo(User);
 

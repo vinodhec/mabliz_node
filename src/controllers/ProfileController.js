@@ -173,7 +173,7 @@ class ProfileController {
 
         }
       }
-
+console.log({models})
       if (isApproval) {
         approval = await user.createApproval({ approver_id: user.reporting_user_id, models, status: approvalStatus.STATUS_PENDING })
       }
@@ -313,7 +313,7 @@ class ProfileController {
 
       const { body, user } = req;
 
-      const { id, action } = body;
+      const { id, action,reason } = body;
       const approval = await this.approvalService.approvalDao.Model.findByPk(id);
       if (user.id !== approval?.approver_id) {
         console.log(user.id, approval.approver_id)
@@ -356,7 +356,7 @@ class ProfileController {
       }
 
 
-      await approval.update({ status: action })
+      await approval.update({ status: action,reason })
       res.json(responseHandler.returnSuccess(httpStatus.OK, "Success"))
 
     } catch (error) {

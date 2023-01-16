@@ -118,6 +118,10 @@ class ProfileController {
 
 
 
+  deleteUser = async(req,res)=>{
+    
+  }
+
 
   addUser = async (req, res) => {
 

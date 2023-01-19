@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
 
   User.init(
     {
+            uuid: DataTypes.UUID,
+
       policeClearance:DataTypes.STRING,
       policeClearanceNumber:DataTypes.STRING,
       policeClearanceExpiryDate: DataTypes.DATEONLY,

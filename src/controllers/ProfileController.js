@@ -98,6 +98,8 @@ class ProfileController {
 
   }
 
+  // x days leave means 
+  // feedback last day as relieving day
   getReportingUsers = async (req, res) => {
 
 

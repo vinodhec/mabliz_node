@@ -1,5 +1,6 @@
 const express = require('express');
 const ProfileController = require('../controllers/ProfileController');
+const AdminController = require('../controllers/AdminController');
 
 const router = express.Router();
 const auth = require('../middlewares/auth');
@@ -10,6 +11,8 @@ const auth = require('../middlewares/auth');
 
 router.use(auth());
 const profileController = new ProfileController();
+const adminController = new AdminController();
+
 router.get('/dashboard-details', profileController.getDashboardDetails);
 // router.get('/user/role',profileController.getRoles);
 
@@ -29,6 +32,7 @@ router.post('/user',profileController.addUser);
 
 router.post('/findUser',profileController.findUser);
 router.post('/getUser',profileController.getUser);
+router.all('/reviewreason', adminController.crudOperations);
 
 router.get('/businessTypes',profileController.getBusinessTypes)
 router.all('/user/:target', profileController.curdUserAssociated);

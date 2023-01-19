@@ -29,6 +29,7 @@ router.put('/user/disable-user',profileController.disableUser);
 router.delete('/user/delete-user',profileController.deleteUser);
 
 router.post('/user',profileController.addUser);
+router.post('/add-attendance',profileController.addAddentance);
 
 router.post('/findUser',profileController.findUser);
 router.post('/getUser',profileController.getUser);

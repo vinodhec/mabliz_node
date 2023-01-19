@@ -5,6 +5,8 @@ const BranchService = require("../service/BranchService");
 const PermissionService = require("../service/PermissionService");
 const ModuleService = require("../service/ModuleService");
 const RolepermissionService = require("../service/RolepermissionService");
+const AttendanceService = require("../service/AttendanceService");
+
 const ApprovalService = require("../service/ApprovalService");
 
 const { Op } = require("sequelize");
@@ -34,6 +36,7 @@ class ProfileController {
     this.moduleService = new ModuleService();
     this.rolePermissionService = new RolepermissionService();
     this.approvalService = new ApprovalService();
+    this.attendanceService = new AttendanceService();
 
   }
 
@@ -551,6 +554,22 @@ console.log({models})
     ]);
     crudOperations({ req, res, source, target, id });
   };
+
+  addAddentance = async(req,res)=>{
+
+    const {body,user :reporting} = req;
+    for (let item of body) {
+const {id,is_present,review,rating,rejoinDate} = item
+const user = await this.userService.userDao.Model.findByPk(id);
+const userDetails = user.get()
+if(userDetails.reporting_user_id === reporting.id || true){
+  await user.createAttendance({is_present,rating,marked_by:reporting.id});
+  const updatedUserDetails = {rejoinDate}
+  await user.update(updatedUserDetails)
+}
+    }
+    res.json(responseHandler.returnError(httpStatus.BAD_REQUEST))
+  }
 
   curdUserAssociatedTwoTargets = async (req, res) => {
     const { source, sourceId, target1, target2, target1Id, target2Id } =

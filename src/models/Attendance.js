@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
 
    Attendance.init(
     {
-     ratings:DataTypes.INTEGER,
-     is_present:DataTypes.BOOLEAN,
+     rating:DataTypes.FLOAT,
+     is_present:{type:DataTypes.BOOLEAN,defaultValue:true},
      marked_by:DataTypes.INTEGER
     },
 
@@ -24,4 +24,3 @@ module.exports = (sequelize, DataTypes) => {
   );
   return  Attendance;
 };
-

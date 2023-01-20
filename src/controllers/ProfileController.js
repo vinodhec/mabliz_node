@@ -12,6 +12,7 @@ const ApprovalService = require("../service/ApprovalService");
 const { Op } = require("sequelize");
 const { createNewOTP, verifyOTP } = require("../helper/otpHelper");
 const capitalize = require("capitalize");
+const { groupBy } = require("lodash");
 
 const UserService = require("../service/UserService");
 const logger = require("../config/logger");
@@ -50,7 +51,7 @@ class ProfileController {
 
   findUser = async (req, res) => {
 
-    const { id, phone_number, id_proof_type, id_proof_no } = req.body;
+    const { id, phone_number, id_proof_type, id_proof_no, acknowledged } = req.body;
     let user;
     if (id) {
       user = await this.userService.userDao.findById(id);
@@ -64,14 +65,35 @@ class ProfileController {
     }
     if (user) {
       const phone_number = user.phone_number?.slice(0, 2) + user.phone_number?.slice(2).replace(/.(?=...)/g, '*')
-      const hash = await createNewOTP(phone_number);
-      res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", { id: user.id, phone_number, hash }))
+      if (acknowledged) {
+        const hash = await createNewOTP(phone_number);
+        res.json(responseHandler.returnSuccess(httpStatus.OK, "OTP sent successfully", { id: user.id, phone_number, hash }))
+
+      }
+      else {
+        res.json(responseHandler.returnSuccess(httpStatus.OK, "User Found", { phone_number }))
+
+      }
 
     }
     else {
       res.json(responseHandler.returnSuccess(httpStatus.OK, "User not found"))
 
     }
+  }
+
+  getBusinesstypeBusinessBranch = async (req, res) => {
+
+    const { user } = req;
+    console.log(user);
+    const businessTypes = await user.getBusinesses({ attributes: ['id','business_name','business_type_label', 'business_type_id'], include: {model:this.branchService.branchDao.Model,attributes:['id','branch_name'] } })
+    const groupByStatus = groupBy(businessTypes, "business_type_label");
+    const groups = Object.keys(groupByStatus).map((statusGroup) => {
+
+   
+      return {businessType:statusGroup,business: groupByStatus[statusGroup]}
+    });
+    res.json(responseHandler.returnSuccess(httpStatus.OK, 'success', groups))
   }
 
   getUser = async (req, res) => {
@@ -128,7 +150,7 @@ class ProfileController {
     let approval;
     try {
       let { user, query, body } = req;
-      body = { role_id:'',role_name:'',branch_id:'',businessId_:"" }
+      body = { role_id: '', role_name: '', branch_id: '', businessId_: "" }
       const isApproval = true
 
       const userById = await this.userService.userDao.Model.findByPk(body.id);
@@ -178,7 +200,7 @@ class ProfileController {
 
         }
       }
-console.log({models})
+      console.log({ models })
       if (isApproval) {
         approval = await user.createApproval({ approver_id: user.reporting_user_id, models, status: approvalStatus.STATUS_PENDING })
       }
@@ -247,6 +269,8 @@ console.log({models})
     }
 
   }
+
+
 
   getRolesForUser = async (user, business_type_id, is_approval_authority) => {
 
@@ -318,7 +342,7 @@ console.log({models})
 
       const { body, user } = req;
 
-      const { id, action,reason } = body;
+      const { id, action, reason } = body;
       const approval = await this.approvalService.approvalDao.Model.findByPk(id);
       if (user.id !== approval?.approver_id) {
         console.log(user.id, approval.approver_id)
@@ -361,7 +385,7 @@ console.log({models})
       }
 
 
-      await approval.update({ status: action,reason })
+      await approval.update({ status: action, reason })
       res.json(responseHandler.returnSuccess(httpStatus.OK, "Success"))
 
     } catch (error) {
@@ -555,18 +579,18 @@ console.log({models})
     crudOperations({ req, res, source, target, id });
   };
 
-  addAddentance = async(req,res)=>{
+  addAddentance = async (req, res) => {
 
-    const {body,user :reporting} = req;
+    const { body, user: reporting } = req;
     for (let item of body) {
-const {id,is_present,review,rating,rejoinDate} = item
-const user = await this.userService.userDao.Model.findByPk(id);
-const userDetails = user.get()
-if(userDetails.reporting_user_id === reporting.id || true){
-  await user.createAttendance({is_present,rating,marked_by:reporting.id});
-  const updatedUserDetails = {rejoinDate}
-  await user.update(updatedUserDetails)
-}
+      const { id, is_present, review, rating, rejoinDate } = item
+      const user = await this.userService.userDao.Model.findByPk(id);
+      const userDetails = user.get()
+      if (userDetails.reporting_user_id === reporting.id || true) {
+        await user.createAttendance({ is_present, rating, marked_by: reporting.id });
+        const updatedUserDetails = { rejoinDate }
+        await user.update(updatedUserDetails)
+      }
     }
     res.json(responseHandler.returnError(httpStatus.BAD_REQUEST))
   }

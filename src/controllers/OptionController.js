@@ -94,7 +94,7 @@ class OptionController {
             else if (field.requestKey === 'permissions') {
 
               const pp = adminController.utilgetModulesForBusinessType(businesstypeId).then((modules) => {
-
+console.log({modules})
                 this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: modules.map(({ dataValues }) => dataValues) })
 
               });

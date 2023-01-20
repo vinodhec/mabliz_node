@@ -33,6 +33,7 @@ router.post('/add-attendance',profileController.addAddentance);
 
 router.post('/findUser',profileController.findUser);
 router.post('/getUser',profileController.getUser);
+router.get('/get-businesstype-business-branch',profileController.getBusinesstypeBusinessBranch);
 router.all('/reviewreason', adminController.crudOperations);
 
 router.get('/businessTypes',profileController.getBusinessTypes)

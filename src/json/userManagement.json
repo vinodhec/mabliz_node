@@ -18,19 +18,20 @@
             "isMandatory": true,
             "error": "Please select your Title",
             "requestKey": "title",
+            "isStringRequest":true,
             "eligility": [
                 "ADMIN"
             ], "fields": [
               {
-                  "label": "Mr",
-                  "id": 1
+                  "label": "Mr"
+                
               },
               {
-                  "label": "Mrs",
-                  "id": 2
+                  "label": "Mrs"
+                 
               }, {
-                "label": "Miss",
-                "id": 3
+                "label": "Miss"
+                
             }
             ]
         },
@@ -94,6 +95,8 @@
   "isMandatory": true,
   "error": "Please select your Nationality",
   "requestKey": "nationality",
+  "isStringRequest":true,
+
   "eligility": [
       "ADMIN"
   ], "fields": [
@@ -122,12 +125,13 @@
             "input": "select",
             "requestKey": "idProofType",
             "isMandatory": true,
+            "isStringRequest":true,
     "error": "Please select your ID Proof",
             "eligility": [
               "PARTNER"
             ],
             "fields": [
-              "PAN Card", "Ration ID"
+              {"label":"PAN Card"},{"label": "Ration ID"}
             ]
             
           },
@@ -152,12 +156,14 @@
             "input": "select",
             "requestKey": "addressProofType",
             "isMandatory": true,
+            "isStringRequest":true,
+
             "error":"Please select your Address Proof ",
             "eligility": [
               "PARTNER"
             ],
             "fields": [
-              "Aadhar Card","Voter ID"
+             {"label": "Aadhar Card"},{"label": "Voter ID"}
              
             ]
             
@@ -190,8 +196,10 @@
           "eligility": [
             "PARTNER"
           ],
+          "isStringRequest":true,
+
           "fields": [
-           "Yes","No"
+          {"label":"Yes" },{"label" :"No"}
           ]
           
         },
@@ -271,8 +279,10 @@
        "eligility": [
          "PARTNER"
        ],
+       "isStringRequest":true,
+
        "fields": [
-         "Joining Letter","Appointment Letter"
+         {"label": "Joining Letter"},{"label" :"Appointment Letter"}
         
        ]
      }, {
@@ -295,8 +305,10 @@
        "eligility": [
          "PARTNER"
        ],
+       "isStringRequest":true,
+
        "fields": [
-         "Reliving Letter","None"
+         {"label": "Reliving Letter"},{"label": "None"}
         
        ]
      }, {
@@ -424,12 +436,14 @@
             "requestKey": "salary_frequency",
             "isMandatory": true,
             "error": "Please select your Pay Basis",
+            "isStringRequest":true,
+
             "eligility": [
   
               "PARTNER"
             ],
             "fields": [
-              "Daily","Weekly","Monthly"
+             {"label": "Daily"},{"label": "Weekly"},{"label" :"Monthly"}
             
             ]
           }

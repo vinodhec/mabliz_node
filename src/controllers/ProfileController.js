@@ -7,6 +7,7 @@ const ModuleService = require("../service/ModuleService");
 const RolepermissionService = require("../service/RolepermissionService");
 const AttendanceService = require("../service/AttendanceService");
 const ItemvariantService = require("../service/ItemvariantService");
+const RoleService = require("../service/RoleService");
 
 const ApprovalService = require("../service/ApprovalService");
 
@@ -40,6 +41,7 @@ class ProfileController {
     this.approvalService = new ApprovalService();
     this.attendanceService = new AttendanceService();
     this.itemvariantService = new ItemvariantService();
+    this.roleService = new RoleService();
 
   }
 
@@ -276,6 +278,7 @@ class ProfileController {
 
   getRolesForUser = async (user, business_type_id, is_approval_authority, branch_id) => {
 
+    branch_id = branch_id ?? user.branchId
     let option = {
       include: this.permissionService.permissionDao.Model,
 
@@ -283,21 +286,22 @@ class ProfileController {
       // attributes:['id','name','is_approval_authority','business_type_id','business_type_label','userId']
     }
     if (business_type_id) {
-      option['where'] = { business_type_id }
+      option['where'] = { ...option['where'], business_type_id }
     }
     if (is_approval_authority) {
-      option['where'] = { is_approval_authority }
+      option['where'] = { ...option['where'], is_approval_authority }
 
     }
     if (branch_id) {
       option['where'] = {
+        ...option['where'],
         branch_ids: {
-          [Op.substring]: `{"id":${branch_id}}`,
+          [Op.substring]: `"id":${branch_id}`,
         }
       }
-
+      console.log(`"id":${branch_id}`)
     }
-    const roles = await user.getRoles(option);
+    const roles = await this.roleService.roleDao.Model.findAll({ option });
     return roles;
   }
   getRoles = async (req, res) => {
@@ -308,25 +312,25 @@ class ProfileController {
   };
 
 
-  getObjfromMappings = (header, row,branch_id) => {
+  getObjfromMappings = (header, row, branch_id) => {
 
     // console.log(row)
     return header.reduce((prev, current, index) => {
       // console.log(prev[itemMappings[current]],prev,current,row[index])
       prev[itemMappings[current]] = row[index]
       return prev
-    }, {branch_id})
+    }, { branch_id })
 
   }
 
-getAllItems = async(req,res)=>{
+  getAllItems = async (req, res) => {
 
-  const {user} = req;
-console.log(user)
-  const branch =await this.branchService.branchDao.Model.findByPk(user.get().branch_id);
-  const items = await branch.getItems({include:this.itemvariantService.itemvariantDao.Model})
-  res.json(responseHandler.returnSuccess(httpStatus.OK,'Success',items))
-}
+    const { user } = req;
+    console.log(user)
+    const branch = await this.branchService.branchDao.Model.findByPk(user.get().branch_id);
+    const items = await branch.getItems({ include: this.itemvariantService.itemvariantDao.Model })
+    res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
+  }
 
   uploadItems = async (req, res) => {
 
@@ -340,14 +344,14 @@ console.log(user)
       for (let i = 1; i < rows.length - 1; i++) {
         const branch = await this.branchService.branchDao.Model.findByPk(branch_id);
         const row = rows[i]
-        const value = this.getObjfromMappings(header, row,branch_id);
-     
-     
+        const value = this.getObjfromMappings(header, row, branch_id);
+
+
 
         if (value['item_generic_name']) {
           item = await branch.createItem(value)
         }
-        if(value['name']){
+        if (value['name']) {
           const variant = await item.createItemvariant(value)
 
         }

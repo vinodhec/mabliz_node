@@ -18,7 +18,7 @@ const UserService = require("../service/UserService");
 const logger = require("../config/logger");
 const { branchStatus, approvalStatus, userConstant } = require("../config/constant");
 const readXlsxFile = require('read-excel-file/node')
-const { removeAbsolutePath,itemMappings } = require("./../helper/utilHelper");
+const { removeAbsolutePath, itemMappings } = require("./../helper/utilHelper");
 const {
   crudOperations,
   crudOperationsTwoTargets,
@@ -86,12 +86,12 @@ class ProfileController {
 
     const { user } = req;
     console.log(user);
-    const businessTypes = await user.getBusinesses({ attributes: ['id','business_name','business_type_label', 'business_type_id'], include: {model:this.branchService.branchDao.Model,attributes:['id','branch_name'] } })
+    const businessTypes = await user.getBusinesses({ attributes: ['id', 'business_name', 'business_type_label', 'business_type_id'], include: { model: this.branchService.branchDao.Model, attributes: ['id', 'branch_name'] } })
     const groupByStatus = groupBy(businessTypes, "business_type_label");
     const groups = Object.keys(groupByStatus).map((statusGroup) => {
 
-   
-      return {businessType:statusGroup,business: groupByStatus[statusGroup]}
+
+      return { businessType: statusGroup, business: groupByStatus[statusGroup] }
     });
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'success', groups))
   }
@@ -272,7 +272,7 @@ class ProfileController {
 
 
 
-  getRolesForUser = async (user, business_type_id, is_approval_authority,branch_id) => {
+  getRolesForUser = async (user, business_type_id, is_approval_authority, branch_id) => {
 
     let option = {
       include: this.permissionService.permissionDao.Model,
@@ -288,8 +288,11 @@ class ProfileController {
 
     }
     if (branch_id) {
-      option['where'] = { branch_ids:{      [Op.substring]: `{"id":${branch_id}}`,                
-    } }
+      option['where'] = {
+        branch_ids: {
+          [Op.substring]: `{"id":${branch_id}}`,
+        }
+      }
 
     }
     const roles = await user.getRoles(option);
@@ -297,36 +300,51 @@ class ProfileController {
   }
   getRoles = async (req, res) => {
     const { user, query } = req;
-    const { business_type_id, is_approval_authority,branch_id } = query;
-    const roles = await this.getRolesForUser(user, business_type_id, is_approval_authority,branch_id)
+    const { business_type_id, is_approval_authority, branch_id } = query;
+    const roles = await this.getRolesForUser(user, business_type_id, is_approval_authority, branch_id)
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
   };
 
 
-  getObjfromMappings= async(header,row)=>{
+  getObjfromMappings = (header, row,branch_id) => {
 
-
-  return  header.reduce((prev,current,index)=>{
-      return prev[mappings[current]] =row[index]
-    },{})
+    // console.log(row)
+    return header.reduce((prev, current, index) => {
+      // console.log(prev[itemMappings[current]],prev,current,row[index])
+      prev[itemMappings[current]] = row[index]
+      return prev
+    }, {branch_id})
 
   }
 
-  
-  uploadItems = async(req,res)=>{
-    
-    const {file,branchId} = req.body;
-  
+
+  uploadItems = async (req, res) => {
+
+    const { file, branch_id } = req.body;
+
 
 
     readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
-const header = rows[0];
-        for(let i=1;i<rows.length-2;i++){
-          const branch = await this.branchService.branchDao.Model.findByPk(branchId);
-         const value =  this.getObjfromMappings(header,rows[i])
-          await branch.createItem(value)
+      const header = rows[0];
+      let item;
+      for (let i = 1; i < rows.length - 1; i++) {
+        const branch = await this.branchService.branchDao.Model.findByPk(branch_id);
+        const row = rows[i]
+        const value = this.getObjfromMappings(header, row,branch_id);
+     
+     
+
+        if (value['item_generic_name']) {
+          item = await branch.createItem(value)
         }
-        res.json(rows)
+        if(value['name']){
+          const variant = await item.createItemvariant(value)
+
+        }
+
+      }
+
+      res.json(rows)
     })
 
   }
@@ -350,7 +368,7 @@ const header = rows[0];
     const { user, query } = req;
     const { role_id } = query;
 
-    const users =await this.userService.userDao.Model.findAll({role_id, branch_id:user.branch_id})
+    const users = await this.userService.userDao.Model.findAll({ role_id, branch_id: user.branch_id })
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", users))
   }
 

@@ -48,7 +48,8 @@ module.exports = (sequelize, DataTypes) => {
       qr_code: DataTypes.TEXT,
 
       barcode: DataTypes.TEXT,
-      isPhoto: DataTypes.STRING
+      isPhoto: DataTypes.STRING,
+      branch_id:DataTypes.INTEGER
     },
 
     {

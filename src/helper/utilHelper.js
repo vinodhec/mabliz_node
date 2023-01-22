@@ -314,7 +314,7 @@ const itemMappings ={
         "HSN Code":'hsn_code',
         "QR":'qr_code',
         "Barcode":'barcode',
-        "Photo":'isPhoto'
+        "Photo":'isPhoto','S.No':'S.No'
 }
 
 module.exports = {

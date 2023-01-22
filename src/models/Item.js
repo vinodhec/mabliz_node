@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             category: DataTypes.STRING,
             sub_category: DataTypes.STRING,
             brand: DataTypes.STRING,
-            name: DataTypes.STRING,
+            item_generic_name: DataTypes.STRING,
             name_local_language: DataTypes.STRING,
             order_type: DataTypes.STRING,
             pre_booking: DataTypes.STRING,

@@ -4,8 +4,17 @@ const responseHandler = require("../helper/responseHandler");
 const httpStatus = require("http-status");
 const { omit } = require("lodash");
 
+
+const abs_path =  "https://mabliz-dev.onrender.com/"
+
 const getAbsolutePath = (path) => {
-  return "https://mabliz-dev.onrender.com/" + path;
+  return abs_path + path;
+};
+
+
+
+const removeAbsolutePath = (path) => {
+  return  path.replaceAll(abs_path,"");
 };
 
 const getRecord = async ({ id, sourceModel, getMixin, res }) => {
@@ -257,9 +266,62 @@ const crudOperationsTwoTargets = async (object) => {
   }
 };
 
+const itemMappings ={
+  'Cuisine':'cuisine',
+  'Type':'type',
+  'Variety':'variety',
+  'Category':'category',
+  'Sub Category':'sub_category',
+  'Brand':'brand',
+  'Item / Product Name':'item_generic_name','Item Name (Local Language)':'name_local_language',
+  "Order Type":'order_type',
+        "Pre Booking":'pre_booking',
+        "Available Time":'available_time',
+        "Availability Days":'availability_days',
+        "Description":'description',
+        "Mandatory (Any One)":'customize',
+        "Add-Ons (Multi Selection)":'add_ons',
+        "Kitchen Notes":'kitchen_notes',
+        "Selling Size":'selling_size',
+        "Selling Qty":'selling_qty',
+        "Variant Name (Auto Fill)":'name',
+        "Variant Nam Local Lang (Auto Fill)":'name_local_language',
+        "Variant Description":'variant_description',
+        "Dish Code":'dish_code',
+        "Search Code":'search_code',
+        "Special Notes / Message":'special_notes',
+        "Photo":'photo',
+        "Selling Price":'selling_price',
+        "Dining Price":'dinning_price',
+        "A/C Dining Price":'ac_dinning_price',
+        "Take Away Price":'takeaway_price',
+        "Delivery Price":'delivery_price',
+        "Dining Discount":'dinning_discount',
+        "A/C Dining Discount":"ac_dinning_discount",
+        "Take Away Discount":'takeaway_discount',
+        "Delivery Discount":'delivery_discount',
+        "Purchase Unit":'purchase_unit',
+        "Selling Unit":'selling_unit',
+        "Purchase Method":'purchase_method',
+        "Selling Method":'selling_method',
+        "Purchase Tax":'purchase_tax_unformatted',
+        "Sales Tax":'sales_tax_unformatted',
+        "Stock Type":'stock_type',
+        "Minimum Stock (Intimation)":'min_stock_notification',
+        "Mfg. Date":'mfg_date',
+        "Exp Date":'exp_date',
+        "Batch No":'batch_no',
+        "HSN Code":'hsn_code',
+        "QR":'qr_code',
+        "Barcode":'barcode',
+        "Photo":'isPhoto'
+}
+
 module.exports = {
   getAbsolutePath,
   crudOperations,
   crudOperationsTwoTargets,
   basicCrudOperations,
+  removeAbsolutePath,
+  itemMappings
 };

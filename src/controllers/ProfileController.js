@@ -17,8 +17,8 @@ const { groupBy } = require("lodash");
 const UserService = require("../service/UserService");
 const logger = require("../config/logger");
 const { branchStatus, approvalStatus, userConstant } = require("../config/constant");
-const pluralize = require("pluralize");
-const sequelize = require("sequelize");
+const readXlsxFile = require('read-excel-file/node')
+const { removeAbsolutePath,itemMappings } = require("./../helper/utilHelper");
 const {
   crudOperations,
   crudOperationsTwoTargets,
@@ -272,7 +272,7 @@ class ProfileController {
 
 
 
-  getRolesForUser = async (user, business_type_id, is_approval_authority) => {
+  getRolesForUser = async (user, business_type_id, is_approval_authority,branch_id) => {
 
     let option = {
       include: this.permissionService.permissionDao.Model,
@@ -287,15 +287,49 @@ class ProfileController {
       option['where'] = { is_approval_authority }
 
     }
+    if (branch_id) {
+      option['where'] = { branch_ids:{      [Op.substring]: `{"id":${branch_id}}`,                
+    } }
+
+    }
     const roles = await user.getRoles(option);
     return roles;
   }
   getRoles = async (req, res) => {
     const { user, query } = req;
-    const { business_type_id, is_approval_authority } = query;
-    const roles = await this.getRolesForUser(user, business_type_id, is_approval_authority)
+    const { business_type_id, is_approval_authority,branch_id } = query;
+    const roles = await this.getRolesForUser(user, business_type_id, is_approval_authority,branch_id)
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
   };
+
+
+  getObjfromMappings= async(header,row)=>{
+
+
+  return  header.reduce((prev,current,index)=>{
+      return prev[mappings[current]] =row[index]
+    },{})
+
+  }
+
+  
+  uploadItems = async(req,res)=>{
+    
+    const {file,branchId} = req.body;
+  
+
+
+    readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
+const header = rows[0];
+        for(let i=1;i<rows.length-2;i++){
+          const branch = await this.branchService.branchDao.Model.findByPk(branchId);
+         const value =  this.getObjfromMappings(header,rows[i])
+          await branch.createItem(value)
+        }
+        res.json(rows)
+    })
+
+  }
 
   getModulesForRole = async (req, res) => {
     const { user, query } = req;

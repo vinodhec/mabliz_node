@@ -41,11 +41,13 @@ const fileStorage = multer.diskStorage({
 });
 const imagesMiddleWare = (req, res, next) => {
 
+  console.log(req.headers)
   if (req.is("multipart/form-data")) {
     const images = {};
     req.files?.forEach((file) => {
       images[file.fieldname] = utilHandler.getAbsolutePath(file.filename);
     });
+    console.log(images)
     req.body = { ...JSON.parse(req.body.details), ...images };
     req.headers["content-type"] = "application/json";
 
@@ -97,6 +99,8 @@ const Planbranchaddon = models.planbranchaddon;
 const Employment = models.employment;
 const Attendance = models.attendance;
 const Approval = models.approval;
+const Itemvariant = models.itemvariant;
+const Item = models.item;
 
 User.hasMany(Employment);
 Employment.belongsTo(User);
@@ -126,6 +130,14 @@ PlanValidity.belongsTo(Plan);
 BusinessTypes.hasMany(Plan);
 Plan.belongsTo(BusinessTypes);
 
+Item.hasMany(Itemvariant);
+Itemvariant.belongsTo(Item);
+
+Branch.hasMany(Item);
+Item.belongsTo(Branch);
+
+
+
 Branch.belongsToMany(Plan, { through: Planbranch });
 Plan.belongsToMany(Branch, { through: Planbranch });
 
@@ -147,5 +159,5 @@ Module.belongsToMany(Role,{through:Rolemoduleuser})
 
 // db.sequelize.sync({alter:true});
 // 
-// db.sequelize.sync();
+db.sequelize.sync();
 module.exports = app;

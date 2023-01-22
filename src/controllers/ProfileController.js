@@ -348,8 +348,10 @@ const header = rows[0];
 
   getUsersForRole = async (req, res) => {
     const { user, query } = req;
-    const { roleId } = query;
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", query))
+    const { role_id } = query;
+
+    const users =await this.userService.userDao.Model.findAll({role_id, branch_id:user.branch_id})
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", users))
   }
 
 

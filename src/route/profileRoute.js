@@ -28,6 +28,9 @@ router.post('/upload-items',profileController.uploadItems)
 
 router.get('/user/get-modules-for-role', profileController.getModulesForRole);
 router.get('/user/get-reporting-users', profileController.getReportingUsers);
+
+router.get('/user/get-all-users-role', profileController.getUsersForRole);
+
 router.get('/user/get-pending-list-for-approval', profileController.getPendingListForApproval);
 router.put('/user/approve', profileController.approveRejectApprovalRequest);
 router.put('/user/disable-user', profileController.disableUser);

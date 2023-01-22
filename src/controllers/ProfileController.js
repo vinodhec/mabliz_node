@@ -6,6 +6,7 @@ const PermissionService = require("../service/PermissionService");
 const ModuleService = require("../service/ModuleService");
 const RolepermissionService = require("../service/RolepermissionService");
 const AttendanceService = require("../service/AttendanceService");
+const ItemvariantService = require("../service/ItemvariantService");
 
 const ApprovalService = require("../service/ApprovalService");
 
@@ -38,6 +39,7 @@ class ProfileController {
     this.rolePermissionService = new RolepermissionService();
     this.approvalService = new ApprovalService();
     this.attendanceService = new AttendanceService();
+    this.itemvariantService = new ItemvariantService();
 
   }
 
@@ -317,6 +319,14 @@ class ProfileController {
 
   }
 
+getAllItems = async(req,res)=>{
+
+  const {user} = req;
+console.log(user)
+  const branch =await this.branchService.branchDao.Model.findByPk(user.get().branch_id);
+  const items = await branch.getItems({include:this.itemvariantService.itemvariantDao.Model})
+  res.json(responseHandler.returnSuccess(httpStatus.OK,'Success',items))
+}
 
   uploadItems = async (req, res) => {
 

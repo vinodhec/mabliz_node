@@ -341,11 +341,11 @@ class ProfileController {
     readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
       const header = rows[0];
       let item;
-      for (let i = 1; i < rows.length - 1; i++) {
+      for (let i = 1; i <= rows.length - 1; i++) {
         const branch = await this.branchService.branchDao.Model.findByPk(branch_id);
         const row = rows[i]
         const value = this.getObjfromMappings(header, row, branch_id);
-
+console.log(value)
 
 
         if (value['item_generic_name']) {

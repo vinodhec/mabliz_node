@@ -292,7 +292,7 @@ const itemMappings ={
         "Special Notes / Message":'special_notes',
         "Photo":'photo',
         "Selling Price":'selling_price',
-        "Dining Price":'dinning_price',
+        "Dining Price":'dinning_price_virtual',
         "A/C Dining Price":'ac_dinning_price',
         "Take Away Price":'takeaway_price',
         "Delivery Price":'delivery_price',

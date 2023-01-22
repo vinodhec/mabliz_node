@@ -34,8 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       addressProofNumber: DataTypes.STRING,
       addressProofImage: DataTypes.STRING,
       photo: DataTypes.STRING,
-      email: {type:DataTypes.STRING,
-        unique:true},
+      email: {type:DataTypes.STRING},
       mpin: DataTypes.STRING,
       pfNo: DataTypes.STRING,
       ESI: DataTypes.STRING,
@@ -103,7 +102,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       phone_number: {
         type: DataTypes.STRING,
-        unique:true
+        // unique:true
       },
       isAdmin: {
         defaultValue: false,

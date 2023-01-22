@@ -20,7 +20,20 @@ module.exports = (sequelize, DataTypes) => {
       special_notes: DataTypes.TEXT,
       photo: DataTypes.STRING,
       selling_price: DataTypes.FLOAT,
-      dinning_price: DataTypes.FLOAT,
+      dinning_service_charge:DataTypes.FLOAT,
+      dinning_price:DataTypes.FLOAT,
+
+      dinning_price_virtual: {type:DataTypes.VIRTUAL,
+
+        set:function(val){
+          console.log(val,typeof val)
+          const sp = val.toString().split(',')
+          console.log(sp)
+          this.setDataValue("dinning_price",parseFloat(sp[0]));
+          this.setDataValue("dinning_service_charge",parseFloat(sp[1]));
+        }
+
+      },
       ac_dinning_price: DataTypes.FLOAT,
       takeaway_price: DataTypes.FLOAT,
       delivery_price: DataTypes.FLOAT,
@@ -41,8 +54,8 @@ module.exports = (sequelize, DataTypes) => {
       sales_tax_method: DataTypes.STRING,
       stock_type: DataTypes.STRING,
       min_stock_notification: DataTypes.STRING,
-      mfg_date: DataTypes.DATEONLY,
-      exp_date: DataTypes.DATEONLY,
+      mfg_date: DataTypes.STRING,
+      exp_date: DataTypes.STRING,
       batch_no: DataTypes.STRING,
       hsn_code: DataTypes.STRING,
       qr_code: DataTypes.TEXT,

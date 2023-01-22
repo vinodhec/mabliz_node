@@ -20,7 +20,7 @@
             "requestKey": "title",
             "isStringRequest":true,
             "eligility": [
-                "ADMIN"
+                "PARTNER"
             ], "fields": [
               {
                   "label": "Mr"
@@ -43,7 +43,7 @@
             "error": "Please enter your Name",
             "requestKey": "name",
             "eligility": [
-                "ADMIN"
+                "PARTNER"
             ]
         }, {
           "label": "Middle Name",
@@ -51,7 +51,7 @@
           "input": "text",
           "requestKey": "middleName",
           "eligility": [
-              "ADMIN"
+              "PARTNER"
           ]
       }, {
         "label": "Last Name",
@@ -59,7 +59,7 @@
         "input": "text",
         "requestKey": "lastName",
         "eligility": [
-            "ADMIN"
+            "PARTNER"
         ]
     }, {
       "label": "Date of Birth *",
@@ -68,7 +68,7 @@
       "error": "Please enter your Date of Birth",
       "requestKey": "dob",
       "eligility": [
-          "ADMIN"
+          "PARTNER"
       ]
   },{
     "label": "Mobile No *",
@@ -78,7 +78,7 @@
     "error": "Please enter your Mobile No",
     "requestKey": "phone_number",
     "eligility": [
-        "ADMIN"
+        "PARTNER"
     ]
 },{
   "label": "Email ID",
@@ -86,7 +86,7 @@
   "input": "email",
   "requestKey": "email",
   "eligility": [
-      "ADMIN"
+      "PARTNER"
   ]
 },  {
   "label": "Nationality *",
@@ -98,7 +98,7 @@
   "isStringRequest":true,
 
   "eligility": [
-      "ADMIN"
+      "PARTNER"
   ], "fields": [
     {
         "label": "Indian",
@@ -462,7 +462,7 @@
             "error": "Please enter your Joining Date",
             "requestKey": "joining_date",
             "eligility": [
-                "ADMIN"
+                "PARTNER"
             ]
 
         }
@@ -479,7 +479,7 @@
             "input": "text",
             "requestKey": "pfNo",
             "eligility": [
-                "ADMIN"
+                "PARTNER"
             ]
 
         }
@@ -496,7 +496,7 @@
             "input": "text",
             "requestKey": "ESI",
             "eligility": [
-                "ADMIN"
+                "PARTNER"
             ]
 
         }
@@ -541,7 +541,7 @@
                   "error": "Please Select Reporting and Approval",
                   "requestKey": "reporting",
                   "eligility": [
-                      "ADMIN"
+                      "PARTNER"
                   ],
                   "fields":[ 
                     {

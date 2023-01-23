@@ -189,7 +189,7 @@ class ProfileController {
     try {
       let { user, query, body } = req;
       body = { status: userConstant.STATUS_DISABLED }
-      const isApproval = true
+      const isApproval = user.role_id !=='OWNER'
 
       const userById = await this.userService.userDao.Model.findByPk(body.id);
       let models = [];
@@ -225,7 +225,7 @@ class ProfileController {
     try {
       let { user, query, body } = req;
       body = { ...body, status: userConstant.STATUS_ACTIVE }
-      const isApproval = true
+      const isApproval = user.role_id !=='OWNER'
 
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
       let models = [];
@@ -341,6 +341,7 @@ class ProfileController {
     readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
       const header = rows[0];
       let item;
+ let dish_codes = await this.itemvariantService.itemvariantDao.Model.findAll({attributes:['dish_code']})
       for (let i = 1; i <= rows.length - 1; i++) {
         const branch = await this.branchService.branchDao.Model.findByPk(branch_id);
         const row = rows[i]

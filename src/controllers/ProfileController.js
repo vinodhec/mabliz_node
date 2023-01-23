@@ -332,28 +332,42 @@ class ProfileController {
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
   }
 
+  findNextNum =(dish_code,k)=>{
+console.log(dish_code,typeof dish_code)
+    if(dish_code.includes(k)){
+     return this.findNextNum(dish_code,++k)    }
+      else{
+       return k
+      }
+
+  }
+
   uploadItems = async (req, res) => {
 
     const { file, branch_id } = req.body;
 
 
-
+let k = 0;
     readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
       const header = rows[0];
       let item;
- let dish_codes = await this.itemvariantService.itemvariantDao.Model.findAll({attributes:['dish_code']})
+ let dish_codes_obj = await this.itemvariantService.itemvariantDao.Model.findAll({raw:true,attributes:['dish_code']});
+ let dish_code = dish_codes_obj.map(({dish_code})=>dish_code);
+
       for (let i = 1; i <= rows.length - 1; i++) {
+
+ k =this.findNextNum(dish_code,k)
         const branch = await this.branchService.branchDao.Model.findByPk(branch_id);
         const row = rows[i]
-        const value = this.getObjfromMappings(header, row, branch_id);
-console.log(value)
-
+        let value = this.getObjfromMappings(header, row, branch_id);
+value['dish_code']= value['dish_code'] ?? k
 
         if (value['item_generic_name']) {
           item = await branch.createItem(value)
         }
         if (value['name']) {
           const variant = await item.createItemvariant(value)
+          dish_code.push(value['dish_code']);
 
         }
 

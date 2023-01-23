@@ -287,7 +287,7 @@ const itemMappings ={
         "Variant Name (Auto Fill)":'name',
         "Variant Nam Local Lang (Auto Fill)":'name_local_language',
         "Variant Description":'variant_description',
-        // "Dish Code":'dish_code',
+        "Dish Code":'dish_code',
         "Search Code":'search_code',
         "Special Notes / Message":'special_notes',
         "Photo":'photo',

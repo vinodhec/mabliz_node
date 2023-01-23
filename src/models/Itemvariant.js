@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       selling_qty: DataTypes.FLOAT, name: DataTypes.STRING,
       name_local_language: DataTypes.STRING,
       variant_description: DataTypes.STRING,
-      dish_code: {type:DataTypes.INTEGER},
+      dish_code: {type:DataTypes.INTEGER, isNull:false},
       search_code: DataTypes.STRING,
       special_notes: DataTypes.TEXT,
       photo: DataTypes.STRING,

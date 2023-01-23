@@ -518,7 +518,16 @@
         "fields": [
           
             
-        ]}
+        ]},
+        
+           {
+            "title": "Module",
+            "eligility": [
+                "PARTNER"
+            ],
+            "requestKey": "module",
+            "fields": []
+        }
         ]},
         
         {

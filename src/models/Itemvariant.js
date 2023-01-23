@@ -117,8 +117,12 @@ defaultValue:itemStatus.STATUS_ACTIVE
       self_service_discount: DataTypes.FLOAT,
       open_dining_discount: DataTypes.FLOAT,
       delivery_discount: DataTypes.FLOAT,
-
+      price_1:DataTypes.FLOAT,
+      price_2:DataTypes.FLOAT,
+      price_3:DataTypes.FLOAT,
+      price_4:DataTypes.FLOAT,
       purchase_unit: DataTypes.STRING,
+  
       selling_unit: DataTypes.STRING,
       purchase_method: DataTypes.STRING,
       selling_method: DataTypes.STRING,

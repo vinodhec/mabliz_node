@@ -1,4 +1,5 @@
 const { Model } = require("sequelize");
+const { itemStatus } = require("./../config/constant");
 
 
 const splitAndUpdate=(context,val1,val2,val,seperator=",")=>{
@@ -40,7 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       selling_price: DataTypes.FLOAT,
       dinning_service_charge:DataTypes.FLOAT,
       dinning_price:DataTypes.FLOAT,
-
+      status:{
+        type:DataTypes.STRING,
+defaultValue:itemStatus.STATUS_ACTIVE
+    },
       self_service_price_virtual: {type:DataTypes.VIRTUAL,
 
         set:function(val){

@@ -1,4 +1,5 @@
 const { Model } = require("sequelize");
+const { itemStatus } = require("./../config/constant");
 
 module.exports = (sequelize, DataTypes) => {
     class Item extends Model {
@@ -27,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
             kitchen_notes: DataTypes.TEXT,
             customize: DataTypes.TEXT,
             add_ons: DataTypes.TEXT,
+            status:{
+                type:DataTypes.STRING,
+defaultValue:itemStatus.STATUS_ACTIVE
+            }
         },
 
         {

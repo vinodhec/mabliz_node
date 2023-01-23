@@ -5,6 +5,12 @@ const userConstant = {
   STATUS_REMOVED: 2,
 };
 
+const itemStatus={
+STATUS_ACTIVE: 1,
+STATUS_INACTIVE: 0,
+STATUS_DISABLED: -1,
+};
+
 const branchStatus = {
   STATUS_INACTIVE: 0,
   STATUS_VERFIED: 1,
@@ -38,5 +44,7 @@ module.exports = {
   verificationCodeConstant,
   branchStatus,
   businessStatus,
+itemStatus
+,
   approvalStatus
 };

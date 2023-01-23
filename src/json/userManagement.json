@@ -504,31 +504,37 @@
       }
     ]
   },{
-    "title": "Assign Role",
-    "eligility": [
-      "PARTNER"
-    ],
     "details": [
-      {
-        "title": "Role",
-        "eligility": [
-          "PARTNER"
-        ],
-        "requestKey": "role",
-        "fields": [
-          
-            
-        ]},
-        
-           {
-            "title": "Module",
+        {
             "eligility": [
                 "PARTNER"
             ],
-            "requestKey": "module",
-            "fields": []
+            "title": "Assign Role",
+            "fields": [
+                {
+                    "eligility": [
+                        "PARTNER"
+                    ],
+                    "title": "Role",
+                    "fields": [],
+                    "requestKey": "role"
+                },
+                {
+                    "eligility": [
+                        "PARTNER"
+                    ],
+                    "title": "Module",
+                    "fields": [],
+                    "requestKey": "module"
+                }
+            ]
         }
-        ]},
+    ],
+    "eligility": [
+        "PARTNER"
+    ],
+    "title": "Assign Role"
+},
         
         {
           "title": "Reporting & Approval",

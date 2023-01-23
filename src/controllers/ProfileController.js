@@ -8,6 +8,7 @@ const RolepermissionService = require("../service/RolepermissionService");
 const AttendanceService = require("../service/AttendanceService");
 const ItemvariantService = require("../service/ItemvariantService");
 const RoleService = require("../service/RoleService");
+const ItemService = require("../service/ItemService");
 
 const ApprovalService = require("../service/ApprovalService");
 
@@ -42,6 +43,7 @@ class ProfileController {
     this.attendanceService = new AttendanceService();
     this.itemvariantService = new ItemvariantService();
     this.roleService = new RoleService();
+    this.itemService = new ItemService();
 
   }
 
@@ -189,7 +191,7 @@ class ProfileController {
     try {
       let { user, query, body } = req;
       body = { status: userConstant.STATUS_DISABLED }
-      const isApproval = user.role_id !=='OWNER'
+      const isApproval = user.role_id !== 'OWNER'
 
       const userById = await this.userService.userDao.Model.findByPk(body.id);
       let models = [];
@@ -225,7 +227,7 @@ class ProfileController {
     try {
       let { user, query, body } = req;
       body = { ...body, status: userConstant.STATUS_ACTIVE }
-      const isApproval = user.role_id !=='OWNER'
+      const isApproval = user.role_id !== 'OWNER'
 
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
       let models = [];
@@ -332,13 +334,14 @@ class ProfileController {
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
   }
 
-  findNextNum =(dish_code,k)=>{
-console.log(dish_code,typeof dish_code)
-    if(dish_code.includes(k)){
-     return this.findNextNum(dish_code,++k)    }
-      else{
-       return k
-      }
+  findNextNum = (dish_code, k) => {
+    console.log(dish_code, typeof dish_code)
+    if (dish_code.includes(k)) {
+      return this.findNextNum(dish_code, ++k)
+    }
+    else {
+      return k
+    }
 
   }
 
@@ -347,20 +350,20 @@ console.log(dish_code,typeof dish_code)
     const { file, branch_id } = req.body;
 
 
-let k = 0;
+    let k = 0;
     readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
       const header = rows[0];
       let item;
- let dish_codes_obj = await this.itemvariantService.itemvariantDao.Model.findAll({raw:true,attributes:['dish_code']});
- let dish_code = dish_codes_obj.map(({dish_code})=>dish_code);
+      let dish_codes_obj = await this.itemvariantService.itemvariantDao.Model.findAll({ raw: true, attributes: ['dish_code'] });
+      let dish_code = dish_codes_obj.map(({ dish_code }) => dish_code);
 
       for (let i = 1; i <= rows.length - 1; i++) {
 
- k =this.findNextNum(dish_code,k)
+        k = this.findNextNum(dish_code, k)
         const branch = await this.branchService.branchDao.Model.findByPk(branch_id);
         const row = rows[i]
         let value = this.getObjfromMappings(header, row, branch_id);
-value['dish_code']= value['dish_code'] ?? k
+        value['dish_code'] = value['dish_code'] ?? k
 
         if (value['item_generic_name']) {
           item = await branch.createItem(value)
@@ -401,6 +404,50 @@ value['dish_code']= value['dish_code'] ?? k
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", users))
   }
 
+  updateItems = async (req, res) => {
+    const { user, body } = req;
+
+    const { id, itemvariants } = body;
+    await this.itemService.itemDao.updateWhere(body, { id })
+    if (itemvariants && itemvariants.length > 0) {
+      for (let itemvariant of itemvariants) {
+        const { id } = itemvariant
+        await this.itemvariantService.itemvariantDao.updateWhere(itemvariant, { id })
+      }
+    }
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", {}))
+
+  }
+
+  deleteItem = async (req, res) => {
+    const { user, body } = req;
+
+    const { id } = body;
+
+    await this.itemService.itemDao.deleteByWhere({ id })
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", {}))
+
+
+  }
+
+  deleteItemVariants = async(req,res)=>{
+    const { user, body } = req;
+
+    const { id, itemvariants } = body;
+    
+    if (itemvariants && itemvariants.length > 0) {
+      for (let itemvariant of itemvariants) {
+        const { id } = itemvariant
+        await this.itemvariantService.itemvariantDao.deleteByWhere( { id })
+      }
+    }
+    const remaining = await this.itemvariantService.itemvariantDao.findByWhere({item_id:id})
+    if(remaining.length === 0){
+await this.itemService.itemDao.deleteByWhere({id})
+    }
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", {}))
+
+  }
 
   getPendingListForApproval = async (req, res) => {
     const { user } = req;

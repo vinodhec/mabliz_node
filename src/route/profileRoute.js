@@ -25,6 +25,9 @@ router.delete('/user/role', profileController.deleteRole);
 
 
 router.post('/upload-items',profileController.uploadItems)
+router.put('/update-items',profileController.updateItems)
+router.delete('/delete-item',profileController.deleteItem)
+router.delete('/delete-item-variants',profileController.deleteItemVariants)
 router.get('/get-all-items',profileController.getAllItems)
 
 router.get('/user/get-modules-for-role', profileController.getModulesForRole);

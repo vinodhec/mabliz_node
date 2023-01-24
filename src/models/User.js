@@ -102,7 +102,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       phone_number: {
         type: DataTypes.STRING,
-        // unique:true
+        unique:true
       },
       isAdmin: {
         defaultValue: false,

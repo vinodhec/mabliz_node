@@ -227,7 +227,8 @@ class ProfileController {
     try {
       let { user, query, body } = req;
       body = { ...body, status: userConstant.STATUS_ACTIVE }
-      const isApproval = user.role_id !== 'OWNER'
+      console.log(user)
+      const isApproval = user.role_id !== 0
 
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
       let models = [];

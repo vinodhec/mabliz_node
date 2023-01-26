@@ -39,8 +39,9 @@ async function sendSMS(phone, otp) {
 async function createNewOTP(phone) {
   console.groupCollapsed('otp');
   console.log(phone)
+  const isDummy = phone.startsWith("00000");
   // Generate a 6 digit numeric OTP
-  const otp = otpGenerator.generate(6, {
+  const otp = isDummy ? "00000" : otpGenerator.generate(6, {
     lowerCaseAlphabets: false,
     upperCaseAlphabets: false,
     specialChars: false,
@@ -53,7 +54,10 @@ console.groupEnd();
   const hash = crypto.createHmac("sha256", key).update(data).digest("hex"); // creating SHA256 hash of the data
   const fullHash = `${hash}.${expires}`; // Hash.expires, format to send to the user
   // you have to implement the function to send SMS yourself. For demo purpose. let's assume it's called sendSMS
-  await sendSMS(phone, otp);
+  if(!isDummy){
+    await sendSMS(phone, otp);
+
+  }
   return fullHash;
 }
 

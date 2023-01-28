@@ -13,7 +13,7 @@ const ItemService = require("../service/ItemService");
 const ApprovalService = require("../service/ApprovalService");
 
 const Sequelize = require("sequelize");
-const op = Sequelize.op;
+const Op = Sequelize.Op;
 const { createNewOTP, verifyOTP } = require("../helper/otpHelper");
 const capitalize = require("capitalize");
 const { groupBy } = require("lodash");

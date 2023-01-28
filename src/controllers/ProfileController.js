@@ -12,7 +12,8 @@ const ItemService = require("../service/ItemService");
 
 const ApprovalService = require("../service/ApprovalService");
 
-const { Op } = require("sequelize");
+const Sequelize = require("sequelize");
+const op = Sequelize.op;
 const { createNewOTP, verifyOTP } = require("../helper/otpHelper");
 const capitalize = require("capitalize");
 const { groupBy } = require("lodash");
@@ -387,7 +388,7 @@ class ProfileController {
     const { roleId } = query;
 
     const rolePermission = await this.rolePermissionService.rolepermissionDao.Model.findAll({
-      attributes: ['module'],
+      attributes: [   [Sequelize.fn('DISTINCT', Sequelize.col('module')) ,'module']],
       raw: true,
       where: { roleId }
     })
@@ -539,9 +540,7 @@ await this.itemService.itemDao.deleteByWhere({id})
       await role.addPermissions(permission, { through: { need_approval, module: permission_suffix.split("_")[0] } });
 
     }
-    const promise = await permissions.map(async () => {
-    })
-    await Promise.all(promise)
+   
 
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
   };
@@ -557,6 +556,8 @@ await this.itemService.itemDao.deleteByWhere({id})
     await role?.update(body);
     console.log({ role });
 
+
+    
     const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
       const permission = await this.permissionService.permissionDao.findById(permission_suffix);
       await role.addPermissions(permission, { through: { need_approval } });

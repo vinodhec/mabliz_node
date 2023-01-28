@@ -41,7 +41,7 @@ async function createNewOTP(phone) {
   console.log(phone)
   const isDummy = phone.startsWith("00000");
   // Generate a 6 digit numeric OTP
-  const otp = isDummy ? "00000" : otpGenerator.generate(6, {
+  const otp = isDummy ? "000000" : otpGenerator.generate(6, {
     lowerCaseAlphabets: false,
     upperCaseAlphabets: false,
     specialChars: false,

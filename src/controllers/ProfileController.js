@@ -532,9 +532,14 @@ await this.itemService.itemDao.deleteByWhere({id})
     const role = await user.createRole(body);
     console.log({ role });
 
-    const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
+    for(let perm of permissions){
+      const { permission_suffix, need_approval } = perm;
       const permission = await this.permissionService.permissionDao.findByWhere({ name: permission_suffix });
+
       await role.addPermissions(permission, { through: { need_approval, module: permission_suffix.split("_")[0] } });
+
+    }
+    const promise = await permissions.map(async () => {
     })
     await Promise.all(promise)
 
@@ -543,14 +548,18 @@ await this.itemService.itemDao.deleteByWhere({id})
 
   updateRole = async (req, res) => {
     const { user, body } = req;
+    console.log(body);
     const { id, permissions } = body;
-    const role = await user.getRoles({ where: { id } });
-    await role?.[0].update(body);
+    console.log(id, permissions);
+    const role = await this.roleService.roleDao.Model.findByPk(id);
+    // const role = await user.getRoles({ where: { id } });
+    console.log(role);
+    await role?.update(body);
     console.log({ role });
 
     const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
       const permission = await this.permissionService.permissionDao.findById(permission_suffix);
-      await role?.[0].addPermissions(permission, { through: { need_approval } });
+      await role.addPermissions(permission, { through: { need_approval } });
     })
     await Promise.all(promise)
 

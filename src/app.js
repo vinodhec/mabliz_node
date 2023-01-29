@@ -41,7 +41,7 @@ const fileStorage = multer.diskStorage({
 });
 const imagesMiddleWare = (req, res, next) => {
 
-  console.log(req.headers)
+  console.log(req.path,req.method)
   if (req.is("multipart/form-data")) {
     const images = {};
     req.files?.forEach((file) => {

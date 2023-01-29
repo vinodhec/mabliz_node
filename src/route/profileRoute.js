@@ -29,6 +29,7 @@ router.put('/update-items',profileController.updateItems)
 router.delete('/delete-item',profileController.deleteItem)
 router.delete('/delete-item-variants',profileController.deleteItemVariants)
 router.get('/get-all-items',profileController.getAllItems)
+router.get('/get-roles-eligible-for-reporting',profileController.getRolesEligibleForReporting)
 
 router.get('/user/get-modules-for-role', profileController.getModulesForRole);
 router.get('/user/get-reporting-users', profileController.getReportingUsers);

@@ -92,7 +92,6 @@
   "label": "Nationality *",
   "type": "drop_down",
   "input": "select",
-  "isMandatory": true,
   "error": "Please select your Nationality",
   "requestKey": "nationality",
   "isStringRequest":true,
@@ -124,7 +123,6 @@
             "type": "drop_down",
             "input": "select",
             "requestKey": "idProofType",
-            "isMandatory": true,
             "isStringRequest":true,
     "error": "Please select your ID Proof",
             "eligility": [
@@ -139,7 +137,6 @@
           "type": "textbox_image_picker",
           "input": "text",
           "requestKey": "idProofNumber",
-          "isMandatory": true,
           "error": "Please Enter ID Proof Number",
           "imageKey": "idProofImage",
           "eligility": [
@@ -155,7 +152,6 @@
             "type": "drop_down",
             "input": "select",
             "requestKey": "addressProofType",
-            "isMandatory": true,
             "isStringRequest":true,
 
             "error":"Please select your Address Proof ",
@@ -172,7 +168,6 @@
           "type": "textbox_image_picker",
           "input": "text",
           "requestKey": "addressProofNumber",
-          "isMandatory": true,
           "error": "Please Enter Address Proof Number",
           "imageKey": "addressProofImage",
           "eligility": [
@@ -191,7 +186,6 @@
           "type": "drop_down",
           "input": "select",
           "requestKey": "policeClearance",
-          "isMandatory": true,
           "error":"Please select your Police Clearance ",
           "eligility": [
             "PARTNER"
@@ -207,7 +201,6 @@
         "type": "textbox_image_picker",
         "input": "text",
         "requestKey": "policeClearanceNumber",
-        "isMandatory": true,
         "error": "Please Enter Police Clearance Number",
         "imageKey": "",
         "eligility": [
@@ -217,7 +210,6 @@
        { "label": "Police Clearance Expiry Date",
        "type": "date_picker",
       "requestKey": "policeClearanceExpiryDate",
-      "isMandatory": true,
       "error": "Please Enter Police Clearance Expiry Date",
       "eligility": [
         "PARTNER"
@@ -263,7 +255,6 @@
        "label": "Location",
        "type": "textbox",
        "input": "text",
-       "isMandatory": true,
        "error": "Please Enter Town / City, State, Country Name",
        "requestKey": "p_organization_location",
        "eligility": [
@@ -273,7 +264,6 @@
        "label": "Employment Joining Proof *",
        "type": "drop_down",
        "input": "select",
-       "isMandatory": true,
        "error": "Please select your Employment Joining Proof",
        "requestKey": "p_organization_joining_proof",
        "eligility": [
@@ -288,7 +278,6 @@
      }, {
        "label": "Joining Date",
        "type": "date_picker_image_picker",
-       "isMandatory": true,
        "error": "Please select your Joining Date",
        "requestKey": "p_organization_joining_date",
        "imageKey": "",
@@ -299,7 +288,6 @@
        "label": "Employment Relieving Proof *",
        "type": "drop_down",
        "input": "select",
-       "isMandatory": true,
        "error": "Please select your Employment Relieving Proof",
        "requestKey": "p_organization_reliving_proof",
        "eligility": [
@@ -314,7 +302,6 @@
      }, {
        "label": "Reliving Date",
        "type": "date_picker_image_picker",
-       "isMandatory": true,
        "error": "Please select your Reliving Date",
        "requestKey": "p_organization_reliving_date",
        "imageKey": "",
@@ -331,7 +318,6 @@
        {
        "label": "1st Month Pay Slip",
        "type": "date_picker_image_picker",
-       "isMandatory": true,
        "error": "Please Enter Pay Slip Date",
        "requestKey": "p_organization_payslip_1",
        "imageKey": "",
@@ -341,7 +327,6 @@
      }, {
        "label": "2nd Month Pay Slip",
        "type": "date_picker_image_picker",
-       "isMandatory": true,
        "error": "Please Enter Pay Slip Date",
        "requestKey": "p_organization_payslip_2",
        "imageKey": "",
@@ -351,7 +336,6 @@
      }, {
        "label": "3rd Month Pay Slip",
        "type": "date_picker_image_picker",
-       "isMandatory": true,
        "error": "Please Enter Pay Slip Date",
        "requestKey": "p_organization_payslip_3",
        "imageKey": "",
@@ -370,7 +354,6 @@
        {
        "label": "1st Month Bank Statement",
        "type": "date_picker_image_picker",
-       "isMandatory": true,
        "error": "Please Enter Bank Statement Date",
        "requestKey": "p_organization_bankstatement_1_date",
        "imageKey": "",
@@ -380,7 +363,6 @@
      }, {
        "label": "2nd Month Bank Statement",
        "type": "date_picker_image_picker",
-       "isMandatory": true,
        "error": "Please Enter Bank Statement Date",
        "requestKey": "p_organization_bankstatement_2_date",
        "imageKey": "",
@@ -390,7 +372,6 @@
      }, {
        "label": "3rd Month Bank Statement",
        "type": "date_picker_image_picker",
-       "isMandatory": true,
        "error": "Please Enter Bank Statement Date",
        "requestKey": "p_organization_bankstatement_3_date",
        "imageKey": "",
@@ -419,7 +400,6 @@
             "label": "Salary *",
             "type": "textbox",
             "input": "number",
-            "isMandatory": true,
             "error": "Please Enter your Salary",
             "requestKey": "salary",
             "eligility": [
@@ -434,7 +414,6 @@
             "type": "drop_down",
             "input": "select",
             "requestKey": "salary_frequency",
-            "isMandatory": true,
             "error": "Please select your Pay Basis",
             "isStringRequest":true,
 

@@ -139,6 +139,7 @@ class ProfileController {
 
       const { query, user } = req;
       console.log(user.dataValues?.id)
+
       const data = await this.userService.userDao.findAll({ where: { reporting_user_id: user.dataValues?.id } })
 
       res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", data))
@@ -150,7 +151,24 @@ class ProfileController {
 
   }
 
+  getRolesEligibleForReporting = async (req, res) => {
 
+    try {
+
+      const { query, user } = req;
+
+      const { branch_id, business_type_id } = user;
+      console.log(user.dataValues?.id)
+      const roles = await this.getRolesForUser(user, business_type_id, 'Yes', branch_id)
+
+
+      res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles))
+
+    }
+    catch (err) {
+
+    }
+  }
 
   deleteUser = async (req, res) => {
 
@@ -228,7 +246,7 @@ class ProfileController {
     try {
       let { user, query, body } = req;
       body = { ...body, status: userConstant.STATUS_ACTIVE }
-      console.log(user)
+      console.log(body)
       const isApproval = user.role_id !== 0
 
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
@@ -388,7 +406,7 @@ class ProfileController {
     const { roleId } = query;
 
     const rolePermission = await this.rolePermissionService.rolepermissionDao.Model.findAll({
-      attributes: [   [Sequelize.fn('DISTINCT', Sequelize.col('module')) ,'module']],
+      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('module')), 'module']],
       raw: true,
       where: { roleId }
     })
@@ -432,20 +450,20 @@ class ProfileController {
 
   }
 
-  deleteItemVariants = async(req,res)=>{
+  deleteItemVariants = async (req, res) => {
     const { user, body } = req;
 
     const { id, itemvariants } = body;
-    
+
     if (itemvariants && itemvariants.length > 0) {
       for (let itemvariant of itemvariants) {
         const { id } = itemvariant
-        await this.itemvariantService.itemvariantDao.deleteByWhere( { id })
+        await this.itemvariantService.itemvariantDao.deleteByWhere({ id })
       }
     }
-    const remaining = await this.itemvariantService.itemvariantDao.findByWhere({item_id:id})
-    if(remaining.length === 0){
-await this.itemService.itemDao.deleteByWhere({id})
+    const remaining = await this.itemvariantService.itemvariantDao.findByWhere({ item_id: id })
+    if (remaining.length === 0) {
+      await this.itemService.itemDao.deleteByWhere({ id })
     }
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", {}))
 
@@ -533,14 +551,14 @@ await this.itemService.itemDao.deleteByWhere({id})
     const role = await user.createRole(body);
     console.log({ role });
 
-    for(let perm of permissions){
+    for (let perm of permissions) {
       const { permission_suffix, need_approval } = perm;
       const permission = await this.permissionService.permissionDao.findByWhere({ name: permission_suffix });
 
       await role.addPermissions(permission, { through: { need_approval, module: permission_suffix.split("_")[0] } });
 
     }
-   
+
 
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
   };
@@ -557,7 +575,7 @@ await this.itemService.itemDao.deleteByWhere({id})
     console.log({ role });
 
 
-    
+
     const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
       const permission = await this.permissionService.permissionDao.findById(permission_suffix);
       await role.addPermissions(permission, { through: { need_approval } });

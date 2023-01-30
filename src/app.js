@@ -163,7 +163,7 @@ BusinessTypes.belongsToMany(Module,{through:Businesstypemodule});
 // Role.belongsToMany(Module,{through:Rolemoduleuser})
 // Module.belongsToMany(Role,{through:Rolemoduleuser})
 
-db.sequelize.sync({alter:true});
+// db.sequelize.sync({alter:true});
 // 
-// db.sequelize.sync();
+db.sequelize.sync();
 module.exports = app;

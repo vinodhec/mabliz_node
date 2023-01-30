@@ -289,10 +289,10 @@ class ProfileController {
       else {
        const emp =  await data.createEmployment(emp_data);
        console.log(emp);
-        const roleuser = await data.createRoleuser(data.role_id);
+        const roleuser = await data.addRoleusers(data.role_id);
         // console.log(ch)
         // const roleuser =  await this.roleuserService.roleuserDao.Model.findAll({role_id:data.role_id,user_id:data.dataValues.id})
-        // console.log({roleuser});
+        console.log({roleuser});
 
         await roleuser.addBranches([...(body.additional_branch_ids??[]),data.branch_id])
       }

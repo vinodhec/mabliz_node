@@ -101,6 +101,8 @@ const Attendance = models.attendance;
 const Approval = models.approval;
 const Itemvariant = models.itemvariant;
 const Item = models.item;
+const Roleuser = models.roleuser;
+const Roleuserbranch = models.roleuserbranch;
 
 User.hasMany(Employment);
 Employment.belongsTo(User);
@@ -143,8 +145,12 @@ Plan.belongsToMany(Branch, { through: Planbranch });
 
 Planbranch.belongsToMany(Addon, { through: Planbranchaddon });
 Addon.belongsToMany(Planbranch, { through: Planbranchaddon });
-User.hasMany(Role,{ onDelete: 'cascade', hooks:true });
-Role.belongsTo(User);
+User.hasMany(Roleuser);
+Roleuser.belongsTo(User);
+
+
+Roleuser.belongsToMany(Branch,{  through: Roleuserbranch, onDelete: 'cascade', hooks:true });
+Branch.belongsToMany(Roleuser,{  through: Roleuserbranch, onDelete: 'cascade', hooks:true });
 
 User.hasMany(User);
 User.belongsTo(User)
@@ -154,10 +160,10 @@ Role.belongsToMany(Permission, { through: Rolepermission});
 Permission.belongsToMany(Role, { through: Rolepermission});
 BusinessTypes.belongsToMany(Module,{through:Businesstypemodule});
 // db.sequelize.sync({force:true});
-Role.belongsToMany(Module,{through:Rolemoduleuser})
-Module.belongsToMany(Role,{through:Rolemoduleuser})
+// Role.belongsToMany(Module,{through:Rolemoduleuser})
+// Module.belongsToMany(Role,{through:Rolemoduleuser})
 
-// db.sequelize.sync({alter:true});
+db.sequelize.sync({alter:true});
 // 
-db.sequelize.sync();
+// db.sequelize.sync();
 module.exports = app;

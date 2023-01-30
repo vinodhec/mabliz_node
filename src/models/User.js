@@ -67,6 +67,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: userConstant.STATUS_INACTIVE,
       },
 
+      additional_branch_ids:DataTypes.JSON, 
 
       branch_id:DataTypes.INTEGER, 
       business_id:DataTypes.INTEGER, 

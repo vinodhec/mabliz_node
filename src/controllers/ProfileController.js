@@ -9,6 +9,7 @@ const AttendanceService = require("../service/AttendanceService");
 const ItemvariantService = require("../service/ItemvariantService");
 const RoleService = require("../service/RoleService");
 const ItemService = require("../service/ItemService");
+const RoleuserService = require("../service/RoleuserService");
 
 const ApprovalService = require("../service/ApprovalService");
 
@@ -36,6 +37,8 @@ class ProfileController {
 
     this.tokenService = new TokenService();
     this.branchService = new BranchService();
+    this.roleuserService = new RoleuserService();
+
     this.authService = new AuthService();
     this.permissionService = new PermissionService();
     this.moduleService = new ModuleService();
@@ -247,7 +250,8 @@ class ProfileController {
       let { user, query, body } = req;
       body = { ...body, status: userConstant.STATUS_ACTIVE }
       console.log(body)
-      const isApproval = user.role_id !== 0
+      const isApproval = user.role_id !== 0 
+      // || true
 
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
       let models = [];
@@ -277,11 +281,20 @@ class ProfileController {
       const emp_data = { ...body, joined_by: user.dataValues.id }
       if (isApproval) {
         models.push({ id: 'PREVIOUS_CHAIN', name: 'user', action: 'createEmployment', value: emp_data })
+        models.push({ id: 'PREVIOUS_CHAIN', name: 'user', action: 'addRoles', value: body.role.id })
+
+        models.push({ id: 'PREVIOUS_CHAIN_2', name: 'roleuser', action: 'addBranches', value: [...(body.additional_branch_ids??[]),data.branch_id] })
 
       }
       else {
-        await data.createEmployment(emp_data);
+       const emp =  await data.createEmployment(emp_data);
+       console.log(emp);
+        const roleuser = await data.createRoleuser(data.role_id);
+        // console.log(ch)
+        // const roleuser =  await this.roleuserService.roleuserDao.Model.findAll({role_id:data.role_id,user_id:data.dataValues.id})
+        // console.log({roleuser});
 
+        await roleuser.addBranches([...(body.additional_branch_ids??[]),data.branch_id])
       }
 
 
@@ -494,7 +507,7 @@ class ProfileController {
 
       const { id, action, reason } = body;
       const approval = await this.approvalService.approvalDao.Model.findByPk(id);
-      if (user.id !== approval?.approver_id) {
+      if (user.id !== approval?.approver_id && false) {
         console.log(user.id, approval.approver_id)
         res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'Not authorized to action this request'))
         return;
@@ -515,16 +528,22 @@ class ProfileController {
           const { id, name, action, value } = item;
           let updatedId = id;
           if (typeof (id) === 'string' && id?.includes('PREVIOUS_CHAIN')) {
-            const chainid = id.split('PREVIOUS_CHAIN')?.[1] || 1;
+            const chainid = parseInt(id.split('PREVIOUS_CHAIN')?.[1]) || 1;
             updatedId = ids[index - chainid]
-            console.log(ids, updatedId, index, chainid, index - chainid)
+            console.log({ids, updatedId, index, chainid}, index - chainid)
           }
           const modelInstance = await this.getModelInstance(updatedId, name);
+          console.log({name,action,value},modelInstance,updatedId)
+
           await modelInstance[action](value).then((a) => {
-            console.log(a.id, ids)
-            ids.push(a.id);
-            console.log(a.id, ids)
-            return a;
+            console.log({a})
+            if(a){
+              console.log(a.id, ids)
+              ids.push(a.id);
+              console.log(a.id, ids)
+              return a;
+            }
+        
           })
           index += 1;
 

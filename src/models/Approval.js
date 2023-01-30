@@ -1,4 +1,5 @@
 const { Model } = require("sequelize");
+const { differenceInMinutes } = require("date-fns");
 
 module.exports = (sequelize, DataTypes) => {
     class Approval extends Model {

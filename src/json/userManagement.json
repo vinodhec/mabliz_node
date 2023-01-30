@@ -484,7 +484,8 @@
     ]
   },{
     "details": [
-        {
+        {"overridden":"true",
+          "overridden_id":"user_role",
             "eligility": [
                 "PARTNER"
             ],
@@ -498,6 +499,14 @@
                     "fields": [],
                     "requestKey": "role"
                 },
+                {
+                  "eligility": [
+                      "PARTNER"
+                  ],
+                  "title": "Branches",
+                  "fields": [],
+                  "requestKey": "additional_branch_ids"
+              },
                 {
                     "eligility": [
                         "PARTNER"
@@ -516,6 +525,8 @@
 },
         
         {
+          "overridden":"true",
+          "overridden_id":"user_reporting",
           "title": "Reporting & Approval",
           "eligility": [
             "PARTNER"
@@ -533,7 +544,6 @@
                   "input": "select",
                   "isMandatory": true,
                   "error": "Please Select Reporting and Approval",
-                  "requestKey": "reporting",
                   "eligility": [
                       "PARTNER"
                   ],
@@ -555,7 +565,20 @@
                     "id": 4
                   }
                   ]
-              }
+              }, {
+                "label": "Select a User*",
+                "type": "user_selection",
+                "isMandatory": true,
+                "error": "Please Select a user",
+                "requestKey": "reporting",
+                "eligility": [
+                    "PARTNER"
+                ],
+                "fields":[ 
+                  
+                ]
+            }
+              
             ]
           }
         ]

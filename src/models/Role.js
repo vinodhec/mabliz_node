@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       business_type_id: {
         type: DataTypes.INTEGER,
       },
+      owner_id:DataTypes.INTEGER,
       branch_ids:{
         type: DataTypes.TEXT,
         get: function () {

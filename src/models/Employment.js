@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
      business_id:DataTypes.INTEGER,
      joining_date:DataTypes.DATEONLY,
      reliving_date:DataTypes.DATEONLY,
+     owner_id:DataTypes.INTEGER,
      joined_by:DataTypes.INTEGER,
      relived_by:DataTypes.INTEGER
     },

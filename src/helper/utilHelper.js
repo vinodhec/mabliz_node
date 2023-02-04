@@ -52,7 +52,7 @@ const crudOperations = async ({ req, res, source, target, id }) => {
   const sourceModelName = source || "user";
   const sourceModel = req[sourceModelName];
   const getMixin = "get" + targetModelName_plural;
-  //  console.log(req.body)
+   console.log("body",req.body)
   switch (req.method) {
     case "GET":
       const modelListData = await sourceModel[getMixin]();

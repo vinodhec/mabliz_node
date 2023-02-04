@@ -38,7 +38,7 @@ class UserService {
             userBody.is_owner = true;
             userBody.role={id:0,label:'OWNER'}
             let userData = await this.userDao.create({...userBody,status: userConstant.STATUS_ACTIVE});
-           
+            userBody.owner_id = userData.id;
 
             if (!userData) {
                 message = 'Registration Failed! Please Try again.';

@@ -12,6 +12,7 @@ const auth = require('../middlewares/auth');
 
 
 router.use(auth());
+
 const profileController = new ProfileController();
 const adminController = new AdminController();
 

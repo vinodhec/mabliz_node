@@ -83,6 +83,7 @@ module.exports = (sequelize, DataTypes) => {
       nationality:DataTypes.STRING,
       is_owner:DataTypes.BOOLEAN,
       role_id: DataTypes.INTEGER,
+      owner_id:DataTypes.INTEGER,
       role: {
         type: DataTypes.JSON,
 

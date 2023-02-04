@@ -11,7 +11,7 @@ const verifyCallback = (req, res, resolve, reject,isAdmin) => {
             return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
         }
         req.user = user;
-
+        req.body = {...req.body,owner_id: user?.role_id === 0 ? user?.id : user?.owner_id}
         resolve();
     };
 };

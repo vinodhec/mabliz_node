@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       branch_name: {
         type: DataTypes.STRING,
       },
+      owner_id:DataTypes.INTEGER,
       // lastName: DataTypes.STRING,
       // middleName: DataTypes.STRING,
       branch_type_label: DataTypes.STRING,

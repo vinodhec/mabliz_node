@@ -281,15 +281,15 @@ class ProfileController {
       const emp_data = { ...body, joined_by: user.dataValues.id }
       if (isApproval) {
         models.push({ id: 'PREVIOUS_CHAIN', name: 'user', action: 'createEmployment', value: emp_data })
-        models.push({ id: 'PREVIOUS_CHAIN', name: 'user', action: 'addRoles', value: body.role.id })
+        models.push({ id: 'PREVIOUS_CHAIN2', name: 'user', action: 'createRoleuser', value:{role_id: body.role.id} })
 
-        models.push({ id: 'PREVIOUS_CHAIN_2', name: 'roleuser', action: 'addBranches', value: [...(body.additional_branch_ids??[]),data.branch_id] })
+        models.push({ id: 'PREVIOUS_CHAIN', name: 'roleuser', action: 'addBranches', value: [...(body.additional_branch_ids??[]),data.branch_id] })
 
       }
       else {
        const emp =  await data.createEmployment(emp_data);
        console.log(emp);
-        const roleuser = await data.addRoleusers(data.role_id);
+        const roleuser = await data.createRoleuser({role_id:data.role_id});
         // console.log(ch)
         // const roleuser =  await this.roleuserService.roleuserDao.Model.findAll({role_id:data.role_id,user_id:data.dataValues.id})
         console.log({roleuser});
@@ -533,7 +533,7 @@ class ProfileController {
             console.log({ids, updatedId, index, chainid}, index - chainid)
           }
           const modelInstance = await this.getModelInstance(updatedId, name);
-          console.log({name,action,value},modelInstance,updatedId)
+          console.log({name,action,value},updatedId)
 
           await modelInstance[action](value).then((a) => {
             console.log({a})

@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       uuid: DataTypes.UUID,
       business_name: DataTypes.STRING,
+      owner_id : {
+        type: DataTypes.INTEGER,
+        // references: 'User', 
+        // referencesKey: 'id' 
+      },
       // lastName: DataTypes.STRING,
       // middleName: DataTypes.STRING,
       business_type_label: DataTypes.STRING,

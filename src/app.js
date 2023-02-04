@@ -153,7 +153,10 @@ Roleuser.belongsToMany(Branch,{  through: Roleuserbranch, onDelete: 'cascade', h
 Branch.belongsToMany(Roleuser,{  through: Roleuserbranch, onDelete: 'cascade', hooks:true });
 
 User.hasMany(User);
-User.belongsTo(User)
+
+
+User.hasMany(Role);
+Role.belongsTo(User)
 User.hasMany(Attendance)
 // User.hasOne(Role);
 Role.belongsToMany(Permission, { through: Rolepermission});
@@ -162,6 +165,10 @@ BusinessTypes.belongsToMany(Module,{through:Businesstypemodule});
 // db.sequelize.sync({force:true});
 // Role.belongsToMany(Module,{through:Rolemoduleuser})
 // Module.belongsToMany(Role,{through:Rolemoduleuser})
+Business.belongsTo(User, {foreignKey: 'owner_id'});
+Branch.belongsTo(User, {foreignKey: 'owner_id'});
+Role.belongsTo(User, {foreignKey: 'owner_id'});
+User.belongsTo(User, {foreignKey: 'owner_id'});
 
 // db.sequelize.sync({alter:true});
 // 

@@ -195,7 +195,7 @@ class SuperDao {
         });
     }
 
-    async getDataTableData(where, limit, offset, order = [['id', 'DESC']]) {
+    async getDataTableData(where, limit =10, offset=0, order) {
         return this.Model.findAndCountAll({
             limit: parseInt(limit, 10),
             offset: parseInt(offset, 10),

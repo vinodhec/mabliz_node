@@ -31,11 +31,14 @@ const {
 
 const responseHandler = require("../helper/responseHandler");
 const { omit } = require("lodash");
+const BusinessService = require("../service/BusinessService");
 class ProfileController {
   constructor() {
     this.userService = new UserService();
 
     this.tokenService = new TokenService();
+    this.businessService = new BusinessService();
+
     this.branchService = new BranchService();
     this.roleuserService = new RoleuserService();
 
@@ -58,6 +61,14 @@ class ProfileController {
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", businessTypes));
 
   }
+
+  getBusiness = async (req, res) => {
+    const business = await this.businessService.businessDao.getAllBusiness(req.user,req.body?.pagination);
+    res.send(responseHandler.returnSuccess(httpStatus[200], "Success", business));
+
+
+  }
+
 
   findUser = async (req, res) => {
 

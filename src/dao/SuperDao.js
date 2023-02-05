@@ -195,6 +195,17 @@ class SuperDao {
         });
     }
 
+    updateWhereBasedOnUser(){
+
+        return {}
+    }
+
+    getAll(user, { where = {}, limit, offset, order } = {}) {
+        const updatedWhere = this.updateWhereBasedOnUser(user);
+        console.log('asd', { ...updatedWhere, ...where })
+        return this.getDataTableData({ ...updatedWhere, ...where }, limit, offset, order);
+    }
+
     async getDataTableData(where, limit =10, offset=0, order) {
         return this.Model.findAndCountAll({
             limit: parseInt(limit, 10),

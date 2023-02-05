@@ -12,11 +12,7 @@ class BusinessDao extends SuperDao {
         super(Business);
     }
 
-    getAllBusiness(user, { where = {}, limit, offset, order } = {}) {
-        const updatedWhere = this.updateWhereBasedOnUser(user);
-        console.log('asd', { ...updatedWhere, ...where })
-        return super.getDataTableData({ ...updatedWhere, ...where }, limit, offset, order);
-    }
+    
 
     updateWhereBasedOnUser(user) {
         let where;

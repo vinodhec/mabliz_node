@@ -53,6 +53,8 @@ router.all('/reviewreason', adminController.crudOperations);
 router.get('/businessTypes', profileController.getBusinessTypes)
 
 router.all('/get-business',profileController.getBusiness)
+router.all('/get-branch',profileController.getBranch)
+
 
 router.all('/user/:target', profileController.curdUserAssociated);
 router.all('/user/:target1/:target1Id', profileController.curdUserAssociatedTwoTargets);

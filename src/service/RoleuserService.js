@@ -23,7 +23,7 @@ class RoleuserService {
         let branches = [];
         if (isOwner) {
             branches = await this.branchDao.findByWhere({ where: { owner_id: id,id:branch_id },  raw: true  });
-            console.log(branches.length)
+            console.log(branches.length,branch_id.length)
         }
 
         else {
@@ -31,7 +31,7 @@ class RoleuserService {
             branches = roleuser.branches;
         }
 
-        if (branches.length == branch_id.length) {
+        if (branches.length !== branch_id.length) {
             console.log('branch id does not match')
             return false
         }

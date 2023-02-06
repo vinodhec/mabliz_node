@@ -27,8 +27,9 @@ class SuperDao {
             });
     }
 
-    async findById(id) {
-        return this.Model.findOne({ where: { id } })
+    async findById(id,options={}) {
+        console.log({...options})
+        return this.Model.findOne({ where: { id },...options })
             .then((result) => {
                 return result;
             })

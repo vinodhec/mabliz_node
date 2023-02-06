@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
    Rolepermission.init(
     {
      need_approval:{type:DataTypes.BOOLEAN,defaultValue:false},
-     module:{type:DataTypes.STRING}
+     module:{type:DataTypes.STRING},
+     permission_name:{type:DataTypes.STRING}
 
     },
 

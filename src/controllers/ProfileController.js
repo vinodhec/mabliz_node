@@ -618,20 +618,25 @@ class ProfileController {
   addNewRoles = async (req, res) => {
     const { user, body } = req;
     const { permissions,branch_ids } = body;
+    const isOwner=user.role_id === 0;
     //TODO
-    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id: 1, isOwner:user.role_id === 0, id:user.id, branch_id: branch_ids});
+    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id: 1, isOwner, id:user.id, branch_id: branch_ids});
 if(!hasAccess){
   return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch'))
 
 }
+
+if(!isOwner || true){
+  const hasRoleAccess = await this.roleuserService.hasPermissionAccess(1,user,'role','add');
+
+}
     const role = await user.createRole(body);
-    console.log({ role });
 
     for (let perm of permissions) {
       const { permission_suffix, need_approval } = perm;
       const permission = await this.permissionService.permissionDao.findByWhere({ name: permission_suffix });
-
-      await role.addPermissions(permission, { through: { need_approval, module: permission_suffix.split("_")[0] } });
+const split = permission_suffix.split("_");
+      await role.addPermissions(permission, { through: { need_approval, module: split[0] } });
 
     }
     await role.addBranches(branch_ids)

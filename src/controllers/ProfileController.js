@@ -43,7 +43,7 @@ class ProfileController {
 
     this.branchService = new BranchService();
     this.roleuserService = new RoleuserService();
-this.roleuserbranchService= new RoleuserbranchService();
+    this.roleuserbranchService = new RoleuserbranchService();
     this.authService = new AuthService();
     this.permissionService = new PermissionService();
     this.moduleService = new ModuleService();
@@ -86,7 +86,7 @@ this.roleuserbranchService= new RoleuserbranchService();
       user = await this.userService.userDao.findByPhoneNumber(phone_number);
     }
     else if (id_proof_type) {
-      user = await this.userService.userDao.findOneByWhere({ [id_proof_type]: id_proof_no });
+      user = await this.userService.userDao.findOneByWhere({ where: { [id_proof_type]: id_proof_no } });
 
     }
     if (user) {
@@ -330,21 +330,31 @@ this.roleuserbranchService= new RoleuserbranchService();
     const { user, body } = req;
 
 
-    const {branch_id,business_id, phone_number,additional_branches } = body;
-    
+    const { branch_id, business_id, phone_number, additional_branches, modules, role_id } = body;
+    const { id, owner_id } = user;
     const dao = this.userService.userDao
-
-    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({roleuser_id:1,branch_id:[branch_id,...additional_branches ], businesses:[business_id]})
-    console.log({hasAccess});
+    const branches = [branch_id, ...additional_branches]
+    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id: 1, branch_id: branches, businesses: [business_id] });
+    const hasRoleAccess = await this.roleService.hasRoleAccess()
+    if (!hasAccess) {
+      return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch'))
+    }
+    const details = { ...body, user_id: id, joined_by: id, owner_id }
     let employee = await dao.findByPhoneNumber(phone_number)
     if (employee) {
-      await dao.updateById(body, employee.id);
+      await dao.updateById(details, employee.id);
       console.log('user already exist with us')
     } else {
-      employee = await dao.create(body);
+      employee = await dao.create(details);
       console.log('user is newly created');
 
     }
+
+    const emp = await employee.createEmployment(details);
+    const roleuser = await employee.createRoleuser({ role_id });
+    await roleuser.addBranches(branches);
+    await roleuser.addModules(modules);
+
 
     res.json(hasAccess)
 
@@ -607,7 +617,13 @@ this.roleuserbranchService= new RoleuserbranchService();
 
   addNewRoles = async (req, res) => {
     const { user, body } = req;
-    const { permissions } = body;
+    const { permissions,branch_ids } = body;
+    //TODO
+    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id: 1, branch_id: branch_ids});
+if(!hasAccess){
+  return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch'))
+
+}
     const role = await user.createRole(body);
     console.log({ role });
 
@@ -618,6 +634,7 @@ this.roleuserbranchService= new RoleuserbranchService();
       await role.addPermissions(permission, { through: { need_approval, module: permission_suffix.split("_")[0] } });
 
     }
+    await role.addBranches(branch_ids)
 
 
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));

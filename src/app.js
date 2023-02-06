@@ -104,10 +104,12 @@ const Item = models.item;
 const Roleuser = models.roleuser;
 const Roleuserbranch = models.roleuserbranch;
 const Roleusermodule = models.roleusermodule;
-
+const Rolebranch = models.rolebranch;
 User.hasMany(Employment);
 Employment.belongsTo(User);
 
+Role.belongsToMany(Branch,{through:Rolebranch,onDelete:'cascade'});
+Branch.belongsToMany(Role,{through:Rolebranch,onDelete:'cascade'})
 User.hasMany(Approval);
 Approval.belongsTo(User);
 
@@ -178,7 +180,7 @@ Branch.belongsTo(User, {foreignKey: 'owner_id'});
 Role.belongsTo(User, {foreignKey: 'owner_id'});
 User.belongsTo(User, {foreignKey: 'owner_id'});
 
-// db.sequelize.sync({alter:true});
+db.sequelize.sync({alter:true});
 // 
-db.sequelize.sync();
+// db.sequelize.sync();
 module.exports = app;

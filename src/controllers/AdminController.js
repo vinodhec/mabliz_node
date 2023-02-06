@@ -341,10 +341,10 @@ class AdminController {
   deleteValidity = async (req, res) => {
     console.log(req.query);
     const planValidity =
-      await this.planvalidityService.planvalidityDao.findOneByWhere({
+      await this.planvalidityService.planvalidityDao.findOneByWhere({where:{
         id: req.query.id,
         plan_id: req.query.plan_id,
-      });
+      }});
     try {
       await planValidity.destroy();
       res.json(responseHandler.returnSuccess(httpStatus["200"], "Success"));

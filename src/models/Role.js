@@ -25,19 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       owner_id:DataTypes.INTEGER,
-      branch_ids:{
-        type: DataTypes.TEXT,
-        get: function () {
-          console.log(typeof JSON.parse(this.getDataValue("branch_ids")));
-          return JSON.parse(this.getDataValue("branch_ids") || "[]");
-        },
-        set: function (value) {
-      
-console.log(value,typeof value)
-          this.setDataValue("branch_ids", JSON.stringify(value || []));
-        },
-
-      }
+    
    
     },
 

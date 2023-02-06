@@ -20,13 +20,24 @@ class RoleuserService {
     async hasAccessToBranchandBusiness({ roleuser_id, branch_id, business_id }) {
 
 
-      const roleuser =  await this.roleuserDao.findByWhere({where:{id:roleuser_id},order:['id','ASC'],include:[{model:this.branchDao.Model}, {model:this.moduleDao.Model}]})
+        const roleuser = await this.roleuserDao.findOneByWhere({ where: { id: roleuser_id }, order: ['id', 'ASC'], attributes: { raw: true }, include: [{ model: this.branchDao.Model, where: { id: branch_id } }, { model: this.moduleDao.Model }] })
+        if (roleuser.branches.length !== branch_id.length) {
+            console.log('branch id does not match')
+            return false
+        }
+        else {
+            if (roleuser.branches.some(({businessId}) => businessId === business_id)) {
+                console.log(roleuser.branches.map((dd)=>dd.businessId))
+              console.log('business id doesnt not match')
+                return false
+            }
+        }
 
-        console.log(roleuser);
-        return roleuser;
+        return true;
+
     }
- 
-   
+
+
 }
 
 module.exports = RoleuserService;

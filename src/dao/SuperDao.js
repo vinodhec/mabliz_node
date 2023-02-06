@@ -38,10 +38,19 @@ class SuperDao {
             });
     }
 
-    async findOneByWhere(where, attributes = null, order = ['id', 'desc']) {
+    async findOneByWhere(  {where,
+        attributes ,
+        include,
+        order ,
+        limit ,
+        offset }={ },) {
+            if(!order){
+                order =['id','DESC']
+            }
         if (attributes == null) {
             return this.Model.findOne({
                 where,
+                include,
                 order: [order],
             })
                 .then((result) => {
@@ -54,6 +63,7 @@ class SuperDao {
         }
         return this.Model.findOne({
             where,
+            include,
             attributes,
             order: [order],
         })
@@ -114,6 +124,9 @@ class SuperDao {
         limit ,
         offset }={ },
     ) {
+        if(!order){
+            order =['id','desc']
+        }
         if (!attributes) {
             return this.Model.findAll({
                 where,

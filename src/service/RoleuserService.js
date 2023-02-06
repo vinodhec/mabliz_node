@@ -5,6 +5,7 @@ const ModuleDao = require('../dao/ModuleDao');
 
 const responseHandler = require('../helper/responseHandler');
 const logger = require('../config/logger');
+const { el } = require('date-fns/locale');
 
 class RoleuserService {
     constructor() {
@@ -17,18 +18,27 @@ class RoleuserService {
 
 
 
-    async hasAccessToBranchandBusiness({ roleuser_id, branch_id, business_id }) {
+    async hasAccessToBranchandBusiness({ isOwner, roleuser_id, id, branch_id, business_id }) {
+        console.log({ isOwner, roleuser_id, id, branch_id, business_id })
+        let branches = [];
+        if (isOwner) {
+            branches = await this.branchDao.findByWhere({ where: { owner_id: id,id:branch_id },  raw: true  });
+            console.log(branches.length)
+        }
 
+        else {
+            const roleuser = await this.roleuserDao.findOneByWhere({ where: { id: roleuser_id }, order: ['id', 'ASC'], attributes: { raw: true }, include: [{ model: this.branchDao.Model, where: { id: branch_id } }, { model: this.moduleDao.Model }] })
+            branches = roleuser.branches;
+        }
 
-        const roleuser = await this.roleuserDao.findOneByWhere({ where: { id: roleuser_id }, order: ['id', 'ASC'], attributes: { raw: true }, include: [{ model: this.branchDao.Model, where: { id: branch_id } }, { model: this.moduleDao.Model }] })
-        if (roleuser.branches.length !== branch_id.length) {
+        if (branches.length == branch_id.length) {
             console.log('branch id does not match')
             return false
         }
         else {
-            if (roleuser.branches.some(({businessId}) => businessId === business_id)) {
-                console.log(roleuser.branches.map((dd)=>dd.businessId))
-              console.log('business id doesnt not match')
+            if (business_id && !(branches.some(({ businessId }) => businessId === business_id))) {
+                console.log(roleuser.branches.map((dd) => dd.businessId))
+                console.log('business id doesnt not match')
                 return false
             }
         }

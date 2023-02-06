@@ -117,34 +117,20 @@ class SuperDao {
     }
 
     async findByWhere(
-        {where,
-        attributes ,
-        include,
-        order ,
-        limit ,
-        offset }={ },
+        {
+        order ,...others
+         }={ },
     ) {
         if(!order){
             order =['id','desc']
         }
-        if (!attributes) {
             return this.Model.findAll({
-                where,
-                include,
-                order: [order],
-                limit,
-                offset,
+               
+                order: [order],...others
+                
             });
-        }
 
-        return this.Model.findAll({
-            where,
-            include,
-            attributes,
-            order: [order],
-            limit,
-            offset,
-        });
+      
     }
 
     async deleteByWhere(where) {

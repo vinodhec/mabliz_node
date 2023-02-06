@@ -619,7 +619,7 @@ class ProfileController {
     const { user, body } = req;
     const { permissions,branch_ids } = body;
     //TODO
-    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id: 1, branch_id: branch_ids});
+    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id: 1, isOwner:user.role_id === 0, id:user.id, branch_id: branch_ids});
 if(!hasAccess){
   return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch'))
 

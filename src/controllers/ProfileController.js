@@ -32,6 +32,8 @@ const {
 const responseHandler = require("../helper/responseHandler");
 const { omit } = require("lodash");
 const BusinessService = require("../service/BusinessService");
+const RoleuserbranchService = require("../service/RoleuserbranchService");
+
 class ProfileController {
   constructor() {
     this.userService = new UserService();
@@ -41,7 +43,7 @@ class ProfileController {
 
     this.branchService = new BranchService();
     this.roleuserService = new RoleuserService();
-
+this.roleuserbranchService= new RoleuserbranchService();
     this.authService = new AuthService();
     this.permissionService = new PermissionService();
     this.moduleService = new ModuleService();
@@ -51,6 +53,7 @@ class ProfileController {
     this.itemvariantService = new ItemvariantService();
     this.roleService = new RoleService();
     this.itemService = new ItemService();
+    // this.addUser1();
 
   }
 
@@ -63,12 +66,12 @@ class ProfileController {
   }
 
   getBusiness = async (req, res) => {
-    const business = await this.businessService.businessDao.getAll(req.user,req.body?.pagination);
+    const business = await this.businessService.businessDao.getAll(req.user, req.body?.pagination);
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", business));
   }
 
   getBranch = async (req, res) => {
-    const branch = await this.branchService.branchDao.getAll(req.user,req.body?.pagination);
+    const branch = await this.branchService.branchDao.getAll(req.user, req.body?.pagination);
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", branch));
   }
 
@@ -263,7 +266,7 @@ class ProfileController {
       let { user, query, body } = req;
       body = { ...body, status: userConstant.STATUS_ACTIVE }
       console.log(body)
-      const isApproval = user.role_id !== 0 
+      const isApproval = user.role_id !== 0
       // || true
 
       const userbyPhone = await this.userService.userDao.findByPhoneNumber(body.phone_number);
@@ -294,20 +297,20 @@ class ProfileController {
       const emp_data = { ...body, joined_by: user.dataValues.id }
       if (isApproval) {
         models.push({ id: 'PREVIOUS_CHAIN', name: 'user', action: 'createEmployment', value: emp_data })
-        models.push({ id: 'PREVIOUS_CHAIN2', name: 'user', action: 'createRoleuser', value:{role_id: body.role.id} })
+        models.push({ id: 'PREVIOUS_CHAIN2', name: 'user', action: 'createRoleuser', value: { role_id: body.role.id } })
 
-        models.push({ id: 'PREVIOUS_CHAIN', name: 'roleuser', action: 'addBranches', value: [...(body.additional_branch_ids??[]),data.branch_id] })
+        models.push({ id: 'PREVIOUS_CHAIN', name: 'roleuser', action: 'addBranches', value: [...(body.additional_branch_ids ?? []), data.branch_id] })
 
       }
       else {
-       const emp =  await data.createEmployment(emp_data);
-       console.log(emp);
-        const roleuser = await data.createRoleuser({role_id:data.role_id});
+        const emp = await data.createEmployment(emp_data);
+        console.log(emp);
+        const roleuser = await data.createRoleuser({ role_id: data.role_id });
         // console.log(ch)
         // const roleuser =  await this.roleuserService.roleuserDao.Model.findAll({role_id:data.role_id,user_id:data.dataValues.id})
-        console.log({roleuser});
+        console.log({ roleuser });
 
-        await roleuser.addBranches([...(body.additional_branch_ids??[]),data.branch_id])
+        await roleuser.addBranches([...(body.additional_branch_ids ?? []), data.branch_id])
       }
 
 
@@ -322,6 +325,31 @@ class ProfileController {
 
   }
 
+
+  addUser1 = async (req, res) => {
+    const { user, body } = req;
+
+
+    const {branch_id,business_id, phone_number,additional_branches } = body;
+    
+    const dao = this.userService.userDao
+
+    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({roleuser_id:1,branch_id:[branch_id,...additional_branches ], businesses:[business_id]})
+    console.log({hasAccess});
+    let employee = await dao.findByPhoneNumber(phone_number)
+    if (employee) {
+      await dao.updateById(body, employee.id);
+      console.log('user already exist with us')
+    } else {
+      employee = await dao.create(body);
+      console.log('user is newly created');
+
+    }
+
+    res.json(hasAccess)
+
+
+  }
 
 
   getRolesForUser = async (user, business_type_id, is_approval_authority, branch_id) => {
@@ -543,20 +571,20 @@ class ProfileController {
           if (typeof (id) === 'string' && id?.includes('PREVIOUS_CHAIN')) {
             const chainid = parseInt(id.split('PREVIOUS_CHAIN')?.[1]) || 1;
             updatedId = ids[index - chainid]
-            console.log({ids, updatedId, index, chainid}, index - chainid)
+            console.log({ ids, updatedId, index, chainid }, index - chainid)
           }
           const modelInstance = await this.getModelInstance(updatedId, name);
-          console.log({name,action,value},updatedId)
+          console.log({ name, action, value }, updatedId)
 
           await modelInstance[action](value).then((a) => {
-            console.log({a})
-            if(a){
+            console.log({ a })
+            if (a) {
               console.log(a.id, ids)
               ids.push(a.id);
               console.log(a.id, ids)
               return a;
             }
-        
+
           })
           index += 1;
 

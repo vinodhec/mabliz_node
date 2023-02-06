@@ -107,15 +107,17 @@ class SuperDao {
     }
 
     async findByWhere(
-        where,
-        attributes = undefined,
-        order = ['id', 'asc'],
-        limit = null,
-        offset = null,
+        {where,
+        attributes ,
+        include,
+        order ,
+        limit ,
+        offset }={ },
     ) {
         if (!attributes) {
             return this.Model.findAll({
                 where,
+                include,
                 order: [order],
                 limit,
                 offset,
@@ -124,6 +126,7 @@ class SuperDao {
 
         return this.Model.findAll({
             where,
+            include,
             attributes,
             order: [order],
             limit,
@@ -205,6 +208,8 @@ class SuperDao {
         console.log('asd', { ...updatedWhere, ...where })
         return this.getDataTableData({ ...updatedWhere, ...where }, limit, offset, order);
     }
+
+// create(user,)
 
     async getDataTableData(where, limit =10, offset=0, order) {
         return this.Model.findAndCountAll({

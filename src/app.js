@@ -103,6 +103,7 @@ const Itemvariant = models.itemvariant;
 const Item = models.item;
 const Roleuser = models.roleuser;
 const Roleuserbranch = models.roleuserbranch;
+const Roleusermodule = models.roleusermodule;
 
 User.hasMany(Employment);
 Employment.belongsTo(User);
@@ -151,6 +152,13 @@ Roleuser.belongsTo(User);
 
 Roleuser.belongsToMany(Branch,{  through: Roleuserbranch, onDelete: 'cascade', hooks:true });
 Branch.belongsToMany(Roleuser,{  through: Roleuserbranch, onDelete: 'cascade', hooks:true });
+
+
+
+Module.belongsToMany(Roleuser,{  onDelete: 'cascade',through: Roleusermodule});
+
+Roleuser.belongsToMany(Module,{ onDelete: 'cascade', through: Roleusermodule});
+
 
 User.hasMany(User);
 

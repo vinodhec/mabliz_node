@@ -42,7 +42,7 @@ router.put('/user/approve', profileController.approveRejectApprovalRequest);
 router.put('/user/disable-user', profileController.disableUser);
 router.delete('/user/delete-user', profileController.deleteUser);
 
-router.post('/user', profileController.addUser);
+router.post('/user', profileController.addUser1);
 router.post('/add-attendance', profileController.addAddentance);
 
 router.post('/findUser', profileController.findUser);

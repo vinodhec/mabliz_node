@@ -86,6 +86,17 @@ class UserService {
         return this.userDao.findOneByWhere({ uuid });
     };
 
+    isUserAllowedToAccess = async(user,path)=>{
+        const {role_id} = user;
+        if(role_id === 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+        return true;
+
+    }
     changePassword = async (data, uuid) => {
         let message = 'Login Successful';
         let statusCode = httpStatus.OK;

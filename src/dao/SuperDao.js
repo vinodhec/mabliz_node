@@ -39,35 +39,14 @@ class SuperDao {
             });
     }
 
-    async findOneByWhere(  {where,
-        attributes ,
-        include,
-        order ,
-        limit ,
-        offset }={ },) {
+    async findOneByWhere(  {        order ,...others
+    }={ },) {
             if(!order){
                 order =['id','DESC']
             }
-        if (attributes == null) {
-            return this.Model.findOne({
-                where,
-                include,
-                order: [order],
-            })
-                .then((result) => {
-                    return result;
-                })
-                .catch((e) => {
-                    logger.error(e);
-                    console.log(e);
-                });
-        }
-        return this.Model.findOne({
-            where,
-            include,
-            attributes,
-            order: [order],
-        })
+    
+        return this.Model.findOne({                order: [order],...others}
+            )
             .then((result) => {
                 return result;
             })

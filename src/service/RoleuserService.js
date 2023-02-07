@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const RoleuserDao = require('../dao/RoleuserDao');
 const BranchDao = require('../dao/BranchDao');
 const ModuleDao = require('../dao/ModuleDao');
+const RolepermissionDao = require('../dao/RolepermissionDao');
 const RoleDao = require('../dao/RoleDao');
 
 const responseHandler = require('../helper/responseHandler');
@@ -15,6 +16,7 @@ class RoleuserService {
         this.branchDao = new BranchDao();
         this.moduleDao = new ModuleDao();
         this.roleDao = new RoleDao();
+        this.rolepermissionDao = new RolepermissionDao();
 
     }
 
@@ -48,11 +50,11 @@ class RoleuserService {
         return true;
 
     }
-    async hasPermissionAccess(roleuser_id,user,module,permission) {
+    async hasPermissionAccess(roleuser_id,user,modulepermission) {
        
-        const {role_id} = await this.roleuserDao.findById(roleuser_id,{raw:true});
+        const {role_id} = await this.roleuserDao.findById(11,{raw:true});
 
-const role = await this.roleDao.findById(1)
+const role = await this.rolepermissionDao.findByWhere({where:{modulepermission}})
        console.log({role,role_id}) 
     //     else {
     //         const roleuser = await this.roleuserDao.findOneByWhere({ where: { id: roleuser_id }, order: ['id', 'ASC'], attributes: { raw: true }, include: [{ model: this.branchDao.Model, where: { id: branch_id } }, { model: this.moduleDao.Model }] })
@@ -74,6 +76,13 @@ const role = await this.roleDao.findById(1)
     //     return true;
 
     // }
+    }
+
+    async getPermissionDetails(roleuser_id,user,modulepermission){
+        const {module,permission:permission_name} = modulepermission
+        const role_id = 27;
+        const role = await this.rolepermissionDao.findOneByWhere({where:{role_id,module,permission_name},raw:true,order:['role_id','DESC']})
+return role
     }
 
 }

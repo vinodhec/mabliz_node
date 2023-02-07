@@ -636,7 +636,7 @@ if(!isOwner || true){
       const { permission_suffix, need_approval } = perm;
       const permission = await this.permissionService.permissionDao.findByWhere({ name: permission_suffix });
 const split = permission_suffix.split("_");
-      await role.addPermissions(permission, { through: { need_approval, module: split[0] } });
+      await role.addPermissions(permission, { through: { need_approval, module: split[0],permission_name:split[1] } });
 
     }
     await role.addBranches(branch_ids)

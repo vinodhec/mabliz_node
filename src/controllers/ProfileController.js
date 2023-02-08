@@ -682,9 +682,9 @@ class ProfileController {
 
     }
     const { role_id } = await this.roleuserService.roleuserDao.findById(roleuser_id)
-    const permissions = await this.rolePermissionService.rolepermissionDao.findByWhere({ where: { role_id }, order: ['role_id', 'DESC'] });
+    const permissions = await this.rolePermissionService.rolepermissionDao.findByWhere({ where: { role_id }, attributes:['need_approval','module','permission_name'], order: ['role_id', 'DESC'] });
 
-    res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', permissions))
+   return res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', permissions))
   }
   deleteRole = async (req, res) => {
     const { user, body } = req;

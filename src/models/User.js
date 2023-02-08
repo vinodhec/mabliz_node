@@ -82,20 +82,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       nationality:DataTypes.STRING,
       is_owner:DataTypes.BOOLEAN,
-      role_id: DataTypes.INTEGER,
+
+      roleuser_id: DataTypes.INTEGER,
       owner_id:DataTypes.INTEGER,
-      role: {
-        type: DataTypes.JSON,
-
-        set: function (val) {
-          this.setDataValue("role_name", val.label);
-
-          return this.setDataValue("role_id", val.id);
-        },
-      },
-      role_name: {
-        type: DataTypes.STRING,
-      },
+  
       reporting_user_id: {
         type: DataTypes.INTEGER,
       },

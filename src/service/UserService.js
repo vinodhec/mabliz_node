@@ -36,7 +36,7 @@ class UserService {
             }
             userBody.uuid = uuid;
             userBody.is_owner = true;
-            userBody.role={id:0,label:'OWNER'}
+            userBody.roleuser_id = 0;
             let userData = await this.userDao.create({...userBody,status: userConstant.STATUS_ACTIVE});
             userBody.owner_id = userData.id;
             userData.update({owner_id:userData.id});

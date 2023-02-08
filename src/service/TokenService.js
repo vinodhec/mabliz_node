@@ -91,6 +91,7 @@ class TokenService {
      * @returns {Promise<Object>}
      */
     generateAuthTokens = async (user) => {
+        console.log({user})
         const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
         const accessToken = await this.generateToken(
             user.uuid,

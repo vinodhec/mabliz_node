@@ -11,17 +11,25 @@ const responseHandler = require("../helper/responseHandler");
 const httpStatus = require('http-status');
 
 
-const rolePermissionConfig = { '/user/role_GET': { module: 'user', permission: 'add' } }
+const rolePermissionConfig = {
+    '/user/role_GET': { module: 'role', permission: 'get' }, '/user/role_POST': { module: 'role', permission: 'add' }, '/user/role_PUT': { module: 'role', permission: 'edit' }, '/user/role_DELETE': { module: 'role', permission: 'delete' }, 
+    '/user_GET': { module: 'user', permission: 'get' }, '/user_POST': { module: 'user', permission: 'add' },'/user_PUT': { module: 'user', permission: 'edit' }, '/user/disable-user_PUT': { module: 'user', permission: 'edit' }, '/user/delete_user_DELETE': { module: 'user', permission: 'delete' }
+}
 const permissionChecker = (config) => {
     return async (req, res, next) => {
         const { path, method, user } = req;
         const requiredRoles = config[path + "_" + method];
-        console.log({ requiredRoles })
-        const role = await profileController.roleuserService.getPermissionDetails(1, user, requiredRoles)
-        console.log(role);
-        if(!role){
-            return  res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED)) 
+        console.log({requiredRoles})
+        // console.log({ requiredRoles },user.dataValues)
+        if (requiredRoles) {
+            const role = await profileController.roleuserService.getPermissionDetails(1, user, requiredRoles)
+            console.log(role);
+            if (!role) {
+                return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED))
+            }
+            req.role = role;
         }
+
         next();
     }
 }

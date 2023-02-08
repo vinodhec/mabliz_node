@@ -217,6 +217,7 @@
             "defaultValue": true,
             "label": "I want to receive communications from mabliz on Whatsapp",
             "requestKey": "whatsapp_communication",
+            "error": "Please select WhatsApp communication.",
             "eligility": ["PARTNER", "CUSTOMER"]
           },
           {

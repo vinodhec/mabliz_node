@@ -636,12 +636,9 @@ class ProfileController {
 
     for (let perm of permissions) {
       const { permission_suffix, need_approval } = perm;
-      console.log(permission_suffix)
       const permission = await this.permissionService.permissionDao.findOneByWhere({ where: { name: permission_suffix } });
       const split = permission_suffix.split("_");
-      console.log(split, permission)
       await role.addPermissions(permission, { through: { need_approval, module: split[0], permission_name: split[1] } });
-      console.log(split)
 
     }
     await role.addBranches(branch_ids)
@@ -663,12 +660,13 @@ class ProfileController {
 
 
 
-    const promise = await permissions.map(async ({ permission_suffix, need_approval }) => {
-      const permission = await this.permissionService.permissionDao.findById(permission_suffix);
-      await role.addPermissions(permission, { through: { need_approval } });
-    })
-    await Promise.all(promise)
+    for (let perm of permissions) {
+      const { permission_suffix, need_approval } = perm;
+      const permission = await this.permissionService.permissionDao.findOneByWhere({ where: { name: permission_suffix } });
+      const split = permission_suffix.split("_");
+      await role.addPermissions(permission, { through: { need_approval, module: split[0], permission_name: split[1] } });
 
+    }
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
   };
 

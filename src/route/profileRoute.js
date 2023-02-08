@@ -22,7 +22,7 @@ const permissionChecker = (config) => {
         console.log({requiredRoles})
         // console.log({ requiredRoles },user.dataValues)
         if (requiredRoles) {
-            const role = await profileController.roleuserService.getPermissionDetails(1, user, requiredRoles)
+            const role = await profileController.roleuserService.getPermissionDetails(user.roleuser_id, user, requiredRoles)
             console.log(role);
             if (!role) {
                 return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED))

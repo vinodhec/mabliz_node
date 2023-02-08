@@ -333,17 +333,17 @@ class ProfileController {
 
 
     const { branch_id, business_id, phone_number, additional_branches, modules, role_id } = body;
-    const { id, owner_id,is_owner,roleuser_id } = user;
+    const { id, owner_id, is_owner, roleuser_id } = user;
     const dao = this.userService.userDao
     const branches = [branch_id, ...additional_branches]
-    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ is_owner,id,roleuser_id, branch_id: branches, businesses: [business_id] });
+    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ is_owner, id, roleuser_id, branch_id: branches, businesses: [business_id] });
 
     if (!hasAccess) {
       return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch'))
     }
     const uuid = uuidv4();
 
-    const details = { ...body, uuid,user_id: id, joined_by: id, owner_id }
+    const details = { ...body, uuid, user_id: id, joined_by: id, owner_id }
     let employee = await dao.findByPhoneNumber(phone_number)
     if (employee) {
       await dao.updateById(details, employee.id);
@@ -356,7 +356,7 @@ class ProfileController {
 
     const emp = await employee.createEmployment(details);
     const roleuser = await employee.createRoleuser({ role_id });
-    employee.update({roleuser_id:roleuser.dataValues.id})
+    employee.update({ roleuser_id: roleuser.dataValues.id })
     await roleuser.addBranches(branches);
     await roleuser.addModules(modules);
 
@@ -622,24 +622,26 @@ class ProfileController {
 
   addNewRoles = async (req, res) => {
     const { user, body } = req;
-    const { permissions,branch_ids } = body;
-    const {is_owner, roleuser_id} = user;
+    const { permissions, branch_ids } = body;
+    const { is_owner, roleuser_id } = user;
     //TODO
-    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id:user.id, branch_id: branch_ids});
-if(!hasAccess){
-  return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch'))
+    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id: user.id, branch_id: branch_ids });
+    if (!hasAccess) {
+      return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch'))
 
-}
+    }
 
 
     const role = await user.createRole(body);
 
     for (let perm of permissions) {
       const { permission_suffix, need_approval } = perm;
-      const permission = await this.permissionService.permissionDao.findOneByWhere({where:{ name: permission_suffix }});
-const split = permission_suffix.split("_");
-console.log(split,perm)
-      await role.addPermission(permission, { through: { need_approval, module: split[0],permission_name:split[1] } });
+      console.log(permission_suffix)
+      const permission = await this.permissionService.permissionDao.findOneByWhere({ where: { name: permission_suffix } });
+      const split = permission_suffix.split("_");
+      console.log(split, permission)
+      await role.addPermissions(permission, { through: { need_approval, module: split[0], permission_name: split[1] } });
+      console.log(split)
 
     }
     await role.addBranches(branch_ids)
@@ -670,6 +672,20 @@ console.log(split,perm)
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
   };
 
+  getPermissionDetails = async (req, res) => {
+    const { user } = req;
+    console.log(user);
+    const { is_owner, roleuser_id } = user.dataValues;
+    console.log({is_owner,roleuser_id})
+    if (is_owner) {
+      return res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', [{ 'module': 'owner', 'permissions': 'all' }]))
+
+    }
+    const { role_id } = await this.roleuserService.roleuserDao.findById(roleuser_id)
+    const permissions = await this.rolePermissionService.rolepermissionDao.findByWhere({ where: { role_id }, order: ['role_id', 'DESC'] });
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', permissions))
+  }
   deleteRole = async (req, res) => {
     const { user, body } = req;
     const { id } = body;

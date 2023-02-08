@@ -41,6 +41,8 @@ router.use(permissionChecker(rolePermissionConfig));
 
 
 router.get('/dashboard-details', profileController.getDashboardDetails);
+router.get('/user/get-permission-details', profileController.getPermissionDetails);
+
 // router.get('/user/role',profileController.getRoles);
 
 router.get('/user/role', profileController.getRoles);

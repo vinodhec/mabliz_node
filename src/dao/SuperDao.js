@@ -181,6 +181,7 @@ class SuperDao {
     }
 
     getAll( {user, where, ...others } = {}) {
+        console.log(user,user.owner_id)
         const updatedWhere = this.updateWhereBasedOnUser(user);
         console.log('asd', { ...updatedWhere, ...where })
         return this.getDataTableData({where:{ ...updatedWhere, ...where },...others});

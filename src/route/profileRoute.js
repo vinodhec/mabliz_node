@@ -57,8 +57,11 @@ router.post('/upload-items', profileController.uploadItems)
 router.put('/update-items', profileController.updateItems)
 router.delete('/delete-item', profileController.deleteItem)
 router.delete('/delete-item-variants', profileController.deleteItemVariants)
-router.get('/get-items-based-on-category',profileController.getItemsWithCategory);
-router.post('/get-all-items', profileController.getItemsWithCategory)
+router.post('/get-all-items',profileController.getItemsWithCategory);
+router.post('/get-all-categories',(req,res,next)=>{
+req.isCategoryOnly = true;
+next();
+}, profileController.getItemsWithCategory)
 router.get('/get-roles-eligible-for-reporting', profileController.getRolesEligibleForReporting)
 
 router.get('/user/get-modules-for-role', profileController.getModulesForRole);

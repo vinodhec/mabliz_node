@@ -16,8 +16,8 @@ class BusinessDao extends SuperDao {
 
     updateWhereBasedOnUser(user) {
         let where;
-        if (user.role_id === 0) {
-            where = { owner_id: user.id }
+        if (user.roleuser_id === 0) {
+            where = { owner_id: user.owner_id }
         }
         else {
             where = { id: user.business_id }

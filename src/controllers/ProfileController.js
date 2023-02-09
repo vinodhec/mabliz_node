@@ -449,16 +449,22 @@ class ProfileController {
 
   }
   getItemsWithCategory = async (req, res) => {
-    const { user, query, body } = req;
+    const { user, query, body,isCategoryOnly } = req;
     const { pagination } = body;
     const category = query.category;
     const business_id = user.get().business_id
-    const items =await  this.itemService.itemDao.getDataTableData({ where: { ...(!!category && {category}), business_id }, include: this.itemvariantService.itemvariantDao.Model, ...pagination })
+    let items = await this.itemService.itemDao.getDataTableData({...(!!isCategoryOnly && { attributes: [Sequelize.fn('DISTINCT', Sequelize.col('category')) ,'category'] }), where: { ...(!!category && {category}), business_id }, ...(!!!isCategoryOnly && {include: this.itemvariantService.itemvariantDao.Model}), ...pagination })
     // const branch = await this.branchService.branchDao.Model.findByPk();
     // const items = await branch.getItems({ include: this.itemvariantService.itemvariantDao.Model })
+    console.log({items})
+    if(isCategoryOnly){
+items = items.rows.map(({category})=>category)
+    }
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
 
   }
+
+  
   uploadItems = async (req, res) => {
 
     const { file } = req.body;

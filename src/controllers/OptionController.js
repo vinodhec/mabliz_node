@@ -124,8 +124,9 @@ console.log({modules})
       });
       await Promise.all(promises.flat(1));
       if (type === 'role') {
+        console.log(req.user)
         const businesses =  await new BusinessService().businessDao.getAll({user:req.user,include:{model:new BranchService().branchDao.Model, attributes:['id','branch_name','businessId']}})
-        console.log(businesses)
+        console.log({businesses})
         businesses.rows.forEach((business) => {
          console.log(business)
           jsonFile[0].details[2] =({ title: business.dataValues?.business_name,

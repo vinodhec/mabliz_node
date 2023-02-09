@@ -154,7 +154,7 @@ defaultValue:itemStatus.STATUS_ACTIVE
 
       barcode: DataTypes.TEXT,
       isPhoto: DataTypes.STRING,
-      branch_id:DataTypes.INTEGER
+      business_id:DataTypes.INTEGER
     },
 
     {

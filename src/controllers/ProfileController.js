@@ -433,7 +433,7 @@ class ProfileController {
 
     const { user } = req;
     console.log(user)
-    const branch = await this.branchService.branchDao.Model.findByPk(user.get().branch_id);
+    const branch = await this.branchService.branchDao.Model.findByPk(user.get().business_id);
     const items = await branch.getItems({ include: this.itemvariantService.itemvariantDao.Model })
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
   }
@@ -448,7 +448,17 @@ class ProfileController {
     }
 
   }
+  getItemsWithCategory = async (req, res) => {
+    const { user, query, body } = req;
+    const { pagination } = body;
+    const category = query.category;
+    const business_id = user.get().business_id
+    const items =await  this.itemService.itemDao.getDataTableData({ where: { ...(!!category && {category}), business_id }, include: this.itemvariantService.itemvariantDao.Model, ...pagination })
+    // const branch = await this.branchService.branchDao.Model.findByPk();
+    // const items = await branch.getItems({ include: this.itemvariantService.itemvariantDao.Model })
+    res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
 
+  }
   uploadItems = async (req, res) => {
 
     const { file } = req.body;
@@ -456,6 +466,8 @@ class ProfileController {
 const {business_id} = req.user;
 console.log({file})
     let k = 0;
+    const business = await this.businessService.businessDao.Model.findByPk(business_id);
+
     readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
       const header = rows[0];
       let item;
@@ -465,13 +477,12 @@ console.log({file})
       for (let i = 1; i <= rows.length - 1; i++) {
 
         k = this.findNextNum(dish_code, k)
-        const branch = await this.businessService.businessDao.Model.findByPk(business_id);
         const row = rows[i]
         let value = this.getObjfromMappings(header, row, business_id);
         value['dish_code'] = value['dish_code'] ?? k
 
         if (value['item_generic_name']) {
-          item = await branch.createItem(value)
+          item = await business.createItem(value)
         }
         if (value['name']) {
           const variant = await item.createItemvariant(value)

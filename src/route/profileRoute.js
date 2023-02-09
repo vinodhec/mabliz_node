@@ -14,7 +14,7 @@ const httpStatus = require('http-status');
 const rolePermissionConfig = {
     '/user/role_GET': { module: 'role', permission: 'get' }, '/user/role_POST': { module: 'role', permission: 'add' }, '/user/role_PUT': { module: 'role', permission: 'edit' }, '/user/role_DELETE': { module: 'role', permission: 'delete' }, 
     '/user_GET': { module: 'user', permission: 'get' }, '/user_POST': { module: 'user', permission: 'add' },'/user_PUT': { module: 'user', permission: 'edit' }, '/user/disable-user_PUT': { module: 'user', permission: 'edit' }, '/user/delete_user_DELETE': { module: 'user', permission: 'delete' },
-    '/upload-items_POST': { module: 'user', permission: 'add' }
+    '/upload-items_POST': { module: 'user', permission: 'add' },'/get-all-items_POST':{module:'user',permission:'get'}
 
 }
 const permissionChecker = (config) => {
@@ -57,7 +57,8 @@ router.post('/upload-items', profileController.uploadItems)
 router.put('/update-items', profileController.updateItems)
 router.delete('/delete-item', profileController.deleteItem)
 router.delete('/delete-item-variants', profileController.deleteItemVariants)
-router.get('/get-all-items', profileController.getAllItems)
+router.get('/get-items-based-on-category',profileController.getItemsWithCategory);
+router.post('/get-all-items', profileController.getItemsWithCategory)
 router.get('/get-roles-eligible-for-reporting', profileController.getRolesEligibleForReporting)
 
 router.get('/user/get-modules-for-role', profileController.getModulesForRole);

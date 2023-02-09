@@ -652,8 +652,7 @@ checkBranchAccess=async(user, res,branch_id)=>{
 
   addNewRoles = async (req, res) => {
     const { user, body } = req;
-    const { permissions, branch_ids } = body;
-    const { is_owner, roleuser_id } = user;
+    const { permissions, branch_ids,id } = body;
     //TODO
    
 
@@ -661,7 +660,18 @@ const  hasAccess= await this.checkBranchAccess(user, res,branch_ids)
 if(!hasAccess){
   return;
 }    
-const role = await user.createRole(body);
+
+let role ;
+if(id){
+   role = await this.roleService.roleDao.Model.findByPk(id);
+// await this.rolePermissionService.rolepermissionDao.deleteByWhere({role_id:role.id})
+// await this.rolebranchService.rolebranchDao.deleteByWhere({role_id:role.id})
+await role.update(body)
+}
+else{
+  role =  await user.createRole(body)
+}
+
 
     for (let perm of permissions) {
       const { permission_suffix, need_approval } = perm;

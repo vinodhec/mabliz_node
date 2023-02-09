@@ -32,10 +32,10 @@ class RoleuserService {
 
         else {
             const roleuser = await this.roleuserDao.findOneByWhere({ where: { id: roleuser_id }, order: ['id', 'ASC'], attributes: { raw: true }, include: [{ model: this.branchDao.Model, where: { id: branch_id } }, { model: this.moduleDao.Model }] })
-            branches = roleuser.branches;
+            branches = roleuser?.branches;
         }
 
-        if (branches.length !== branch_id.length) {
+        if (branches?.length !== branch_id.length) {
             console.log('branch id does not match')
             return false
         }

@@ -179,7 +179,7 @@ Branch.belongsTo(User, {foreignKey: 'owner_id'});
 Role.belongsTo(User, {foreignKey: 'owner_id'});
 User.belongsTo(User, {foreignKey: 'owner_id'});
 
-db.sequelize.sync({alter:true});
+// db.sequelize.sync({alter:true});
 // 
 // db.sequelize.sync({force:true});
 

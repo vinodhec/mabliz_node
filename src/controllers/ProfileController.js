@@ -24,7 +24,7 @@ const UserService = require("../service/UserService");
 const logger = require("../config/logger");
 const { branchStatus, approvalStatus, userConstant } = require("../config/constant");
 const readXlsxFile = require('read-excel-file/node')
-const { removeAbsolutePath, itemMappings } = require("./../helper/utilHelper");
+const { removeAbsolutePath, itemMappings,getIdsFromArray } = require("./../helper/utilHelper");
 const {
   crudOperations,
   crudOperationsTwoTargets,
@@ -676,7 +676,7 @@ checkBranchAccess=async(user, res,branch_id,business_id)=>{
     let { permissions, branch_ids,id } = body;
     //TODO
    
-branch_ids = branch_ids.map(({id})=>id);
+branch_ids = getIdsFromArray(branch_ids);
 const  hasAccess= await this.checkBranchAccess(user, res,branch_ids)
 if(hasAccess){
   return res.json(hasAccess);

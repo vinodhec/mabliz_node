@@ -11,6 +11,7 @@ const getAbsolutePath = (path) => {
   return abs_path + path;
 };
 
+const getIdsFromArray=(arr)=> arr.map(({id})=>id)
 
 
 const removeAbsolutePath = (path) => {
@@ -327,5 +328,6 @@ module.exports = {
   crudOperationsTwoTargets,
   basicCrudOperations,
   removeAbsolutePath,
-  itemMappings
+  itemMappings,
+  getIdsFromArray
 };

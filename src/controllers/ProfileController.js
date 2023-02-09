@@ -672,10 +672,10 @@ checkBranchAccess=async(user, res,branch_id,business_id)=>{
 
   addNewRoles = async (req, res) => {
     const { user, body } = req;
-    const { permissions, branch_ids,id } = body;
+    let { permissions, branch_ids,id } = body;
     //TODO
    
-
+branch_ids = branch_ids.map(({id})=>id);
 const  hasAccess= await this.checkBranchAccess(user, res,branch_ids)
 if(!hasAccess){
   return;

@@ -11,7 +11,7 @@ module.exports = {
             bigNumberStrings: true,
 
         },
-        logging:true,
+        logging:false,
  
           timezone: '+05:30', 
     },

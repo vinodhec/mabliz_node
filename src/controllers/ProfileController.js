@@ -394,7 +394,7 @@ class ProfileController {
      option['where']={...option['where'], id} 
      console.log(option)
     }
-    const roles = await this.roleService.roleDao.findByWhere(option);
+    const roles = await this.roleService.roleDao.getAll(option);
     return roles;
   }
   getRoles = async (req, res) => {

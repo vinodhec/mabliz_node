@@ -180,20 +180,20 @@ class SuperDao {
         return {}
     }
 
-    getAll(user, { where = {}, limit, offset, order } = {}) {
+    getAll( {user, where, ...others } = {}) {
         const updatedWhere = this.updateWhereBasedOnUser(user);
         console.log('asd', { ...updatedWhere, ...where })
-        return this.getDataTableData({ ...updatedWhere, ...where }, limit, offset, order);
+        return this.getDataTableData({where:{ ...updatedWhere, ...where },...others});
     }
 
 // create(user,)
 
-    async getDataTableData(where, limit =10, offset=0, order) {
+    async getDataTableData({limit,offset,...others}) {
+        console.log(others);
         return this.Model.findAndCountAll({
-            limit: parseInt(limit, 10),
-            offset: parseInt(offset, 10),
-            where,
-            order,
+            limit: parseInt(limit??10 , 10),
+            offset: parseInt(offset??0, 10),
+            ... others
         })
             .then((result) => {
                 return result;

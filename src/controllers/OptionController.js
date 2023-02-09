@@ -124,9 +124,10 @@ console.log({modules})
       });
       await Promise.all(promises.flat(1));
       if (type === 'role') {
-
-        const businesses = await req.user.getBusinesses({include:new BranchService().branchDao.Model});
-        businesses.forEach((business) => {
+        const businesses =  await new BusinessService().businessDao.getAll({user:req.user,include:new BranchService().branchDao.Model})
+        console.log(businesses)
+        businesses.rows.forEach((business) => {
+         console.log(business)
           jsonFile[0].details[2] =({ title: business.dataValues?.business_name,
           
             "eligility": ["PARTNER"],
@@ -144,7 +145,7 @@ console.log({modules})
           })
 
         })
-
+console.log(jsonFile[0].details[2])
 
       }
 

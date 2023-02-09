@@ -190,9 +190,14 @@ class SuperDao {
 
     async getDataTableData({limit,offset,...others}) {
         console.log(others);
+        if(limit){
+            others['limit'] = parseInt(limit,10);
+        }
+        if(offset){
+            others['offset'] = parseInt(offset,10)
+        }
         return this.Model.findAndCountAll({
-            limit: parseInt(limit??10 , 10),
-            offset: parseInt(offset??0, 10),
+           
             ... others
         })
             .then((result) => {

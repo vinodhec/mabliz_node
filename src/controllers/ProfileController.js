@@ -70,12 +70,12 @@ class ProfileController {
   }
 
   getBusiness = async (req, res) => {
-    const business = await this.businessService.businessDao.getAll(req.user, req.body?.pagination);
+    const business = await this.businessService.businessDao.getAll({user:req.user, ...req.body?.pagination});
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", business));
   }
 
   getBranch = async (req, res) => {
-    const branch = await this.branchService.branchDao.getAll(req.user, req.body?.pagination);
+    const branch = await this.branchService.branchDao.getAll({user:req.user, ...req.body?.pagination});
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", branch));
   }
 

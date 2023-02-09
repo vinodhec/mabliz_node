@@ -124,7 +124,7 @@ console.log({modules})
       });
       await Promise.all(promises.flat(1));
       if (type === 'role') {
-        const businesses =  await new BusinessService().businessDao.getAll({user:req.user,include:new BranchService().branchDao.Model})
+        const businesses =  await new BusinessService().businessDao.getAll({user:req.user,include:{model:new BranchService().branchDao.Model, attributes:['id','branch_name','businessId']}})
         console.log(businesses)
         businesses.rows.forEach((business) => {
          console.log(business)

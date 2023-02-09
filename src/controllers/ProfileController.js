@@ -412,7 +412,7 @@ class ProfileController {
   branch_id = await this.roleuserbranchService.getBranches(user)
 
   }
-  console.log(branch_id)
+  console.log({branch_id})
     const roles = await this.getRolesForUser(user, business_type_id, is_approval_authority, branch_id)
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
   };

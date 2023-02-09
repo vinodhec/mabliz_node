@@ -12,6 +12,11 @@ class RoleuserbranchService {
     }
 
 
+    getBranches =async(user)=>{
+
+        const branch_id =await this.roleuserbranchDao.findByWhere({where:{roleuser_id:user.roleuser_id},raw:true, attributes:['branch_id']})
+     return branch_id.map(({branch_id})=>branch_id)
+    }
 
 }
 

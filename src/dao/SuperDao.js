@@ -101,14 +101,12 @@ class SuperDao {
         order ,...others
          }={ },
     ) {
-        if(!order){
-            order =['id','desc']
+        let query  = others
+            
+        if(order){
+        query = {...others,order:[order]}
         }
-            return this.Model.findAll({
-               
-                order: [order],...others
-                
-            });
+            return this.Model.findAll(query);
 
       
     }

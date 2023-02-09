@@ -10,6 +10,7 @@ const ItemvariantService = require("../service/ItemvariantService");
 const RoleService = require("../service/RoleService");
 const ItemService = require("../service/ItemService");
 const RoleuserService = require("../service/RoleuserService");
+const RolebranchService = require("../service/RolebranchService");
 
 const ApprovalService = require("../service/ApprovalService");
 
@@ -54,6 +55,7 @@ class ProfileController {
     this.attendanceService = new AttendanceService();
     this.itemvariantService = new ItemvariantService();
     this.roleService = new RoleService();
+    this.rolebranchService = new RolebranchService();
     this.itemService = new ItemService();
     // this.addUser1();
 
@@ -369,6 +371,7 @@ class ProfileController {
 
   getRolesForUser = async (user, business_type_id, is_approval_authority, branch_id) => {
 
+
     branch_id = branch_id ?? user.branchId
     let option = {
       include: this.permissionService.permissionDao.Model,
@@ -377,27 +380,39 @@ class ProfileController {
       // attributes:['id','name','is_approval_authority','business_type_id','business_type_label','userId']
     }
     if (business_type_id) {
-      option['where'] = { ...option['where'], business_type_id }
+      option['where'] = { ...option['where'], business_type_id:parseInt(business_type_id) }
     }
     if (is_approval_authority) {
       option['where'] = { ...option['where'], is_approval_authority }
 
     }
     if (branch_id) {
-      option['where'] = {
-        ...option['where'],
-        branch_ids: {
-          [Op.substring]: `"id":${branch_id}`,
-        }
-      }
-      console.log(`"id":${branch_id}`)
+     
+     const temprolebranch= await this.rolebranchService.rolebranchDao.findByWhere({where:{branch_id}, raw:true})
+     console.log(temprolebranch)
+     const id = temprolebranch.map(({roleId})=>roleId);
+     option['where']={...option['where'], id} 
+     console.log(option)
     }
-    const roles = await this.roleService.roleDao.Model.findAll({ option });
+    const roles = await this.roleService.roleDao.findByWhere(option);
     return roles;
   }
   getRoles = async (req, res) => {
     const { user, query } = req;
-    const { business_type_id, is_approval_authority, branch_id } = query;
+    let { business_type_id, is_approval_authority, branch_id } = query;
+    if(branch_id){
+
+    
+    const hasAccess =await this.checkBranchAccess(user,res,branch_id);
+    if(hasAccess){
+      return res.json(hasAccess)
+    }
+  }
+  else{
+  branch_id = await this.roleuserbranchService.getBranches(user)
+
+  }
+  console.log(branch_id)
     const roles = await this.getRolesForUser(user, business_type_id, is_approval_authority, branch_id)
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
   };
@@ -620,19 +635,33 @@ class ProfileController {
     }
   }
 
+checkBranchAccess=async(user, res,branch_id)=>{
+
+
+  const {roleuser_id, is_owner,id} = user;
+
+
+  const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id, branch_id });
+  if (!hasAccess) {
+    return responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch')
+
+  }
+  return null;
+
+}
+
   addNewRoles = async (req, res) => {
     const { user, body } = req;
     const { permissions, branch_ids } = body;
     const { is_owner, roleuser_id } = user;
     //TODO
-    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id: user.id, branch_id: branch_ids });
-    if (!hasAccess) {
-      return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch'))
+   
 
-    }
-
-
-    const role = await user.createRole(body);
+const  hasAccess= await this.checkBranchAccess(user, res,branch_ids)
+if(!hasAccess){
+  return;
+}    
+const role = await user.createRole(body);
 
     for (let perm of permissions) {
       const { permission_suffix, need_approval } = perm;

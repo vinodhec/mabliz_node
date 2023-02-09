@@ -14,7 +14,7 @@ const getAbsolutePath = (path) => {
 
 
 const removeAbsolutePath = (path) => {
-  return  path.replaceAll(abs_path,"");
+  return  path?.replaceAll(abs_path,"");
 };
 
 const getRecord = async ({ id, sourceModel, getMixin, res }) => {

@@ -418,14 +418,14 @@ class ProfileController {
   };
 
 
-  getObjfromMappings = (header, row, branch_id) => {
+  getObjfromMappings = (header, row, business_id) => {
 
     // console.log(row)
     return header.reduce((prev, current, index) => {
       // console.log(prev[itemMappings[current]],prev,current,row[index])
       prev[itemMappings[current]] = row[index]
       return prev
-    }, { branch_id })
+    }, { business_id })
 
   }
 
@@ -451,9 +451,10 @@ class ProfileController {
 
   uploadItems = async (req, res) => {
 
-    const { file, branch_id } = req.body;
-
-
+    const { file } = req.body;
+   
+const {business_id} = req.user;
+console.log({file})
     let k = 0;
     readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
       const header = rows[0];
@@ -464,9 +465,9 @@ class ProfileController {
       for (let i = 1; i <= rows.length - 1; i++) {
 
         k = this.findNextNum(dish_code, k)
-        const branch = await this.branchService.branchDao.Model.findByPk(branch_id);
+        const branch = await this.businessService.businessDao.Model.findByPk(business_id);
         const row = rows[i]
-        let value = this.getObjfromMappings(header, row, branch_id);
+        let value = this.getObjfromMappings(header, row, business_id);
         value['dish_code'] = value['dish_code'] ?? k
 
         if (value['item_generic_name']) {
@@ -635,13 +636,13 @@ class ProfileController {
     }
   }
 
-checkBranchAccess=async(user, res,branch_id)=>{
+checkBranchAccess=async(user, res,branch_id,business_id)=>{
 
 
   const {roleuser_id, is_owner,id} = user;
 
 
-  const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id, branch_id });
+  const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id, branch_id ,business_id});
   if (!hasAccess) {
     return responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch')
 
@@ -649,6 +650,8 @@ checkBranchAccess=async(user, res,branch_id)=>{
   return null;
 
 }
+
+
 
   addNewRoles = async (req, res) => {
     const { user, body } = req;

@@ -138,8 +138,8 @@ Plan.belongsTo(BusinessTypes);
 Item.hasMany(Itemvariant);
 Itemvariant.belongsTo(Item);
 
-Branch.hasMany(Item);
-Item.belongsTo(Branch);
+Business.hasMany(Item);
+Item.belongsTo(Business);
 
 
 

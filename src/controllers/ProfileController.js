@@ -679,7 +679,7 @@ checkBranchAccess=async(user, res,branch_id,business_id)=>{
 branch_ids = branch_ids.map(({id})=>id);
 const  hasAccess= await this.checkBranchAccess(user, res,branch_ids)
 if(hasAccess){
-  return hasAccess;
+  return res.json(hasAccess);
 }    
 
 let role ;

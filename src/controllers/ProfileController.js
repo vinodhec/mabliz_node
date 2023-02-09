@@ -660,6 +660,7 @@ checkBranchAccess=async(user, res,branch_id,business_id)=>{
 
 
   const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id, branch_id ,business_id});
+  console.log(hasAccess)
   if (!hasAccess) {
     return responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch')
 
@@ -677,8 +678,8 @@ checkBranchAccess=async(user, res,branch_id,business_id)=>{
    
 branch_ids = branch_ids.map(({id})=>id);
 const  hasAccess= await this.checkBranchAccess(user, res,branch_ids)
-if(!hasAccess){
-  return;
+if(hasAccess){
+  return hasAccess;
 }    
 
 let role ;

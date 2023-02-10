@@ -547,7 +547,7 @@ class ProfileController {
     const lastFloor = await this.floorService.floorDao.findOneByWhere({order:['sNo','DESC'],attributes:['sNo'],raw:true});
     console.log({lastFloor})
     const lastFloorVal = lastFloor?.sNo;
-    
+     
     const floor = await branch.createFloor({...body,sNo:lastFloorVal !==null ? lastFloorVal+1 : 0});
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
   }

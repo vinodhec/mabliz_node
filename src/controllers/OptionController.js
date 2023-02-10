@@ -102,12 +102,13 @@ console.log({modules})
 
 
             }
-            else if(field.requestKey === 'reporting'){
+            else if(field.requestKey === 'reporting_role'){
 
 
-              const pp = profileController.getRolesForUser(req.user, businesstypeId, 'yes').then((modules) => {
+              const pp = profileController.getRolesForUser(req.user, businesstypeId, 'yes').then(({rows}) => {
+                console.log(rows);
 
-                this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: [{label:'OWNER',id:0},...modules.map(({ dataValues }) => ({label:dataValues.name,id:dataValues.id }))]})
+                this.updateJson({ jsonFile, tabIndex, groupIndex, fieldIndex, value: [{label:'OWNER',id:0},...rows.map(({ dataValues }) => ({label:dataValues.name,id:dataValues.id }))]})
 
               });
               return await pp;

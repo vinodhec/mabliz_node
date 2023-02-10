@@ -542,6 +542,8 @@
                   "label": "Reporting and Approval *",
                   "type": "drop_down",
                   "input": "select",
+                  "requestKey": "reporting_role",
+
                   "isMandatory": true,
                   "error": "Please Select Reporting and Approval",
                   "eligility": [

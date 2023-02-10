@@ -101,6 +101,8 @@ const Attendance = models.attendance;
 const Approval = models.approval;
 const Itemvariant = models.itemvariant;
 const Item = models.item;
+const Table = models.table;
+const Floor = models.floor;
 const Roleuser = models.roleuser;
 const Roleuserbranch = models.roleuserbranch;
 const Roleusermodule = models.roleusermodule;
@@ -113,6 +115,8 @@ Branch.belongsToMany(Role,{through:Rolebranch,onDelete:'cascade'})
 User.hasMany(Approval);
 Approval.belongsTo(User);
 
+Branch.hasMany(Floor);
+Floor.hasMany(Table);
 User.hasMany(Business,{ onDelete: 'cascade', hooks:true });
 Business.belongsTo(User);
 

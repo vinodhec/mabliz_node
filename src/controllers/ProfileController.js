@@ -512,14 +512,22 @@ console.log({file})
       raw: true,
       where: { role_id }
     })
-    const roleBranch = await this.rolebranchService.rolebranchDao.Model.findAll({
-      attributes: [ 'branch_id'],
-      raw: true,
-      where: { role_id }
-    })
+    // const roleBranch = await this.rolebranchService.rolebranchDao.Model.findAll({
+    //   attributes: [ 'branch_id'],
+    //   include:{model:this.branchService.branchDao.Model, through: {
+    //     attributes: ['createdAt', 'startedAt', 'finishedAt'],
+    //     where: {
+    //       role_id: role_id
+    //     }
+    // } },
+    //   raw: true,
+    //   where: { role_id }
+    // })
 
-    console.log({ rolePermission })
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", {modules:rolePermission.map(({ module }) => module),branches:roleBranch.map(({branch_id})=>branch_id) }))
+const roleBranch = await this.roleService.roleDao.findOneByWhere({where:{id:role_id},include:{model:this.branchService.branchDao.Model,attributes:['id','branch_name',"businessId"]}})
+console.log(roleBranch)
+
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", {modules:rolePermission.map(({ module }) => module),branches:roleBranch.dataValues.branches }))
 
   }
 

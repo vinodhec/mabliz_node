@@ -36,6 +36,7 @@ const responseHandler = require("../helper/responseHandler");
 const { omit } = require("lodash");
 const BusinessService = require("../service/BusinessService");
 const RoleuserbranchService = require("../service/RoleuserbranchService");
+const FloorService = require("../service/FloorService");
 
 class ProfileController {
   constructor() {
@@ -57,6 +58,7 @@ class ProfileController {
     this.roleService = new RoleService();
     this.rolebranchService = new RolebranchService();
     this.itemService = new ItemService();
+    this.floorService =  new FloorService();
     // this.addUser1();
 
   }
@@ -116,7 +118,7 @@ class ProfileController {
 
     const { user } = req;
     console.log(user);
-    const businessTypes = await user.getBusinesses({ attributes: ['id', 'business_name', 'business_type_label', 'business_type_id'], include: { model: this.branchService.branchDao.Model, attributes: ['id', 'branch_name'] },...req.body.pagination })
+    const businessTypes = await user.getBusinesses({ attributes: ['id', 'business_name', 'business_type_label', 'business_type_id'], include: { model: this.branchService.branchDao.Model, attributes: ['id', 'branch_name'] }, ...req.body.pagination })
     const groupByStatus = groupBy(businessTypes, "business_type_label");
     const groups = Object.keys(groupByStatus).map((statusGroup) => {
 
@@ -531,16 +533,29 @@ class ProfileController {
 
   }
   addFloor = async (req, res) => {
-    const { user, body } = req;
+    const { user, body, isApprovalFlow } = req;
+    let { branch_id } = body;
+    branch_id = getIdsFromArray(branch_id);
 
-    this.branchService.branchDao
-
+    if (!isApprovalFlow) {
+      const hasAccess = await this.checkBranchAccess(user, res, branch_id)
+      if (hasAccess) {
+        return res.json(hasAccess);
+      }
+    }
+    const branch = await this.branchService.branchDao.findById(branch_id[0]);
+    const lastFloor = await this.floorService.floorDao.findOneByWhere({order:['sNo','DESC'],attributes:['sNo'],raw:true});
+    console.log({lastFloor})
+    const lastFloorVal = lastFloor?.sNo;
+    
+    const floor = await branch.createFloor({...body,sNo:lastFloorVal !==null ? lastFloorVal+1 : 0});
+    res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
   }
 
-  getAllBranchesOfUser = async(req,res)=>{
+  getAllBranchesOfUser = async (req, res) => {
 
-    const businesses =  await this.businessService.businessDao.getAll({user:req.user,attributes:['id','business_name'],include:{model:new BranchService().branchDao.Model, attributes:['id','branch_name','businessId']},...req.body.pagination})
-res.json(responseHandler.returnSuccess(httpStatus[200],"Success",businesses))
+    const businesses = await this.businessService.businessDao.getAll({ user: req.user, attributes: ['id', 'business_name'], include: { model: new BranchService().branchDao.Model, attributes: ['id', 'branch_name', 'businessId'] }, ...req.body.pagination })
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success", businesses))
   }
   getUsersForRole = async (req, res) => {
     const { user, query } = req;

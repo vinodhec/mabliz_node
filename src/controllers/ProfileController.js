@@ -505,16 +505,21 @@ console.log({file})
 
   getModulesForRole = async (req, res) => {
     const { user, query } = req;
-    const { roleId } = query;
+    const { roleId:role_id } = query;
 
     const rolePermission = await this.rolePermissionService.rolepermissionDao.Model.findAll({
       attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('module')), 'module']],
       raw: true,
-      where: { roleId }
+      where: { role_id }
+    })
+    const roleBranch = await this.rolebranchService.rolebranchDao.Model.findAll({
+      attributes: [ 'branch_id'],
+      raw: true,
+      where: { role_id }
     })
 
     console.log({ rolePermission })
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", rolePermission.map(({ module }) => module)))
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", {modules:rolePermission.map(({ module }) => module),branches:roleBranch.map(({branch_id})=>branch_id) }))
 
   }
 

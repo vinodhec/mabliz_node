@@ -75,6 +75,9 @@ router.put('/user/disable-user', profileController.disableUser);
 router.delete('/user/delete-user', profileController.deleteUser);
 
 router.post('/user', profileController.addUser1);
+router.post('/floor', profileController.addFloor);
+router.post('/get-business-branch', profileController.getAllBranchesOfUser);
+
 router.post('/add-attendance', profileController.addAddentance);
 
 router.post('/findUser', profileController.findUser);

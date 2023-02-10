@@ -24,7 +24,7 @@ const UserService = require("../service/UserService");
 const logger = require("../config/logger");
 const { branchStatus, approvalStatus, userConstant } = require("../config/constant");
 const readXlsxFile = require('read-excel-file/node')
-const { removeAbsolutePath, itemMappings,getIdsFromArray } = require("./../helper/utilHelper");
+const { removeAbsolutePath, itemMappings, getIdsFromArray } = require("./../helper/utilHelper");
 const {
   crudOperations,
   crudOperationsTwoTargets,
@@ -70,12 +70,12 @@ class ProfileController {
   }
 
   getBusiness = async (req, res) => {
-    const business = await this.businessService.businessDao.getAll({user:req.user, ...req.body?.pagination});
+    const business = await this.businessService.businessDao.getAll({ user: req.user, ...req.body?.pagination });
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", business));
   }
 
   getBranch = async (req, res) => {
-    const branch = await this.branchService.branchDao.getAll({user:req.user, ...req.body?.pagination});
+    const branch = await this.branchService.branchDao.getAll({ user: req.user, ...req.body?.pagination });
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", branch));
   }
 
@@ -116,7 +116,7 @@ class ProfileController {
 
     const { user } = req;
     console.log(user);
-    const businessTypes = await user.getBusinesses({ attributes: ['id', 'business_name', 'business_type_label', 'business_type_id'], include: { model: this.branchService.branchDao.Model, attributes: ['id', 'branch_name'] } })
+    const businessTypes = await user.getBusinesses({ attributes: ['id', 'business_name', 'business_type_label', 'business_type_id'], include: { model: this.branchService.branchDao.Model, attributes: ['id', 'branch_name'] },...req.body.pagination })
     const groupByStatus = groupBy(businessTypes, "business_type_label");
     const groups = Object.keys(groupByStatus).map((statusGroup) => {
 
@@ -380,19 +380,19 @@ class ProfileController {
       // attributes:['id','name','is_approval_authority','business_type_id','business_type_label','userId']
     }
     if (business_type_id) {
-      option['where'] = { ...option['where'], business_type_id:parseInt(business_type_id) }
+      option['where'] = { ...option['where'], business_type_id: parseInt(business_type_id) }
     }
     if (is_approval_authority) {
       option['where'] = { ...option['where'], is_approval_authority }
 
     }
     if (branch_id) {
-     
-     const temprolebranch= await this.rolebranchService.rolebranchDao.findByWhere({where:{branch_id}, raw:true})
-     console.log(temprolebranch)
-     const id = temprolebranch.map(({roleId})=>roleId);
-     option['where']={...option['where'], id} 
-     console.log(option)
+
+      const temprolebranch = await this.rolebranchService.rolebranchDao.findByWhere({ where: { branch_id }, raw: true })
+      console.log(temprolebranch)
+      const id = temprolebranch.map(({ roleId }) => roleId);
+      option['where'] = { ...option['where'], id }
+      console.log(option)
     }
     const roles = await this.roleService.roleDao.getAll(option);
     return roles;
@@ -400,19 +400,19 @@ class ProfileController {
   getRoles = async (req, res) => {
     const { user, query } = req;
     let { business_type_id, is_approval_authority, branch_id } = query;
-    if(branch_id){
+    if (branch_id) {
 
-    
-    const hasAccess =await this.checkBranchAccess(user,res,branch_id);
-    if(hasAccess){
-      return res.json(hasAccess)
+
+      const hasAccess = await this.checkBranchAccess(user, res, branch_id);
+      if (hasAccess) {
+        return res.json(hasAccess)
+      }
     }
-  }
-  else{
-  branch_id = await this.roleuserbranchService.getBranches(user)
+    else {
+      branch_id = await this.roleuserbranchService.getBranches(user)
 
-  }
-  console.log({branch_id})
+    }
+    console.log({ branch_id })
     const roles = await this.getRolesForUser(user, business_type_id, is_approval_authority, branch_id)
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", roles));
   };
@@ -449,28 +449,28 @@ class ProfileController {
 
   }
   getItemsWithCategory = async (req, res) => {
-    const { user, query, body,isCategoryOnly } = req;
+    const { user, query, body, isCategoryOnly } = req;
     const { pagination } = body;
     const category = query.category;
     const business_id = user.get().business_id
-    let items = await this.itemService.itemDao.getDataTableData({...(!!isCategoryOnly && { attributes: [Sequelize.fn('DISTINCT', Sequelize.col('category')) ,'category'] }), where: { ...(!!category && {category}), business_id }, ...(!!!isCategoryOnly && {include: this.itemvariantService.itemvariantDao.Model}), ...pagination })
+    let items = await this.itemService.itemDao.getDataTableData({ ...(!!isCategoryOnly && { attributes: [Sequelize.fn('DISTINCT', Sequelize.col('category')), 'category'] }), where: { ...(!!category && { category }), business_id }, ...(!!!isCategoryOnly && { include: this.itemvariantService.itemvariantDao.Model }), ...pagination })
     // const branch = await this.branchService.branchDao.Model.findByPk();
     // const items = await branch.getItems({ include: this.itemvariantService.itemvariantDao.Model })
-    console.log({items})
-    if(isCategoryOnly){
-items = items.rows.map(({category})=>category)
+    console.log({ items })
+    if (isCategoryOnly) {
+      items = items.rows.map(({ category }) => category)
     }
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
 
   }
 
-  
+
   uploadItems = async (req, res) => {
 
     const { file } = req.body;
-   
-const {business_id} = req.user;
-console.log({file})
+
+    const { business_id } = req.user;
+    console.log({ file })
     let k = 0;
     const business = await this.businessService.businessDao.Model.findByPk(business_id);
 
@@ -505,7 +505,7 @@ console.log({file})
 
   getModulesForRole = async (req, res) => {
     const { user, query } = req;
-    const { roleId:role_id } = query;
+    const { roleId: role_id } = query;
 
     const rolePermission = await this.rolePermissionService.rolepermissionDao.Model.findAll({
       attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('module')), 'module']],
@@ -524,13 +524,24 @@ console.log({file})
     //   where: { role_id }
     // })
 
-const roleBranch = await this.roleService.roleDao.findOneByWhere({where:{id:role_id},include:{model:this.branchService.branchDao.Model,attributes:['id','branch_name',"businessId"]}})
-console.log(roleBranch)
+    const roleBranch = await this.roleService.roleDao.findOneByWhere({ where: { id: role_id }, include: { model: this.branchService.branchDao.Model, attributes: ['id', 'branch_name', "businessId"] } })
+    console.log(roleBranch)
 
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", {modules:rolePermission.map(({ module }) => module),branches:roleBranch.dataValues.branches }))
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", { modules: rolePermission.map(({ module }) => module), branches: roleBranch.dataValues.branches }))
+
+  }
+  addFloor = async (req, res) => {
+    const { user, body } = req;
+
+    this.branchService.branchDao
 
   }
 
+  getAllBranchesOfUser = async(req,res)=>{
+
+    const businesses =  await this.businessService.businessDao.getAll({user:req.user,attributes:['id','business_name'],include:{model:new BranchService().branchDao.Model, attributes:['id','branch_name','businessId']},...req.body.pagination})
+res.json(responseHandler.returnSuccess(httpStatus[200],"Success",businesses))
+  }
   getUsersForRole = async (req, res) => {
     const { user, query } = req;
     const { role_id } = query;
@@ -679,22 +690,22 @@ console.log(roleBranch)
         res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'Not authorized to action this request'))
         return;
       }
-      const { models, status,method,userId } = approval.get();
-      if (status !== approvalStatus.STATUS_PENDING ) {
+      const { models, status, method, userId } = approval.get();
+      if (status !== approvalStatus.STATUS_PENDING) {
         res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Status is not pending'))
         return;
       }
 
       else if (action === approvalStatus.STATUS_PENDING || true) {
-req.user = await this.userService.userDao.Model.findByPk(userId);
-console.log(req.user,userId)
-req.body = models;
-req.isApprovalFlow =true;
-req.role ={}
-console.log(this[method])     
- await approval.update({ status: action, reason })
+        req.user = await this.userService.userDao.Model.findByPk(userId);
+        console.log(req.user, userId)
+        req.body = models;
+        req.isApprovalFlow = true;
+        req.role = {}
+        console.log(this[method])
+        await approval.update({ status: action, reason })
 
-await this[method](req,res)
+        await this[method](req, res)
       }
 
 
@@ -708,54 +719,54 @@ await this[method](req,res)
   }
 
 
-checkBranchAccess=async(user, res,branch_id,business_id)=>{
+  checkBranchAccess = async (user, res, branch_id, business_id) => {
 
 
-  const {roleuser_id, is_owner,id} = user;
+    const { roleuser_id, is_owner, id } = user;
 
 
-  const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id, branch_id ,business_id});
-  console.log(hasAccess)
-  if (!hasAccess) {
-    return responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch')
+    const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ roleuser_id, is_owner, id, branch_id, business_id });
+    console.log(hasAccess)
+    if (!hasAccess) {
+      return responseHandler.returnError(httpStatus.UNAUTHORIZED, 'No access to business or branch')
+
+    }
+    return null;
 
   }
-  return null;
-
-}
 
 
 
   addNewRoles = async (req, res) => {
-    const { user, body,role:roleaccess,isApprovalFlow } = req;
-    console.log({roleaccess})
-    const {need_approval} = roleaccess
-    let { permissions, branch_ids,id } = body;
+    const { user, body, role: roleaccess, isApprovalFlow } = req;
+    console.log({ roleaccess })
+    const { need_approval } = roleaccess
+    let { permissions, branch_ids, id } = body;
     //TODO
     branch_ids = getIdsFromArray(branch_ids);
 
-if(!isApprovalFlow){  
-const  hasAccess= await this.checkBranchAccess(user, res,branch_ids)
-if(hasAccess){
-  return res.json(hasAccess);
-}    
-}
-if(need_approval && !isApprovalFlow){
-  const approval = await user.createApproval({ approver_id: user.reporting_user_id, models:body,method:"addNewRoles", status: approvalStatus.STATUS_PENDING })
-  return res.json(responseHandler.returnSuccess(httpStatus[200],"Success",{'request_id':approval.dataValues.id, status: 'Pending with approval' } ))
+    if (!isApprovalFlow) {
+      const hasAccess = await this.checkBranchAccess(user, res, branch_ids)
+      if (hasAccess) {
+        return res.json(hasAccess);
+      }
+    }
+    if (need_approval && !isApprovalFlow) {
+      const approval = await user.createApproval({ approver_id: user.reporting_user_id, models: body, method: "addNewRoles", status: approvalStatus.STATUS_PENDING })
+      return res.json(responseHandler.returnSuccess(httpStatus[200], "Success", { 'request_id': approval.dataValues.id, status: 'Pending with approval' }))
 
-}
+    }
 
-let role ;
-if(id){
-   role = await this.roleService.roleDao.Model.findByPk(id);
-// await this.rolePermissionService.rolepermissionDao.deleteByWhere({role_id:role.id})
-// await this.rolebranchService.rolebranchDao.deleteByWhere({role_id:role.id})
-await role.update(body)
-}
-else{
-  role =  await user.createRole(body)
-}
+    let role;
+    if (id) {
+      role = await this.roleService.roleDao.Model.findByPk(id);
+      // await this.rolePermissionService.rolepermissionDao.deleteByWhere({role_id:role.id})
+      // await this.rolebranchService.rolebranchDao.deleteByWhere({role_id:role.id})
+      await role.update(body)
+    }
+    else {
+      role = await user.createRole(body)
+    }
 
 
     for (let perm of permissions) {
@@ -768,7 +779,7 @@ else{
     await role.addBranches(branch_ids)
 
 
-    res.json(responseHandler.returnSuccess(httpStatus.OK, isApprovalFlow?"Approved and added Successfully" : "Success", role));
+    res.json(responseHandler.returnSuccess(httpStatus.OK, isApprovalFlow ? "Approved and added Successfully" : "Success", role));
   };
 
   updateRole = async (req, res) => {
@@ -798,15 +809,15 @@ else{
     const { user } = req;
     console.log(user);
     const { is_owner, roleuser_id } = user.dataValues;
-    console.log({is_owner,roleuser_id})
+    console.log({ is_owner, roleuser_id })
     if (is_owner) {
       return res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', [{ 'module': 'owner', 'permissions': 'all' }]))
 
     }
     const { role_id } = await this.roleuserService.roleuserDao.findById(roleuser_id)
-    const permissions = await this.rolePermissionService.rolepermissionDao.findByWhere({ where: { role_id }, attributes:['need_approval','module','permission_name'], order: ['role_id', 'DESC'] });
+    const permissions = await this.rolePermissionService.rolepermissionDao.findByWhere({ where: { role_id }, attributes: ['need_approval', 'module', 'permission_name'], order: ['role_id', 'DESC'] });
 
-   return res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', permissions))
+    return res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', permissions))
   }
   deleteRole = async (req, res) => {
     const { user, body } = req;

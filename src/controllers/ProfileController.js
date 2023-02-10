@@ -543,6 +543,13 @@ class ProfileController {
         return res.json(hasAccess);
       }
     }
+    const isAppr = await this.checkandupdateApproval(req,"addFloor");
+    console.log(isAppr)
+    if (isAppr) {
+      return res.json(isAppr)
+
+    }
+
     const branch = await this.branchService.branchDao.findById(branch_id[0]);
     const lastFloor = await this.floorService.floorDao.findOneByWhere({order:['sNo','DESC'],attributes:['sNo'],raw:true});
     console.log({lastFloor})
@@ -751,6 +758,15 @@ class ProfileController {
   }
 
 
+  checkandupdateApproval = async({user, role,isApprovalFlow,body},method)=>{
+const {need_approval} = role;
+    if (need_approval && !isApprovalFlow) {
+      const approval = await user.createApproval({ approver_id: user.reporting_user_id, models: body, method, status: approvalStatus.STATUS_PENDING })
+      return responseHandler.returnSuccess(httpStatus[200], "Success", { 'request_id': approval.dataValues.id, status: 'Pending with approval' })
+
+    }
+    return null;
+  }
 
   addNewRoles = async (req, res) => {
     const { user, body, role: roleaccess, isApprovalFlow } = req;
@@ -766,9 +782,10 @@ class ProfileController {
         return res.json(hasAccess);
       }
     }
-    if (need_approval && !isApprovalFlow) {
-      const approval = await user.createApproval({ approver_id: user.reporting_user_id, models: body, method: "addNewRoles", status: approvalStatus.STATUS_PENDING })
-      return res.json(responseHandler.returnSuccess(httpStatus[200], "Success", { 'request_id': approval.dataValues.id, status: 'Pending with approval' }))
+    const isAppr = await this.checkandupdateApproval(req,"addNewRoles");
+    console.log(isAppr)
+    if (isAppr) {
+      return res.json(isAppr)
 
     }
 

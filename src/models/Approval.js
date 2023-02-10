@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         {
             approver_id: DataTypes.INTEGER,
             reason_id:DataTypes.INTEGER,
+            class:DataTypes.STRING,
+            method:DataTypes.STRING,
+            second_level_approver:DataTypes.INTEGER,
             reason:DataTypes.TEXT,
             waiting_time: {
                 type: DataTypes.VIRTUAL,

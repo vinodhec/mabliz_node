@@ -588,6 +588,71 @@ console.log({file})
     return modelInstance
 
   }
+  // approveRejectApprovalRequest = async (req, res) => {
+
+  //   try {
+
+  //     const { body, user } = req;
+
+  //     const { id, action, reason } = body;
+  //     const approval = await this.approvalService.approvalDao.Model.findByPk(id);
+  //     if (user.id !== approval?.approver_id && false) {
+  //       console.log(user.id, approval.approver_id)
+  //       res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'Not authorized to action this request'))
+  //       return;
+  //     }
+  //     const { models, status } = approval.get();
+  //     if (status !== approvalStatus.STATUS_PENDING) {
+  //       res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Status is not pending'))
+  //       return;
+  //     }
+
+  //     if (action === approvalStatus.STATUS_APPROVED) {
+  //       console.log(typeof models)
+  //       let ids = []
+
+  //       console.log('begin');
+  //       let index = 0
+  //       for (let item of models) {
+  //         const { id, name, action, value } = item;
+  //         let updatedId = id;
+  //         if (typeof (id) === 'string' && id?.includes('PREVIOUS_CHAIN')) {
+  //           const chainid = parseInt(id.split('PREVIOUS_CHAIN')?.[1]) || 1;
+  //           updatedId = ids[index - chainid]
+  //           console.log({ ids, updatedId, index, chainid }, index - chainid)
+  //         }
+  //         const modelInstance = await this.getModelInstance(updatedId, name);
+  //         console.log({ name, action, value }, updatedId)
+
+  //         await modelInstance[action](value).then((a) => {
+  //           console.log({ a })
+  //           if (a) {
+  //             console.log(a.id, ids)
+  //             ids.push(a.id);
+  //             console.log(a.id, ids)
+  //             return a;
+  //           }
+
+  //         })
+  //         index += 1;
+
+  //       }
+  //       console.log('finished');
+
+
+  //     }
+
+
+  //     await approval.update({ status: action, reason })
+  //     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success"))
+
+  //   } catch (error) {
+  //     console.log(error)
+  //     res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Error', error))
+
+  //   }
+  // }
+
   approveRejectApprovalRequest = async (req, res) => {
 
     try {
@@ -596,55 +661,31 @@ console.log({file})
 
       const { id, action, reason } = body;
       const approval = await this.approvalService.approvalDao.Model.findByPk(id);
-      if (user.id !== approval?.approver_id && false) {
+      if (user.id !== approval?.approver_id) {
         console.log(user.id, approval.approver_id)
         res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, 'Not authorized to action this request'))
         return;
       }
-      const { models, status } = approval.get();
-      if (status !== approvalStatus.STATUS_PENDING) {
+      const { models, status,method,userId } = approval.get();
+      if (status !== approvalStatus.STATUS_PENDING ) {
         res.json(responseHandler.returnError(httpStatus.BAD_REQUEST, 'Status is not pending'))
         return;
       }
 
-      if (action === approvalStatus.STATUS_APPROVED) {
-        console.log(typeof models)
-        let ids = []
+      else if (action === approvalStatus.STATUS_PENDING || true) {
+req.user = await this.userService.userDao.Model.findByPk(userId);
+console.log(req.user,userId)
+req.body = models;
+req.isApprovalFlow =true;
+req.role ={}
+console.log(this[method])     
+ await approval.update({ status: action, reason })
 
-        console.log('begin');
-        let index = 0
-        for (let item of models) {
-          const { id, name, action, value } = item;
-          let updatedId = id;
-          if (typeof (id) === 'string' && id?.includes('PREVIOUS_CHAIN')) {
-            const chainid = parseInt(id.split('PREVIOUS_CHAIN')?.[1]) || 1;
-            updatedId = ids[index - chainid]
-            console.log({ ids, updatedId, index, chainid }, index - chainid)
-          }
-          const modelInstance = await this.getModelInstance(updatedId, name);
-          console.log({ name, action, value }, updatedId)
-
-          await modelInstance[action](value).then((a) => {
-            console.log({ a })
-            if (a) {
-              console.log(a.id, ids)
-              ids.push(a.id);
-              console.log(a.id, ids)
-              return a;
-            }
-
-          })
-          index += 1;
-
-        }
-        console.log('finished');
-
-
+await this[method](req,res)
       }
 
 
-      await approval.update({ status: action, reason })
-      res.json(responseHandler.returnSuccess(httpStatus.OK, "Success"))
+      // res.json(responseHandler.returnSuccess(httpStatus.OK, "Success"))
 
     } catch (error) {
       console.log(error)
@@ -652,6 +693,7 @@ console.log({file})
 
     }
   }
+
 
 checkBranchAccess=async(user, res,branch_id,business_id)=>{
 
@@ -672,15 +714,24 @@ checkBranchAccess=async(user, res,branch_id,business_id)=>{
 
 
   addNewRoles = async (req, res) => {
-    const { user, body } = req;
+    const { user, body,role:roleaccess,isApprovalFlow } = req;
+    console.log({roleaccess})
+    const {need_approval} = roleaccess
     let { permissions, branch_ids,id } = body;
     //TODO
-   
-branch_ids = getIdsFromArray(branch_ids);
+    branch_ids = getIdsFromArray(branch_ids);
+
+if(!isApprovalFlow){  
 const  hasAccess= await this.checkBranchAccess(user, res,branch_ids)
 if(hasAccess){
   return res.json(hasAccess);
 }    
+}
+if(need_approval && !isApprovalFlow){
+  const approval = await user.createApproval({ approver_id: user.reporting_user_id, models:body,method:"addNewRoles", status: approvalStatus.STATUS_PENDING })
+  return res.json(responseHandler.returnSuccess(httpStatus[200],"Success",{'request_id':approval.dataValues.id, status: 'Pending with approval' } ))
+
+}
 
 let role ;
 if(id){
@@ -704,7 +755,7 @@ else{
     await role.addBranches(branch_ids)
 
 
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", role));
+    res.json(responseHandler.returnSuccess(httpStatus.OK, isApprovalFlow?"Approved and added Successfully" : "Success", role));
   };
 
   updateRole = async (req, res) => {

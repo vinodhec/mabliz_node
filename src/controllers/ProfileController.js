@@ -620,7 +620,6 @@ class ProfileController {
     }
 
     const deleteTable = await this.tableService.tableDao.deleteByWhere({ floor_id: id, id: table_id })
-    console.lo(deleteTable)
 
     res.json(responseHandler.returnSuccess(httpStatus[200], "Success", {}))
 

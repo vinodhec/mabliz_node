@@ -606,9 +606,12 @@ reason ="access"
     }
     const branch = await this.branchService.getBranchFromBranchId(branch_id);
     const {id} = await this.floorService.getFloorFromFloorandBranchId({floor_id,branch_id})
-    const table = await this.tableService.getTableFromFloorandTableId({floor_id,table_id});
-
-   await table.delete();
+  console.log(id,{floor_id:id,id:table_id});
+    if(!id){
+      return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED,"Error"))
+    }
+  const deleteTable =   await this.tableService.tableDao.deleteByWhere({floor_id:id,id:table_id})
+    console.lo(deleteTable)
 
    res.json(responseHandler.returnSuccess(httpStatus[200],"Success",{}))
 
@@ -637,9 +640,8 @@ reason ="access"
     const floor = await this.floorService.getFloorFromFloorandBranchId({floor_id,branch_id})
     const lastTable = await this.tableService.tableDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
     const lastTableVal = lastTable?.sNo;
-    console.log({ lastTableVal })
 
-    const table = await floor[0].createTable({ ...body, sNo: lastTableVal !== null ? lastTableVal + 1 : 1 });
+    const table = await floor.createTable({ ...body, sNo: lastTableVal !== null ? lastTableVal + 1 : 1 });
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
   }
 

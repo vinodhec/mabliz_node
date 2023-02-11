@@ -16,7 +16,7 @@ const rolePermissionConfig = {
     '/user_GET': { module: 'user', permission: 'get' }, '/user_POST': { module: 'user', permission: 'add' },'/user_PUT': { module: 'user', permission: 'edit' }, '/user/disable-user_PUT': { module: 'user', permission: 'edit' }, '/user/delete_user_DELETE': { module: 'user', permission: 'delete' },
     '/upload-items_POST': { module: 'user', permission: 'add' },'/get-all-items_POST':{module:'user',permission:'get'},
     '/floor_POST': { module: 'role', permission: 'add' },
-    '/table_POST': { module: 'role', permission: 'add' },    '/table_DELETE': { module: 'user', permission: 'add' }
+    '/table_POST': { module: 'user', permission: 'add' },    '/table_DELETE': { module: 'user', permission: 'add' }
 
 
 

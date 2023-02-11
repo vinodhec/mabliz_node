@@ -12,9 +12,9 @@ class FloorService {
 
 getFloorFromFloorandBranchId=async({floor_id,branch_id})=>{
 
-const floor   =  await this.floorDao.Model.findAll({ id: floor_id, ...(branch_id && {branch_id}) })
-
-return floor[0]
+const floor   =  await this.floorDao.findOneByWhere({where:{ id: floor_id, ...(branch_id && {branch_id}) }})
+console.log(floor);
+return floor
 }
     
    

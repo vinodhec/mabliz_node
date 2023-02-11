@@ -15,7 +15,7 @@ const rolePermissionConfig = {
     '/user/role_GET': { module: 'role', permission: 'get' }, '/user/role_POST': { module: 'role', permission: 'add' }, '/user/role_PUT': { module: 'role', permission: 'edit' }, '/user/role_DELETE': { module: 'role', permission: 'delete' }, 
     '/user_GET': { module: 'user', permission: 'get' }, '/user_POST': { module: 'user', permission: 'add' },'/user_PUT': { module: 'user', permission: 'edit' }, '/user/disable-user_PUT': { module: 'user', permission: 'edit' }, '/user/delete_user_DELETE': { module: 'user', permission: 'delete' },
     '/upload-items_POST': { module: 'user', permission: 'add' },'/get-all-items_POST':{module:'user',permission:'get'},
-    '/floor_POST': { module: 'user', permission: 'add' }
+    '/floor_POST': { module: 'role', permission: 'add' }
 
 }
 const permissionChecker = (config) => {

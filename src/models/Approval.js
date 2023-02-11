@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
                 },
               },
             module:DataTypes.STRING,
+            permission_name:DataTypes.STRING,
             action:DataTypes.STRING,
 
             models: {

@@ -533,7 +533,10 @@ class ProfileController {
 
   }
   addFloor = async (req, res) => {
-    const { user, body, isApprovalFlow } = req;
+    const { user, body, isApprovalFlow } =req;
+    console.log(
+      'addfloor',user,body
+    )
     let { branch_id } = body;
     branch_id = getIdsFromArray(branch_id);
 
@@ -544,7 +547,7 @@ class ProfileController {
       }
     }
     const isAppr = await this.checkandupdateApproval(req,"addFloor");
-    console.log(isAppr)
+    console.log({isAppr})
     if (isAppr) {
       return res.json(isAppr)
 
@@ -559,6 +562,10 @@ class ProfileController {
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
   }
 
+  updateTables = async(req,res)=>{
+
+    
+  }
   getAllBranchesOfUser = async (req, res) => {
 
     const businesses = await this.businessService.businessDao.getAll({ user: req.user, attributes: ['id', 'business_name'], include: { model: new BranchService().branchDao.Model, attributes: ['id', 'branch_name', 'businessId'] }, ...req.body.pagination })
@@ -759,9 +766,10 @@ class ProfileController {
 
 
   checkandupdateApproval = async({user, role,isApprovalFlow,body},method)=>{
-const {need_approval} = role;
+const {need_approval,module,permission_name} = role;
+console.log({module,permission_name})
     if (need_approval && !isApprovalFlow) {
-      const approval = await user.createApproval({ approver_id: user.reporting_user_id, models: body, method, status: approvalStatus.STATUS_PENDING })
+      const approval = await user.createApproval({module,permission_name, approver_id: user.reporting_user_id, models: body, method, status: approvalStatus.STATUS_PENDING })
       return responseHandler.returnSuccess(httpStatus[200], "Success", { 'request_id': approval.dataValues.id, status: 'Pending with approval' })
 
     }

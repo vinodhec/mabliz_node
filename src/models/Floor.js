@@ -1,4 +1,5 @@
 const { Model } = require("sequelize");
+const { itemStatus } = require("./../config/constant");
 
 module.exports = (sequelize, DataTypes) => {
   class  Floor extends Model {
@@ -15,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
     name:DataTypes.STRING,
     approval_action:DataTypes.STRING,
     approval_id:DataTypes.STRING,
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: itemStatus.STATUS_ACTIVE
+    }
   
     },
 

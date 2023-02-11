@@ -628,26 +628,48 @@ class ProfileController {
   addTable = async (req, res) => {
     const { user, body } = req;
 
+    let { branch_id, floor_id, tables } = body;
+    // branch_id = getIdsFromArray(branch_id);
+
+    const floor = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
+
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, model: floor, branch_id: [branch_id], method: 'addTable' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+    let table={};
+    if (!tables) {
+      const lastTable = await this.tableService.tableDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
+      const lastTableVal = lastTable?.sNo;
+      table = await floor.createTable({ ...body, sNo: lastTableVal !== null ? lastTableVal + 1 : 1 });
+
+    }
+    else {
+      for(let tt of tables)
+      await this.tableService.tableDao.updateById(tt,tt.id)
+    }
+
+    res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
+  }
+
+  getTable=async(req,res)=>{
+    const { user, body } = req;
+
     let { branch_id, floor_id } = body;
     // branch_id = getIdsFromArray(branch_id);
 
+    const floor = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
 
-    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addTable' })
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, model: floor, branch_id: [branch_id], method: 'addTable' })
     console.log(shouldReturn, reason)
     if (shouldReturn) {
       return;
     }
 
-    const floor = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
-    const lastTable = await this.tableService.tableDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
-    const lastTableVal = lastTable?.sNo;
+    const tables = await this.tableService.tableDao.getAll({where:{floor_id}});
 
-    const table = await floor.createTable({ ...body, sNo: lastTableVal !== null ? lastTableVal + 1 : 1 });
-    res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
-  }
-
-  updateTables = async (req, res) => {
-
+    res.json(responseHandler.returnSuccess(httpStatus[200],'Success',tables));
 
   }
   getAllBranchesOfUser = async (req, res) => {
@@ -855,7 +877,7 @@ class ProfileController {
     if (need_approval) {
 
       const approval = await user.createApproval({ module, permission_name, approver_id: user.reporting_user_id, models: body, method, status: approvalStatus.STATUS_PENDING })
-     model && model.update({ approval_id: approval.dataValues.id, approval_action: permission_name })
+      model && model.update({ approval_id: approval.dataValues.id, approval_action: permission_name })
       return responseHandler.returnSuccess(httpStatus[200], "Success", { 'request_id': approval.dataValues.id, status: 'Pending with approval' })
 
     }
@@ -870,7 +892,7 @@ class ProfileController {
 
 
 
-    const { shouldReturn } = await this.initalChecks({ req, res,branch_id: branch_ids}, "addNewRoles")
+    const { shouldReturn } = await this.initalChecks({ req, res, branch_id: branch_ids }, "addNewRoles")
     if (shouldReturn) {
       return;
     }

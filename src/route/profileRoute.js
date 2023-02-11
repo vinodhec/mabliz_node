@@ -16,7 +16,7 @@ const rolePermissionConfig = {
     '/user_GET': { module: 'user', permission: 'get' }, '/user_POST': { module: 'user', permission: 'add' },'/user_PUT': { module: 'user', permission: 'edit' }, '/user/disable-user_PUT': { module: 'user', permission: 'edit' }, '/user/delete_user_DELETE': { module: 'user', permission: 'delete' },
     '/upload-items_POST': { module: 'user', permission: 'add' },'/get-all-items_POST':{module:'user',permission:'get'},
     '/floor_POST': { module: 'role', permission: 'add' },
-    '/table_POST': { module: 'user', permission: 'add' },    '/table_DELETE': { module: 'role', permission: 'add' }
+    '/get-tables_POST': { module: 'user', permission: 'add' }, '/table_POST': { module: 'user', permission: 'add' }, '/table_PUT': { module: 'role', permission: 'add' },   '/table_DELETE': { module: 'role', permission: 'add' }
 
 
 
@@ -80,7 +80,11 @@ router.delete('/user/delete-user', profileController.deleteUser);
 
 router.post('/user', profileController.addUser1);
 router.post('/floor', profileController.addFloor);
+router.post('/get-tables', profileController.getTable);
+
 router.post('/table', profileController.addTable);
+router.put('/table', profileController.addTable);
+
 router.delete('/table', profileController.deleteTable);
 
 router.post('/get-business-branch', profileController.getAllBranchesOfUser);

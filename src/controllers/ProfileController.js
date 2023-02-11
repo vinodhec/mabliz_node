@@ -60,8 +60,8 @@ class ProfileController {
     this.roleService = new RoleService();
     this.rolebranchService = new RolebranchService();
     this.itemService = new ItemService();
-    this.floorService =  new FloorService();
-    this.tableService =  new TableService();
+    this.floorService = new FloorService();
+    this.tableService = new TableService();
 
     // this.addUser1();
 
@@ -536,39 +536,60 @@ class ProfileController {
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", { modules: rolePermission.map(({ module }) => module), branches: roleBranch.dataValues.branches }))
 
   }
+
+  initalChecks = async ({ req, res, branch_id, method }) => {
+
+    const { user, isApprovalFlow } = req;
+    if (!isApprovalFlow) {
+      const hasAccess = await this.checkBranchAccess(user, res, [branch_id])
+      if (hasAccess) {
+
+        res.json(hasAccess);
+        return true;
+      }
+    }
+    const isAppr = await this.checkandupdateApproval(req, method);
+    console.log({ isAppr })
+    if (isAppr) {
+      res.json(isAppr)
+      return true;
+    }
+    return false;
+
+  }
+
   addFloor = async (req, res) => {
-    const { user, body, isApprovalFlow } =req;
+    const { user, body, isApprovalFlow } = req;
     console.log(
-      'addfloor',user,body
+      'addfloor', user, body
     )
     let { branch_id } = body;
     // branch_id = getIdsFromArray(branch_id);
 
-    if (!isApprovalFlow) {
-      const hasAccess = await this.checkBranchAccess(user, res, [branch_id])
-      if (hasAccess) {
-        return res.json(hasAccess);
-      }
-    }
-    const isAppr = await this.checkandupdateApproval(req,"addFloor");
-    console.log({isAppr})
-    if (isAppr) {
-      return res.json(isAppr)
-
+    const shouldReturn = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addFloor' })
+    console.log(shouldReturn)
+    if (shouldReturn) {
+      return;
     }
 
-    const branch = await this.branchService.branchDao.findById(branch_id[0]);
-    const lastFloor = await this.floorService.floorDao.findOneByWhere({order:['sNo','DESC'],attributes:['sNo'],raw:true});
-    console.log({lastFloor})
+    const branch = await this.branchService.branchDao.findById(branch_id);
+    const lastFloor = await this.floorService.floorDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
+    console.log({ lastFloor })
     const lastFloorVal = lastFloor?.sNo;
-     
-    const floor = await branch.createFloor({...body,sNo:lastFloorVal !==null ? lastFloorVal+1 : 1});
+
+    const floor = await branch.createFloor({ ...body, sNo: lastFloorVal !== null ? lastFloorVal + 1 : 1 });
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
   }
 
-  addTable = async(req,res)=>{
-    const { user, body, isApprovalFlow,floor_id } =req;
-  
+  deleteTable = async (req, res) => {
+
+    const { body, user, role } = req
+
+  }
+
+  addTable = async (req, res) => {
+    const { user, body, isApprovalFlow, floor_id } = req;
+
     let { branch_id } = body;
     // branch_id = getIdsFromArray(branch_id);
 
@@ -578,26 +599,26 @@ class ProfileController {
         return res.json(hasAccess);
       }
     }
-    const isAppr = await this.checkandupdateApproval(req,"addTable");
-    console.log({isAppr})
+    const isAppr = await this.checkandupdateApproval(req, "addTable");
+    console.log({ isAppr })
     if (isAppr) {
       return res.json(isAppr)
 
     }
 
-    
-    const floor =await this.floorService.floorDao.Model.findAll({id:floor_id,branch_id})
-    const lastTable = await this.tableService.tableDao.findOneByWhere({order:['sNo','DESC'],attributes:['sNo'],raw:true});
-    const lastTableVal = lastTable?.sNo;
-    console.log({lastTableVal})
 
-    const table = await floor[0].createTable({...body,sNo:lastTableVal !==null ? lastTableVal+1 : 1});
+    const floor = await this.floorService.floorDao.Model.findAll({ id: floor_id, branch_id })
+    const lastTable = await this.tableService.tableDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
+    const lastTableVal = lastTable?.sNo;
+    console.log({ lastTableVal })
+
+    const table = await floor[0].createTable({ ...body, sNo: lastTableVal !== null ? lastTableVal + 1 : 1 });
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
   }
 
-  updateTables = async(req,res)=>{
+  updateTables = async (req, res) => {
 
-    
+
   }
   getAllBranchesOfUser = async (req, res) => {
 
@@ -798,11 +819,11 @@ class ProfileController {
   }
 
 
-  checkandupdateApproval = async({user, role,isApprovalFlow,body},method)=>{
-const {need_approval,module,permission_name} = role;
-console.log({module,permission_name})
+  checkandupdateApproval = async ({ user, role, isApprovalFlow, body }, method) => {
+    const { need_approval, module, permission_name } = role;
+    console.log({ module, permission_name })
     if (need_approval && !isApprovalFlow) {
-      const approval = await user.createApproval({module,permission_name, approver_id: user.reporting_user_id, models: body, method, status: approvalStatus.STATUS_PENDING })
+      const approval = await user.createApproval({ module, permission_name, approver_id: user.reporting_user_id, models: body, method, status: approvalStatus.STATUS_PENDING })
       return responseHandler.returnSuccess(httpStatus[200], "Success", { 'request_id': approval.dataValues.id, status: 'Pending with approval' })
 
     }
@@ -823,7 +844,7 @@ console.log({module,permission_name})
         return res.json(hasAccess);
       }
     }
-    const isAppr = await this.checkandupdateApproval(req,"addNewRoles");
+    const isAppr = await this.checkandupdateApproval(req, "addNewRoles");
     console.log(isAppr)
     if (isAppr) {
       return res.json(isAppr)

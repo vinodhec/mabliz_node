@@ -540,21 +540,26 @@ class ProfileController {
   initalChecks = async ({ req, res, branch_id, method }) => {
 
     const { user, isApprovalFlow } = req;
+    let shouldReturn=false
+    let reason =""
     if (!isApprovalFlow) {
       const hasAccess = await this.checkBranchAccess(user, res, [branch_id])
       if (hasAccess) {
-
+shouldReturn = true;
+reason ="access"
         res.json(hasAccess);
-        return true;
+        return {shouldReturn,reason};
       }
     }
     const isAppr = await this.checkandupdateApproval(req, method);
     console.log({ isAppr })
     if (isAppr) {
+      shouldReturn = true;
       res.json(isAppr)
-      return true;
+      reason="approval"
+      return {shouldReturn,reason};
     }
-    return false;
+    return {shouldReturn,reason};
 
   }
 
@@ -566,8 +571,8 @@ class ProfileController {
     let { branch_id } = body;
     // branch_id = getIdsFromArray(branch_id);
 
-    const shouldReturn = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addFloor' })
-    console.log(shouldReturn)
+    const {shouldReturn,reason} = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addFloor' })
+    console.log(shouldReturn,reason)
     if (shouldReturn) {
       return;
     }

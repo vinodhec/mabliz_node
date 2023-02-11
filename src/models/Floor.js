@@ -12,7 +12,10 @@ module.exports = (sequelize, DataTypes) => {
    Floor.init(
     {
         sNo:DataTypes.INTEGER,
-    name:DataTypes.STRING
+    name:DataTypes.STRING,
+    approval_action:DataTypes.STRING,
+    approval_id:DataTypes.STRING,
+  
     },
 
     {

@@ -542,7 +542,7 @@ class ProfileController {
     const fncName = stackLine.match(/at Object.([^ ]+)/)?.[1]
     return fncName
 }
-  initalChecks = async ({ req, res, branch_id, method }) => {
+  initalChecks = async ({ model,req, res, branch_id, method }) => {
 
 
     const { user, isApprovalFlow } = req;
@@ -557,12 +557,13 @@ reason ="access"
         return {shouldReturn,reason};
       }
     }
-    const isAppr = await this.checkandupdateApproval(req, method);
+    const isAppr = await this.checkandupdateApproval(model, req, method);
     console.log({ isAppr })
     if (isAppr) {
       shouldReturn = true;
       res.json(isAppr)
       reason="approval"
+      
       return {shouldReturn,reason};
     }
     return {shouldReturn,reason};
@@ -598,18 +599,22 @@ reason ="access"
 
     const { body, user, role } = req
     let { branch_id,floor_id,table_id } = body;
-    // branch_id = getIdsFromArray(branch_id);
-    const {shouldReturn,reason} = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deleteTable' })
-    console.log({shouldReturn,reason})
-    if (shouldReturn) {
-      return;
-    }
+
+
     const branch = await this.branchService.getBranchFromBranchId(branch_id);
     const {id} = await this.floorService.getFloorFromFloorandBranchId({floor_id,branch_id})
   console.log(id,{floor_id:id,id:table_id});
     if(!id){
       return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED,"Error"))
     }
+    // branch_id = getIdsFromArray(branch_id);
+    const tabble = await this.tableService.tableDao.findOneByWhere({floor_id:id,id:table_id})
+    const {shouldReturn,reason} = await this.initalChecks({ model :table , req, res, branch_id: [branch_id], method: 'deleteTable' })
+    console.log({shouldReturn,reason})
+    if (shouldReturn) {
+      return;
+    }
+ 
   const deleteTable =   await this.tableService.tableDao.deleteByWhere({floor_id:id,id:table_id})
     console.lo(deleteTable)
 
@@ -848,11 +853,13 @@ reason ="access"
   }
 
 
-  checkandupdateApproval = async ({ user, role, isApprovalFlow, body }, method) => {
+  checkandupdateApproval = async ({model, user, role, isApprovalFlow, body }, method) => {
     const { need_approval, module, permission_name } = role;
     console.log({ module, permission_name })
     if (need_approval && !isApprovalFlow) {
+      
       const approval = await user.createApproval({ module, permission_name, approver_id: user.reporting_user_id, models: body, method, status: approvalStatus.STATUS_PENDING })
+      model.update({approval_id:approval.dataVaues.id, approval_action:permission_name})
       return responseHandler.returnSuccess(httpStatus[200], "Success", { 'request_id': approval.dataValues.id, status: 'Pending with approval' })
 
     }

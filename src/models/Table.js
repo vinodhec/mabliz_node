@@ -2,23 +2,25 @@ const { Model } = require("sequelize");
 const { itemStatus } = require("./../config/constant");
 
 module.exports = (sequelize, DataTypes) => {
-  class  Table extends Model {
-  
+  class Table extends Model {
+
     static associate(models) {
       // define association here
       //  User.belongsTo(models.agency, { foreignKey: 'agency_id', targetKey: 'id' });
     }
   }
 
-   Table.init(
+  Table.init(
     {
-        sNo:DataTypes.INTEGER,
-    name:DataTypes.STRING,
-    capacity:DataTypes.INTEGER,
-    status:{
-        type:DataTypes.STRING,
-defaultValue:itemStatus.STATUS_ACTIVE
-    }     
+      sNo: DataTypes.INTEGER,
+      name: DataTypes.STRING,
+      capacity: DataTypes.INTEGER,
+      approval_action: DataTypes.STRING,
+      approval_id: DataTypes.STRING,
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: itemStatus.STATUS_ACTIVE
+      }
     },
 
     {
@@ -27,6 +29,6 @@ defaultValue:itemStatus.STATUS_ACTIVE
       underscored: true,
     }
   );
-  return  Table;
+  return Table;
 };
 

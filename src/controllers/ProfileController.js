@@ -190,7 +190,7 @@ class ProfileController {
       const { query, user } = req;
 
       const { branch_id, business_type_id } = user;
-      console.log(user.dataValues?.id)
+
       const roles = await this.getRolesForUser(user, business_type_id, 'Yes', branch_id)
 
 
@@ -792,8 +792,15 @@ let i=0;
   getUsersForRole = async (req, res) => {
     const { user, query } = req;
     const { role_id } = query;
+    console.log(user.owner_id,role_id)
+    if(role_id  == 0){
 
-    const users = await this.userService.userDao.Model.findAll({ role_id, branch_id: user.branch_id })
+      const owner =await this.userService.userDao.findByWhere({where:{id:user.owner_id}})
+      return res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", owner))
+    }
+    
+    // this.roleuserService.roleDao.findByWhere({})
+   const users = await this.roleService.roleDao.findByWhere({where:{id:role_id},include:this.userService.userDao.Model})
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", users))
   }
 

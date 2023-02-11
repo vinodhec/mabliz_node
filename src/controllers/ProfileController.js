@@ -557,7 +557,7 @@ reason ="access"
         return {shouldReturn,reason};
       }
     }
-    const isAppr = await this.checkandupdateApproval(model, req, method);
+    const isAppr = await this.checkandupdateApproval( {...req,model}, method);
     console.log({ isAppr })
     if (isAppr) {
       shouldReturn = true;
@@ -608,7 +608,7 @@ reason ="access"
       return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED,"Error"))
     }
     // branch_id = getIdsFromArray(branch_id);
-    const tabble = await this.tableService.tableDao.findOneByWhere({floor_id:id,id:table_id})
+    const table = await this.tableService.tableDao.findOneByWhere({floor_id:id,id:table_id})
     const {shouldReturn,reason} = await this.initalChecks({ model :table , req, res, branch_id: [branch_id], method: 'deleteTable' })
     console.log({shouldReturn,reason})
     if (shouldReturn) {
@@ -623,9 +623,9 @@ reason ="access"
   }
 
   addTable = async (req, res) => {
-    const { user, body, isApprovalFlow, floor_id } = req;
+    const { user, body, isApprovalFlow } = req;
 
-    let { branch_id } = body;
+    let { branch_id ,floor_id} = body;
     // branch_id = getIdsFromArray(branch_id);
 
     if (!isApprovalFlow) {
@@ -859,7 +859,7 @@ reason ="access"
     if (need_approval && !isApprovalFlow) {
       
       const approval = await user.createApproval({ module, permission_name, approver_id: user.reporting_user_id, models: body, method, status: approvalStatus.STATUS_PENDING })
-      model.update({approval_id:approval.dataVaues.id, approval_action:permission_name})
+      model.update({approval_id:approval.dataValues.id, approval_action:permission_name})
       return responseHandler.returnSuccess(httpStatus[200], "Success", { 'request_id': approval.dataValues.id, status: 'Pending with approval' })
 
     }
@@ -867,9 +867,8 @@ reason ="access"
   }
 
   addNewRoles = async (req, res) => {
-    const { user, body, role: roleaccess, isApprovalFlow } = req;
+    const { user, body,  isApprovalFlow } = req;
     console.log({ roleaccess })
-    const { need_approval } = roleaccess
     let { permissions, branch_ids, id } = body;
     //TODO
     branch_ids = getIdsFromArray(branch_ids);

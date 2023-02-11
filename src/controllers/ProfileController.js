@@ -13,6 +13,8 @@ const RoleuserService = require("../service/RoleuserService");
 const RolebranchService = require("../service/RolebranchService");
 
 const ApprovalService = require("../service/ApprovalService");
+const TableService = require("../service/TableService");
+
 
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
@@ -59,6 +61,8 @@ class ProfileController {
     this.rolebranchService = new RolebranchService();
     this.itemService = new ItemService();
     this.floorService =  new FloorService();
+    this.tableService =  new TableService();
+
     // this.addUser1();
 
   }
@@ -538,10 +542,10 @@ class ProfileController {
       'addfloor',user,body
     )
     let { branch_id } = body;
-    branch_id = getIdsFromArray(branch_id);
+    // branch_id = getIdsFromArray(branch_id);
 
     if (!isApprovalFlow) {
-      const hasAccess = await this.checkBranchAccess(user, res, branch_id)
+      const hasAccess = await this.checkBranchAccess(user, res, [branch_id])
       if (hasAccess) {
         return res.json(hasAccess);
       }
@@ -560,6 +564,35 @@ class ProfileController {
      
     const floor = await branch.createFloor({...body,sNo:lastFloorVal !==null ? lastFloorVal+1 : 0});
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
+  }
+
+  addTable = async(req,res)=>{
+    const { user, body, isApprovalFlow,floor_id } =req;
+  
+    let { branch_id } = body;
+    // branch_id = getIdsFromArray(branch_id);
+
+    if (!isApprovalFlow) {
+      const hasAccess = await this.checkBranchAccess(user, res, [branch_id])
+      if (hasAccess) {
+        return res.json(hasAccess);
+      }
+    }
+    const isAppr = await this.checkandupdateApproval(req,"addTable");
+    console.log({isAppr})
+    if (isAppr) {
+      return res.json(isAppr)
+
+    }
+
+    
+    const floor =await this.floorService.floorDao.Model.findAll({id:floor_id,branch_id})
+    const lastTable = await this.tableService.tableDao.findOneByWhere({order:['sNo','DESC'],attributes:['sNo'],raw:true});
+    const lastTableVal = lastTable?.sNo;
+    console.log({lastTableVal})
+
+    const table = await floor[0].createTable({...body,sNo:lastTableVal !==null ? lastTableVal+1 : 0});
+    res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
   }
 
   updateTables = async(req,res)=>{

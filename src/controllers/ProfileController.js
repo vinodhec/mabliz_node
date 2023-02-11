@@ -562,7 +562,7 @@ class ProfileController {
     console.log({lastFloor})
     const lastFloorVal = lastFloor?.sNo;
      
-    const floor = await branch.createFloor({...body,sNo:lastFloorVal !==null ? lastFloorVal+1 : 0});
+    const floor = await branch.createFloor({...body,sNo:lastFloorVal !==null ? lastFloorVal+1 : 1});
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
   }
 
@@ -591,7 +591,7 @@ class ProfileController {
     const lastTableVal = lastTable?.sNo;
     console.log({lastTableVal})
 
-    const table = await floor[0].createTable({...body,sNo:lastTableVal !==null ? lastTableVal+1 : 0});
+    const table = await floor[0].createTable({...body,sNo:lastTableVal !==null ? lastTableVal+1 : 1});
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
   }
 

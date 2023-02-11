@@ -537,7 +537,13 @@ class ProfileController {
 
   }
 
+   getFncName() {
+    const stackLine = (new Error()).stack.split('\n')[2].trim()
+    const fncName = stackLine.match(/at Object.([^ ]+)/)?.[1]
+    return fncName
+}
   initalChecks = async ({ req, res, branch_id, method }) => {
+
 
     const { user, isApprovalFlow } = req;
     let shouldReturn=false
@@ -563,11 +569,11 @@ reason ="access"
 
   }
 
+ 
+
   addFloor = async (req, res) => {
     const { user, body, isApprovalFlow } = req;
-    console.log(
-      'addfloor', user, body
-    )
+   
     let { branch_id } = body;
     // branch_id = getIdsFromArray(branch_id);
 
@@ -577,7 +583,7 @@ reason ="access"
       return;
     }
 
-    const branch = await this.branchService.branchDao.findById(branch_id);
+    const branch = await this.getBranchFromBranchId(branch_id)
     const lastFloor = await this.floorService.floorDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
     console.log({ lastFloor })
     const lastFloorVal = lastFloor?.sNo;
@@ -586,9 +592,25 @@ reason ="access"
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
   }
 
+  
+
   deleteTable = async (req, res) => {
 
     const { body, user, role } = req
+    let { branch_id,floor_id,table_id } = body;
+    // branch_id = getIdsFromArray(branch_id);
+    const {shouldReturn,reason} = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deleteTable' })
+    console.log({shouldReturn,reason})
+    if (shouldReturn) {
+      return;
+    }
+    const branch = await this.branchService.getBranchFromBranchId(branch_id);
+    const {id} = await this.floorService.getFloorFromFloorandBranchId({floor_id,branch_id})
+    const table = await this.tableService.getTableFromFloorandTableId({floor_id,table_id});
+
+   await table.delete();
+
+   res.json(responseHandler.returnSuccess(httpStatus[200],"Success",{}))
 
   }
 
@@ -612,7 +634,7 @@ reason ="access"
     }
 
 
-    const floor = await this.floorService.floorDao.Model.findAll({ id: floor_id, branch_id })
+    const floor = await this.floorService.getFloorFromFloorandBranchId({floor_id,branch_id})
     const lastTable = await this.tableService.tableDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
     const lastTableVal = lastTable?.sNo;
     console.log({ lastTableVal })

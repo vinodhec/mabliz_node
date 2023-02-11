@@ -58,6 +58,11 @@ class BranchService {
       { groups,branchStatus }
     );
   };
+
+  getBranchFromBranchId = async(branch_id)=>{
+    return await this.branchDao.findById(branch_id);
+    
+      }
 }
 
 module.exports = BranchService;

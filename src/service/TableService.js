@@ -9,7 +9,12 @@ class TableService {
         this.tableDao = new TableDao();
     }
 
+    getTableFromFloorandTableId= async({floor_id,table_id})=>{
 
+       const table = await this.tableDao.Model.findAll({floor_id,id:table_id})
+    
+    return table[0];
+    }
     
    
 }

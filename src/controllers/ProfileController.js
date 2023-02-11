@@ -11,6 +11,9 @@ const RoleService = require("../service/RoleService");
 const ItemService = require("../service/ItemService");
 const RoleuserService = require("../service/RoleuserService");
 const RolebranchService = require("../service/RolebranchService");
+const QRCode = require('qrcode')
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 const ApprovalService = require("../service/ApprovalService");
 const TableService = require("../service/TableService");
@@ -638,7 +641,7 @@ class ProfileController {
     if (shouldReturn) {
       return;
     }
-    let table={};
+    let table = {};
     if (!tables) {
       const lastTable = await this.tableService.tableDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
       const lastTableVal = lastTable?.sNo;
@@ -646,14 +649,123 @@ class ProfileController {
 
     }
     else {
-      for(let tt of tables)
-      await this.tableService.tableDao.updateById(tt,tt.id)
+      for (let tt of tables)
+        await this.tableService.tableDao.updateById(tt, tt.id)
     }
 
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
   }
 
-  getTable=async(req,res)=>{
+
+  generateQrCodeForTables = async (req, res) => {
+    const { user, body } = req;
+
+    let { branch_id, floor_id, tables } = body;
+    // branch_id = getIdsFromArray(branch_id);
+
+    const floor = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
+
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, model: floor, branch_id: [branch_id], method: 'addTable' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+    console.log({branch_id})
+    const branch = await this.branchService.branchDao.findById(branch_id, {raw:true, attributes: ['branch_name','businessId'] })
+
+    const business = await this.businessService.businessDao.findById(branch.businessId, {raw:true, attributes: ['business_name'] })
+    console.log({business})
+
+    const doc = new PDFDocument({autoFirstPage: false})
+    doc.pipe(fs.createWriteStream('./output2.pdf'))
+
+
+    // Embed a font, set the font size, and render some text
+   
+let i=0;
+    for (let tt of tables) {
+      const table = await this.tableService.tableDao.findById(tt.id);
+      if (table) {
+        const { name, id, capacity, status } = table.dataValues
+        console.log({ name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name })
+        const data = await QRCode.toFile('./filename.png', JSON.stringify({ name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name,business_name:business.business_name }))
+        console.log('done', data)
+
+
+
+        //Add an image, constrain it to a given size, and center it vertically and horizontally 
+    
+       
+
+
+        // doc.addPage()
+        //    .image('./1.png', {
+        //    fit: [500,400],
+        //    align: 'center',
+        //    valign: 'center'
+        // });
+        doc.addPage();
+     
+        doc
+        .fontSize(35)
+        .fillColor('red')
+        .text('Mabliz',{align:'center'});
+        doc
+        .fontSize(20)
+        .fillColor('black')
+        .text("Contactless Dining",{align:'center'});
+      
+        doc
+        .fontSize(15)
+        .fillColor('grey')
+        .text("Scan & Order Now",{align:'center'});
+
+
+      // Add an image, constrain it to a given size, and center it vertically and horizontally
+      doc.image('./filename.png', {
+        fit: [500, 500],
+        align: 'center'
+       
+      });
+      doc.lineWidth(25).rect(0,0,doc.page.width,doc.page.height);
+      doc.stroke();
+      doc
+      .fontSize(30)
+      .fillColor('black')
+      .text(business.business_name,{align:'center'});
+      doc
+      .fontSize(20)
+      .fillColor('black')
+      .text(branch.branch_name,{align:'center'});
+      // Add another page
+     
+      // Add some text with annotations
+
+      // Finalize PDF file
+        console.log(tt);
+      }
+    }
+
+    // doc.removePage(i-1);
+
+    doc.end();
+
+    //Pipe its output somewhere, like to a file or HTTP response 
+    //See below for browser usage 
+    console.log('download')
+    res.setHeader('Content-disposition', './output2.pdf');
+
+    setTimeout(()=>{
+      res.download('./output2.pdf')
+
+    },100)
+
+    
+
+  }
+
+
+  getTable = async (req, res) => {
     const { user, body } = req;
 
     let { branch_id, floor_id } = body;
@@ -667,9 +779,9 @@ class ProfileController {
       return;
     }
 
-    const tables = await this.tableService.tableDao.getAll({where:{floor_id}});
+    const tables = await this.tableService.tableDao.getAll({ where: { floor_id } });
 
-    res.json(responseHandler.returnSuccess(httpStatus[200],'Success',tables));
+    res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', tables));
 
   }
   getAllBranchesOfUser = async (req, res) => {
@@ -1111,6 +1223,7 @@ class ProfileController {
     ]);
     crudOperations({ req, res, source, target, id });
   };
+
 
   addAddentance = async (req, res) => {
 

@@ -61,8 +61,49 @@ app.use(imagesMiddleWare);
 app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 
+
+
 app.get("/", async (req, res) => {
-  res.status(200).send("Congratulations! API is working!");
+  const QRCode = require('qrcode')
+
+  QRCode.toFile('filename.png', 'Some text', {
+    color: {
+      dark: '#00F',  // Blue dots
+      light: '#0000' // Transparent background
+    }
+  }, function (err) {
+    if (err) throw err
+    console.log('done')
+    PDFDocument = require('pdfkit');
+    fs = require('fs');
+    doc = new PDFDocument
+    
+    //Pipe its output somewhere, like to a file or HTTP response 
+    //See below for browser usage 
+    doc.pipe(fs.createWriteStream('output.pdf'))
+    
+    
+    //Add an image, constrain it to a given size, and center it vertically and horizontally 
+    doc.image('./filename.png', {
+       fit: [500, 400],
+       align: 'center',
+       valign: 'center'
+    });
+
+    res.download('./output1.pdf')
+    
+    // doc.addPage()
+    //    .image('./1.png', {
+    //    fit: [500,400],
+    //    align: 'center',
+    //    valign: 'center'
+    // });
+    
+    
+    doc.end()
+
+  })
+  // res.status(200).send("Congratulations! API is working!");
 });
 app.use("/api", routes);
 
@@ -183,9 +224,9 @@ Branch.belongsTo(User, {foreignKey: 'owner_id'});
 Role.belongsTo(User, {foreignKey: 'owner_id'});
 User.belongsTo(User, {foreignKey: 'owner_id'});
 
-db.sequelize.sync({alter:true});
+// db.sequelize.sync({alter:true});
 // 
 // db.sequelize.sync({force:true});
 
-// db.sequelize.sync();
+db.sequelize.sync();
 module.exports = app;

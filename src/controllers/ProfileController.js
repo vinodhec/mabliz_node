@@ -723,18 +723,27 @@ let i=0;
 
       // Add an image, constrain it to a given size, and center it vertically and horizontally
       doc.image('./filename.png', {
-        fit: [500, 500],
+        fit: [450, 450],
         align: 'center'
        
       });
       doc.lineWidth(25).rect(0,0,doc.page.width,doc.page.height);
       doc.stroke();
       doc
-      .fontSize(30)
+      .fontSize(20)
+      .fillColor('black')
+      .text('Floor : ' + floor.name,{align:'center'});
+      doc
+      .fontSize(20)
+      .fillColor('black')
+      .text('Table : ' + table.name,{align:'center'});
+      doc.moveDown()
+      doc
+      .fontSize(20)
       .fillColor('black')
       .text(business.business_name,{align:'center'});
       doc
-      .fontSize(20)
+      .fontSize(15)
       .fillColor('black')
       .text(branch.branch_name,{align:'center'});
       // Add another page

@@ -599,7 +599,7 @@ class ProfileController {
       const lastFloorVal = lastFloor?.sNo;
 
       floor = await branch.createFloor({ ...body, sNo: lastFloorVal !== null ? lastFloorVal + 1 : 1 });
-      for(let t of tables){
+      for (let t of tables) {
         await floor.createTable(t)
 
       }
@@ -666,8 +666,24 @@ class ProfileController {
 
     }
     else {
-      for (let tt of tables)
-        await this.tableService.tableDao.updateById(tt, tt.id)
+      for (let tt of tables) {
+
+        const uu = await this.userService.userDao.findById(tt.userId)
+        console.log(tt.userId);
+        if (uu) {
+          const hasAccess = await this.checkBranchAccess(uu, res, [branch_id])
+          console.log({ hasAccess })
+          if (!hasAccess) {
+
+            tt = { ...tt, user_id: tt.userId }
+
+
+          }
+          await this.tableService.tableDao.updateById(tt, tt.id)
+        }
+
+      }
+
     }
 
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
@@ -816,7 +832,7 @@ class ProfileController {
 
     const floor = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
 
-    const { shouldReturn, reason } = await this.initalChecks({ req, res, model: floor, branch_id: [branch_id], method: 'addTable' })
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, model: floor, branch_id: [branch_id], method: 'getTable' })
     console.log(shouldReturn, reason)
     if (shouldReturn) {
       return;
@@ -830,23 +846,53 @@ class ProfileController {
 
   getFloor = async (req, res) => {
 
-  const { user, body } = req;
+    const { user, body } = req;
 
-  let { branch_id } = body;
-  // branch_id = getIdsFromArray(branch_id);
+    let { branch_id } = body;
+    // branch_id = getIdsFromArray(branch_id);
 
 
-  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addTable' })
-  console.log(shouldReturn, reason)
-  if (shouldReturn) {
-    return;
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'getFloor' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+
+    const floors = await this.floorService.floorDao.getAll({ where: { branch_id }, include: { model: this.tableService.tableDao.Model } });
+
+    res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', floors));
+
   }
 
-  const floors = await this.floorService.floorDao.getAll({ where: { branch_id }, include:{model:this.tableService.tableDao.Model} });
+  assignUsersToTables = async (req, res) => {
+    const { user, body } = req;
 
-  res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', floors));
+    let { branch_id, floor_id, tables } = body;
+    // branch_id = getIdsFromArray(branch_id);
 
-}
+    const floor = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
+
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, model: floor, branch_id: [branch_id], method: 'addTable' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+    let table = {};
+    if (!tables) {
+      const lastTable = await this.tableService.tableDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
+      const lastTableVal = lastTable?.sNo;
+      table = await floor.createTable({ ...body, sNo: lastTableVal !== null ? lastTableVal + 1 : 1 });
+
+    }
+    else {
+      for (let tt of tables)
+        await this.tableService.tableDao.updateById(tt, tt.id)
+    }
+
+    res.send(responseHandler.returnSuccess(httpStatus[200], "Success", table))
+
+  }
+
   getAllBranchesOfUser = async (req, res) => {
 
     const businesses = await this.businessService.businessDao.getAll({ user: req.user, attributes: ['id', 'business_name'], include: { model: new BranchService().branchDao.Model, attributes: ['id', 'branch_name', 'businessId'] }, ...req.body.pagination })

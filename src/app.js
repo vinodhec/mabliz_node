@@ -222,6 +222,9 @@ User.hasMany(User);
 
 
 User.hasMany(Role);
+User.hasMany(Table);
+Table.belongsTo(User);
+
 Role.belongsTo(User)
 User.hasMany(Attendance)
 // User.hasOne(Role);

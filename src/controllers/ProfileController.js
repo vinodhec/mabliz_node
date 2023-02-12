@@ -582,7 +582,7 @@ class ProfileController {
   addFloor = async (req, res) => {
     const { user, body, isApprovalFlow } = req;
 
-    let { branch_id,floors,tables } = body;
+    let { branch_id, floors, tables } = body;
     // branch_id = getIdsFromArray(branch_id);
 
     const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addFloor' })
@@ -593,23 +593,24 @@ class ProfileController {
 
     const branch = await this.branchService.getBranchFromBranchId(branch_id)
     let floor = {};
-    if (!floors){
+    if (!floors) {
       const lastFloor = await this.floorService.floorDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
       console.log({ lastFloor })
       const lastFloorVal = lastFloor?.sNo;
-  
-       floor = await branch.createFloor({ ...body, sNo: lastFloorVal !== null ? lastFloorVal + 1 : 1 });
-       await floor.addTables(tables)
-    } 
-    else{
-      for (let tt of floors)
-      {
-      await this.floorService.floorDao.updateById(tt, tt.id)
-      for (let t of tt.tables)
-      {
-        await this.tableService.tableDao.updateById(t, t.id)
+
+      floor = await branch.createFloor({ ...body, sNo: lastFloorVal !== null ? lastFloorVal + 1 : 1 });
+      for(let t of tables){
+        await floor.createTable(t)
+
       }
-      
+    }
+    else {
+      for (let tt of floors) {
+        await this.floorService.floorDao.updateById(tt, tt.id)
+        for (let t of tt.tables) {
+          await this.tableService.tableDao.updateById(t, t.id)
+        }
+
       }
     }
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
@@ -686,32 +687,32 @@ class ProfileController {
     if (shouldReturn) {
       return;
     }
-    console.log({branch_id})
-    const branch = await this.branchService.branchDao.findById(branch_id, {raw:true, attributes: ['branch_name','businessId'] })
+    console.log({ branch_id })
+    const branch = await this.branchService.branchDao.findById(branch_id, { raw: true, attributes: ['branch_name', 'businessId'] })
 
-    const business = await this.businessService.businessDao.findById(branch.businessId, {raw:true, attributes: ['business_name'] })
-    console.log({business})
+    const business = await this.businessService.businessDao.findById(branch.businessId, { raw: true, attributes: ['business_name'] })
+    console.log({ business })
 
-    const doc = new PDFDocument({autoFirstPage: false})
+    const doc = new PDFDocument({ autoFirstPage: false })
     doc.pipe(fs.createWriteStream('./tableQR.pdf'))
 
 
     // Embed a font, set the font size, and render some text
-   
-let i=0;
+
+    let i = 0;
     for (let tt of tables) {
       const table = await this.tableService.tableDao.findById(tt.id);
       if (table) {
         const { name, id, capacity, status } = table.dataValues
         console.log({ name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name })
-        const data = await QRCode.toFile('./filename.png', JSON.stringify({ type:'TABLE_QR', name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name,business_name:business.business_name }),{scale:7})
+        const data = await QRCode.toFile('./filename.png', JSON.stringify({ type: 'TABLE_QR', name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name, business_name: business.business_name }), { scale: 7 })
         console.log('done', data)
 
 
 
         //Add an image, constrain it to a given size, and center it vertically and horizontally 
-    
-       
+
+
 
 
         // doc.addPage()
@@ -721,70 +722,70 @@ let i=0;
         //    valign: 'center'
         // });
         doc.addPage();
-     
-        doc
-.font('./src/fonts/Amita-Bold.ttf')
-
-        .fontSize(24)
-        .fillColor('#C8073B')
-        .text('Mabliz',{align:'center'});
-  //       doc.moveTo(0, 200)       // this is your starting position of the line, from the left side of the screen 200 and from top 200
-  //  .lineTo(400, 200)       // this is the end point the line 
-  //   doc.moveTo(0, 200)   //again we are giving a starting position for the text
-  // //adding dash
-  //  .stroke()
 
         doc
-.font('./src/fonts/JosefinSans-SemiBold.ttf').
-        fontSize(20)
-        .fillColor('#170408')
-        .text("Contactless Dining", {align:'center'})   
-        ;
-      
+          .font('./src/fonts/Amita-Bold.ttf')
+
+          .fontSize(24)
+          .fillColor('#C8073B')
+          .text('Mabliz', { align: 'center' });
+        //       doc.moveTo(0, 200)       // this is your starting position of the line, from the left side of the screen 200 and from top 200
+        //  .lineTo(400, 200)       // this is the end point the line 
+        //   doc.moveTo(0, 200)   //again we are giving a starting position for the text
+        // //adding dash
+        //  .stroke()
+
         doc
-        .fontSize(15)
-        .fillColor('#6D6D72')
-        .text("Scan & Order Now",{align:'center'});
+          .font('./src/fonts/JosefinSans-SemiBold.ttf').
+          fontSize(20)
+          .fillColor('#170408')
+          .text("Contactless Dining", { align: 'center' })
+          ;
+
+        doc
+          .fontSize(15)
+          .fillColor('#6D6D72')
+          .text("Scan & Order Now", { align: 'center' });
 
 
-      // Add an image, constrain it to a given size, and center it vertically and horizontally
-      doc.image('./filename.png', {
-     
-  align: 'center',
-  valign: 'center'
-       
-       
-      });
-      doc.lineWidth(5).rect(0,0,doc.page.width,doc.page.height);
-      doc.stroke();
+        // Add an image, constrain it to a given size, and center it vertically and horizontally
+        doc.image('./filename.png', {
 
-      doc.lineWidth(1).rect(8,8,doc.page.width-16,doc.page.height-16);
-      doc.stroke();
+          align: 'center',
+          valign: 'center'
 
-      doc
-      .fontSize(20)
-      .      moveUp(0.5)
-      .fillColor('#AAAEAE')
-      .text( floor.name + 
-        " / "+table.name,{align:'center'});
 
-      doc.moveDown()
-      doc
-.      moveDown(0.75)
-.font('./src/fonts/Raleway-Medium.ttf')
+        });
+        doc.lineWidth(5).rect(0, 0, doc.page.width, doc.page.height);
+        doc.stroke();
 
-      .fontSize(20)
-      .fillColor('#0D1923')
-      .text(business.business_name,{align:'center'});
-      doc
-      .fontSize(15)
-      .fillColor('#AAAEAE')
-      .text(branch.branch_name,{align:'center'});
-      // Add another page
-     
-      // Add some text with annotations
+        doc.lineWidth(1).rect(8, 8, doc.page.width - 16, doc.page.height - 16);
+        doc.stroke();
 
-      // Finalize PDF file
+        doc
+          .fontSize(20)
+          .moveUp(0.5)
+          .fillColor('#AAAEAE')
+          .text(floor.name +
+            " / " + table.name, { align: 'center' });
+
+        doc.moveDown()
+        doc
+          .moveDown(0.75)
+          .font('./src/fonts/Raleway-Medium.ttf')
+
+          .fontSize(20)
+          .fillColor('#0D1923')
+          .text(business.business_name, { align: 'center' });
+        doc
+          .fontSize(15)
+          .fillColor('#AAAEAE')
+          .text(branch.branch_name, { align: 'center' });
+        // Add another page
+
+        // Add some text with annotations
+
+        // Finalize PDF file
         console.log(tt);
       }
     }
@@ -797,12 +798,12 @@ let i=0;
     //See below for browser usage 
     console.log('download')
 
-    setTimeout(()=>{
+    setTimeout(() => {
       res.download('./tableQR.pdf')
 
-    },100)
+    }, 100)
 
-    
+
 
   }
 
@@ -826,6 +827,26 @@ let i=0;
     res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', tables));
 
   }
+
+  getFloor = async (req, res) => {
+
+  const { user, body } = req;
+
+  let { branch_id } = body;
+  // branch_id = getIdsFromArray(branch_id);
+
+
+  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addTable' })
+  console.log(shouldReturn, reason)
+  if (shouldReturn) {
+    return;
+  }
+
+  const floors = await this.floorService.floorDao.getAll({ where: { branch_id }, include:{model:this.tableService.tableDao.Model} });
+
+  res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', floors));
+
+}
   getAllBranchesOfUser = async (req, res) => {
 
     const businesses = await this.businessService.businessDao.getAll({ user: req.user, attributes: ['id', 'business_name'], include: { model: new BranchService().branchDao.Model, attributes: ['id', 'branch_name', 'businessId'] }, ...req.body.pagination })
@@ -834,15 +855,15 @@ let i=0;
   getUsersForRole = async (req, res) => {
     const { user, query } = req;
     const { role_id } = query;
-    console.log(user.owner_id,role_id)
-    if(role_id  == 0){
+    console.log(user.owner_id, role_id)
+    if (role_id == 0) {
 
-      const owner =await this.userService.userDao.findByWhere({where:{id:user.owner_id}})
+      const owner = await this.userService.userDao.findByWhere({ where: { id: user.owner_id } })
       return res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", owner))
     }
-    
+
     // this.roleuserService.roleDao.findByWhere({})
-   const users = await this.roleService.roleDao.findByWhere({where:{id:role_id},include:this.userService.userDao.Model})
+    const users = await this.roleService.roleDao.findByWhere({ where: { id: role_id }, include: this.userService.userDao.Model })
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", users))
   }
 

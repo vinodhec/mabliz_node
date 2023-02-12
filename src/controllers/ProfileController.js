@@ -708,16 +708,24 @@ let i=0;
      
         doc
         .fontSize(35)
-        .fillColor('red')
+        .fillColor('#C8073B')
         .text('Mabliz',{align:'center'});
-        doc
-        .fontSize(20)
-        .fillColor('black')
-        .text("Contactless Dining",{align:'center'});
+  //       doc.moveTo(0, 200)       // this is your starting position of the line, from the left side of the screen 200 and from top 200
+  //  .lineTo(400, 200)       // this is the end point the line 
+  //   doc.moveTo(0, 200)   //again we are giving a starting position for the text
+  // //adding dash
+  //  .stroke()
+
+        doc.
+moveDown(0.5).
+        fontSize(20)
+        .fillColor('#170408')
+        .text("Contactless Dining", {align:'center'})   
+        ;
       
         doc
         .fontSize(15)
-        .fillColor('grey')
+        .fillColor('#6D6D72')
         .text("Scan & Order Now",{align:'center'});
 
 
@@ -727,24 +735,29 @@ let i=0;
         align: 'center'
        
       });
-      doc.lineWidth(25).rect(0,0,doc.page.width,doc.page.height);
+      doc.lineWidth(5).rect(0,0,doc.page.width,doc.page.height);
       doc.stroke();
+
+      doc.lineWidth(1).rect(8,8,doc.page.width-16,doc.page.height-16);
+      doc.stroke();
+
       doc
       .fontSize(20)
-      .fillColor('black')
-      .text('Floor : ' + floor.name,{align:'center'});
-      doc
-      .fontSize(20)
-      .fillColor('black')
-      .text('Table : ' + table.name,{align:'center'});
+      .      moveUp(0.5)
+      .fillColor('#AAAEAE')
+      .text( floor.name + 
+        " / "+table.name,{align:'center'});
+
       doc.moveDown()
       doc
+.      moveDown(0.75)
+
       .fontSize(20)
-      .fillColor('black')
+      .fillColor('#0D1923')
       .text(business.business_name,{align:'center'});
       doc
       .fontSize(15)
-      .fillColor('black')
+      .fillColor('#AAAEAE')
       .text(branch.branch_name,{align:'center'});
       // Add another page
      

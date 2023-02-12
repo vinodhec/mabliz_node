@@ -686,7 +686,7 @@ class ProfileController {
     console.log({business})
 
     const doc = new PDFDocument({autoFirstPage: false})
-    doc.pipe(fs.createWriteStream('./output2.pdf'))
+    doc.pipe(fs.createWriteStream('./tableQR.pdf'))
 
 
     // Embed a font, set the font size, and render some text
@@ -716,7 +716,9 @@ let i=0;
         doc.addPage();
      
         doc
-        .fontSize(35)
+.font('./src/fonts/Amita-Bold.ttf')
+
+        .fontSize(24)
         .fillColor('#C8073B')
         .text('Mabliz',{align:'center'});
   //       doc.moveTo(0, 200)       // this is your starting position of the line, from the left side of the screen 200 and from top 200
@@ -725,8 +727,8 @@ let i=0;
   // //adding dash
   //  .stroke()
 
-        doc.
-moveDown(0.5).
+        doc
+.font('./src/fonts/JosefinSans-SemiBold.ttf').
         fontSize(20)
         .fillColor('#170408')
         .text("Contactless Dining", {align:'center'})   
@@ -762,6 +764,7 @@ moveDown(0.5).
       doc.moveDown()
       doc
 .      moveDown(0.75)
+.font('./src/fonts/Raleway-Medium.ttf')
 
       .fontSize(20)
       .fillColor('#0D1923')
@@ -786,10 +789,9 @@ moveDown(0.5).
     //Pipe its output somewhere, like to a file or HTTP response 
     //See below for browser usage 
     console.log('download')
-    res.setHeader('Content-disposition', './output2.pdf');
 
     setTimeout(()=>{
-      res.download('./output2.pdf')
+      res.download('./tableQR.pdf')
 
     },100)
 

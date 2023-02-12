@@ -682,7 +682,7 @@ class ProfileController {
 
     const floor = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
 
-    const { shouldReturn, reason } = await this.initalChecks({ req, res, model: floor, branch_id: [branch_id], method: 'addTable' })
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, model: floor, branch_id: [branch_id], method: 'generateQrCodeForTables' })
     console.log(shouldReturn, reason)
     if (shouldReturn) {
       return;
@@ -706,7 +706,7 @@ class ProfileController {
         const { name, id, capacity, status } = table.dataValues
         console.log({ name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name })
         const data = await QRCode.toFile('./filename.png', JSON.stringify({ type: 'TABLE_QR', name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name, business_name: business.business_name }), { scale: 7 })
-        console.log('done', data)
+        console.log('done', JSON.stringify({ type: 'TABLE_QR', name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name, business_name: business.business_name }))
 
 
 
@@ -801,7 +801,7 @@ class ProfileController {
     setTimeout(() => {
       res.download('./tableQR.pdf')
 
-    }, 100)
+    }, 1000)
 
 
 

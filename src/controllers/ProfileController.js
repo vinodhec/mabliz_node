@@ -582,7 +582,7 @@ class ProfileController {
   addFloor = async (req, res) => {
     const { user, body, isApprovalFlow } = req;
 
-    let { branch_id,floors } = body;
+    let { branch_id,floors,tables } = body;
     // branch_id = getIdsFromArray(branch_id);
 
     const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addFloor' })
@@ -599,6 +599,7 @@ class ProfileController {
       const lastFloorVal = lastFloor?.sNo;
   
        floor = await branch.createFloor({ ...body, sNo: lastFloorVal !== null ? lastFloorVal + 1 : 1 });
+       await floor.addTables(tables)
     } 
     else{
       for (let tt of floors)

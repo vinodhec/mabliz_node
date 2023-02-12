@@ -159,7 +159,13 @@ User.hasMany(Approval);
 Approval.belongsTo(User);
 
 Branch.hasMany(Floor);
+Floor.belongsTo(Branch);
+
+
 Floor.hasMany(Table);
+Table.belongsTo(Floor,{ onDelete: 'cascade'});
+
+
 User.hasMany(Business,{ onDelete: 'cascade', hooks:true });
 Business.belongsTo(User);
 

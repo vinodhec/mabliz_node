@@ -224,12 +224,18 @@ class AdminController {
 
     const {query,body} = req;
     const {businesstype_id} = query;
+    const {access,planvalidities} = body
     const business = await this.businesstypeService.businessTypeDao.findById(
       businesstype_id
     );
     const plan = await business.createPlan(body);
 
-    const promises = req.body.planvalidities.map(async (tt) => {
+for (let ac of access){
+
+  plan.addAccess(ac,{})
+}
+
+    const promises =planvalidities.map(async (tt) => {
 
       return await plan.createPlanvalidity(tt);
     });
@@ -358,23 +364,23 @@ class AdminController {
 }
 module.exports = AdminController;
 
-// setTimeout(()=>{
-//   const models = require('./../models');
-//   for (let model of Object.keys(models)) {
-//     if(models[model].name === 'Sequelize')
-//        continue;
-//     if(!models[model].name)
-//       continue;
+setTimeout(()=>{
+  const models = require('./../models');
+  for (let model of Object.keys(models)) {
+    if(models[model].name === 'Sequelize')
+       continue;
+    if(!models[model].name)
+      continue;
 
-//     console.log("\n\n----------------------------------\n",
-//     models[model].name,
-//     "\n----------------------------------");
+    console.log("\n\n----------------------------------\n",
+    models[model].name,
+    "\n----------------------------------");
 
-//     console.log("\nAssociations");
-//     for (let assoc of Object.keys(models[model].associations)) {
-//       for (let accessor of Object.keys(models[model].associations[assoc].accessors)) {
-//         console.log(models[model].name + '.' + models[model].associations[assoc].accessors[accessor]+'()');
-//       }
-//     }
-//   }
-// },10000)
+    console.log("\nAssociations");
+    for (let assoc of Object.keys(models[model].associations)) {
+      for (let accessor of Object.keys(models[model].associations[assoc].accessors)) {
+        console.log(models[model].name + '.' + models[model].associations[assoc].accessors[accessor]+'()');
+      }
+    }
+  }
+},10000)

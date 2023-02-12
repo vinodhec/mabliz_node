@@ -603,8 +603,14 @@ class ProfileController {
     } 
     else{
       for (let tt of floors)
+      {
       await this.floorService.floorDao.updateById(tt, tt.id)
-
+      for (let t of tt.tables)
+      {
+        await this.tableService.tableDao.updateById(t, t.id)
+      }
+      
+      }
     }
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
 

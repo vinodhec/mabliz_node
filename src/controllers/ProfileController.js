@@ -582,7 +582,7 @@ class ProfileController {
   addFloor = async (req, res) => {
     const { user, body, isApprovalFlow } = req;
 
-    let { branch_id } = body;
+    let { branch_id,floors } = body;
     // branch_id = getIdsFromArray(branch_id);
 
     const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addFloor' })
@@ -591,13 +591,22 @@ class ProfileController {
       return;
     }
 
-    const branch = await this.getBranchFromBranchId(branch_id)
-    const lastFloor = await this.floorService.floorDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
-    console.log({ lastFloor })
-    const lastFloorVal = lastFloor?.sNo;
+    const branch = await this.branchService.getBranchFromBranchId(branch_id)
+    let floor = {};
+    if (!floors){
+      const lastFloor = await this.floorService.floorDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
+      console.log({ lastFloor })
+      const lastFloorVal = lastFloor?.sNo;
+  
+       floor = await branch.createFloor({ ...body, sNo: lastFloorVal !== null ? lastFloorVal + 1 : 1 });
+    } 
+    else{
+      for (let tt of floors)
+      await this.floorService.floorDao.updateById(tt, tt.id)
 
-    const floor = await branch.createFloor({ ...body, sNo: lastFloorVal !== null ? lastFloorVal + 1 : 1 });
+    }
     res.send(responseHandler.returnSuccess(httpStatus[200], "Success", floor))
+
   }
 
 

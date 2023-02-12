@@ -148,6 +148,8 @@ const Roleuser = models.roleuser;
 const Roleuserbranch = models.roleuserbranch;
 const Roleusermodule = models.roleusermodule;
 const Rolebranch = models.rolebranch;
+const Planaccess = models.planaccess;
+
 User.hasMany(Employment);
 Employment.belongsTo(User);
 
@@ -176,6 +178,9 @@ BusinessCategory.hasMany(BusinessActivity);
 Module.hasMany(Permission);
 Plan.hasMany(PlanValidity);
 PlanValidity.belongsTo(Plan);
+
+Plan.belongsToMany(Module,{ through: Planbranch , onDelete: 'cascade'});
+Module.belongsToMany(Plan,{ through: Planbranch , onDelete: 'cascade'});
 
 BusinessTypes.hasMany(Plan);
 Plan.belongsTo(BusinessTypes);

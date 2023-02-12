@@ -697,7 +697,7 @@ let i=0;
       if (table) {
         const { name, id, capacity, status } = table.dataValues
         console.log({ name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name })
-        const data = await QRCode.toFile('./filename.png', JSON.stringify({ name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name,business_name:business.business_name }))
+        const data = await QRCode.toFile('./filename.png', JSON.stringify({ type:'TABLE_QR', name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name,business_name:business.business_name }),{scale:7})
         console.log('done', data)
 
 
@@ -740,8 +740,10 @@ moveDown(0.5).
 
       // Add an image, constrain it to a given size, and center it vertically and horizontally
       doc.image('./filename.png', {
-        fit: [450, 450],
-        align: 'center'
+     
+  align: 'center',
+  valign: 'center'
+       
        
       });
       doc.lineWidth(5).rect(0,0,doc.page.width,doc.page.height);

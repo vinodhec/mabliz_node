@@ -221,13 +221,15 @@ class AdminController {
   };
 
   addPlan = async (req, res) => {
+
+    const {query,body} = req;
+    const {businesstype_id} = query;
     const business = await this.businesstypeService.businessTypeDao.findById(
-      req.query.businesstype_id
+      businesstype_id
     );
-    const plan = await business.createPlan(req.body);
+    const plan = await business.createPlan(body);
 
     const promises = req.body.planvalidities.map(async (tt) => {
-      console.log(tt);
 
       return await plan.createPlanvalidity(tt);
     });

@@ -677,8 +677,9 @@ class ProfileController {
 
             tt = { ...tt, user_id: tt.userId }
 
-
           }
+          console.log({tt})
+
           await this.tableService.tableDao.updateById(tt, tt.id)
         }
 
@@ -838,7 +839,7 @@ class ProfileController {
       return;
     }
 
-    const tables = await this.tableService.tableDao.getAll({ where: { floor_id } });
+    const tables = await this.tableService.tableDao.getAll({ where: { floor_id },include:{model:this.userService.userDao.Model,attributes:['name','id', 'owner_id','user_status']} });
 
     res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', tables));
 

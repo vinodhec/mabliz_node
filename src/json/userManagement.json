@@ -18,23 +18,22 @@
             "isMandatory": true,
             "error": "Please select your Title",
             "requestKey": "title",
-            "isStringRequest":true,
+            "isStringRequest": true,
             "eligility": [
-                "PARTNER"
-            ], "fields": [
+              "PARTNER"
+            ],
+            "fields": [
               {
-                  "label": "Mr"
-                
+                "label": "Mr"
               },
               {
-                  "label": "Mrs"
-                 
-              }, {
+                "label": "Mrs"
+              },
+              {
                 "label": "Miss"
-                
-            }
+              }
             ]
-        },
+          },
           {
             "label": "First Name *",
             "type": "textbox",
@@ -43,75 +42,80 @@
             "error": "Please enter your Name",
             "requestKey": "name",
             "eligility": [
-                "PARTNER"
-            ]
-        }, {
-          "label": "Middle Name",
-          "type": "textbox",
-          "input": "text",
-          "requestKey": "middleName",
-          "eligility": [
               "PARTNER"
-          ]
-      }, {
-        "label": "Last Name",
-        "type": "textbox",
-        "input": "text",
-        "requestKey": "lastName",
-        "eligility": [
-            "PARTNER"
-        ]
-    }, {
-      "label": "Date of Birth *",
-      "type": "date_picker",
-      "isMandatory": true,
-      "error": "Please enter your Date of Birth",
-      "requestKey": "dob",
-      "eligility": [
-          "PARTNER"
-      ]
-  },{
-    "label": "Mobile No *",
-    "type": "textbox",
-    "input": "number",
-    "isMandatory": true,
-    "error": "Please enter your Mobile No",
-    "requestKey": "phone_number",
-    "eligility": [
-        "PARTNER"
-    ]
-},{
-  "label": "Email ID",
-  "type": "textbox",
-  "input": "email",
-  "requestKey": "email",
-  "eligility": [
-      "PARTNER"
-  ]
-},  {
-  "label": "Nationality *",
-  "type": "drop_down",
-  "input": "select",
-  "error": "Please select your Nationality",
-  "requestKey": "nationality",
-  "isStringRequest":true,
-
-  "eligility": [
-      "PARTNER"
-  ], "fields": [
-    {
-        "label": "Indian",
-        "id": 1
-    },
-    {
-        "label": "Nepal",
-        "id": 2
-    }
-  ]
-}
+            ]
+          },
+          {
+            "label": "Middle Name",
+            "type": "textbox",
+            "input": "text",
+            "requestKey": "middleName",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Last Name",
+            "type": "textbox",
+            "input": "text",
+            "requestKey": "lastName",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Date of Birth *",
+            "type": "date_picker",
+            "isMandatory": true,
+            "error": "Please enter your Date of Birth",
+            "requestKey": "dob",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Mobile No *",
+            "type": "textbox",
+            "input": "number",
+            "isMandatory": true,
+            "error": "Please enter your Mobile No",
+            "requestKey": "phone_number",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Email ID",
+            "type": "textbox",
+            "input": "email",
+            "requestKey": "email",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Nationality *",
+            "type": "drop_down",
+            "input": "select",
+            "error": "Please select your Nationality",
+            "requestKey": "nationality",
+            "isStringRequest": true,
+            "eligility": [
+              "PARTNER"
+            ],
+            "fields": [
+              {
+                "label": "Indian",
+                "id": 1
+              },
+              {
+                "label": "Nepal",
+                "id": 2
+              }
+            ]
+          }
         ]
       },
-      
       {
         "title": "ID Proof",
         "eligility": [
@@ -123,267 +127,306 @@
             "type": "drop_down",
             "input": "select",
             "requestKey": "idProofType",
-            "isStringRequest":true,
-    "error": "Please select your ID Proof",
+            "isStringRequest": true,
+            "error": "Please select your ID Proof",
             "eligility": [
               "PARTNER"
             ],
             "fields": [
-              {"label":"PAN Card"},{"label": "Ration ID"}
+              {
+                "label": "PAN Card"
+              },
+              {
+                "label": "Ration ID"
+              }
             ]
-            
           },
-          { "label": "ID Proof Number",
-          "type": "textbox_image_picker",
-          "input": "text",
-          "requestKey": "idProofNumber",
-          "error": "Please Enter ID Proof Number",
-          "imageKey": "idProofImage",
-          "eligility": [
-            "PARTNER"
-          ]
-        }]},
-          { "title": "Address Proof",
+          {
+            "label": "ID Proof Number",
+            "type": "textbox_image_picker",
+            "input": "text",
+            "requestKey": "idProofNumber",
+            "error": "Please Enter ID Proof Number",
+            "imageKey": "idProofImage",
+            "eligility": [
+              "PARTNER"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Address Proof",
         "eligility": [
           "PARTNER"
         ],
-        "fields": [{
+        "fields": [
+          {
             "label": "Address Proof",
             "type": "drop_down",
             "input": "select",
             "requestKey": "addressProofType",
-            "isStringRequest":true,
-
-            "error":"Please select your Address Proof ",
+            "isStringRequest": true,
+            "error": "Please select your Address Proof ",
             "eligility": [
               "PARTNER"
             ],
             "fields": [
-             {"label": "Aadhar Card"},{"label": "Voter ID"}
-             
+              {
+                "label": "Aadhar Card"
+              },
+              {
+                "label": "Voter ID"
+              }
             ]
-            
           },
-          { "label": "Address Proof Number",
-          "type": "textbox_image_picker",
-          "input": "text",
-          "requestKey": "addressProofNumber",
-          "error": "Please Enter Address Proof Number",
-          "imageKey": "addressProofImage",
-          "eligility": [
-            "PARTNER"
-          ]
-        }
+          {
+            "label": "Address Proof Number",
+            "type": "textbox_image_picker",
+            "input": "text",
+            "requestKey": "addressProofNumber",
+            "error": "Please Enter Address Proof Number",
+            "imageKey": "addressProofImage",
+            "eligility": [
+              "PARTNER"
+            ]
+          }
         ]
       },
-
-      { "title": "Police Clearance",
-      "eligility": [
-        "PARTNER"
-      ],
-      "fields": [{
-          "label": "Police Clearance *",
-          "type": "drop_down",
-          "input": "select",
-          "requestKey": "policeClearance",
-          "error":"Please select your Police Clearance ",
-          "eligility": [
-            "PARTNER"
-          ],
-          "isStringRequest":true,
-
-          "fields": [
-          {"label":"Yes" },{"label" :"No"}
-          ]
-          
-        },
-        { "label": "Police Clearance Number",
-        "type": "textbox_image_picker",
-        "input": "text",
-        "requestKey": "policeClearanceNumber",
-        "error": "Please Enter Police Clearance Number",
-        "imageKey": "",
+      {
+        "title": "Police Clearance",
         "eligility": [
           "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "Police Clearance *",
+            "type": "drop_down",
+            "input": "select",
+            "requestKey": "policeClearance",
+            "error": "Please select your Police Clearance ",
+            "eligility": [
+              "PARTNER"
+            ],
+            "isStringRequest": true,
+            "fields": [
+              {
+                "label": "Yes"
+              },
+              {
+                "label": "No"
+              }
+            ]
+          },
+          {
+            "label": "Police Clearance Number",
+            "type": "textbox_image_picker",
+            "input": "text",
+            "requestKey": "policeClearanceNumber",
+            "error": "Please Enter Police Clearance Number",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Police Clearance Expiry Date",
+            "type": "date_picker",
+            "requestKey": "policeClearanceExpiryDate",
+            "error": "Please Enter Police Clearance Expiry Date",
+            "eligility": [
+              "PARTNER"
+            ]
+          }
         ]
       },
-       { "label": "Police Clearance Expiry Date",
-       "type": "date_picker",
-      "requestKey": "policeClearanceExpiryDate",
-      "error": "Please Enter Police Clearance Expiry Date",
-      "eligility": [
-        "PARTNER"
-      ]
-    }
-      ]
-    }, { "title": "Photo",
+      {
+        "title": "Photo",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "Photo",
+            "type": "image_picker",
+            "input": "image",
+            "requestKey": "photo",
+            "eligility": [
+              "PARTNER"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Previous Organisation Details",
     "eligility": [
       "PARTNER"
     ],
-    "fields": [{
-      
-      "label": "Photo",
-    "type": "image_picker",
-    "input": "image",
-    "requestKey": "photo",
-    "eligility": [
-      "PARTNER"
+    "details": [
+      {
+        "title": "Previous Organization Details",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "Organization Name",
+            "type": "textbox",
+            "input": "text",
+            "requestKey": "p_organization_name",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Location",
+            "type": "textbox",
+            "input": "text",
+            "error": "Please Enter Town / City, State, Country Name",
+            "requestKey": "p_organization_location",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Employment Joining Proof *",
+            "type": "drop_down",
+            "input": "select",
+            "error": "Please select your Employment Joining Proof",
+            "requestKey": "p_organization_joining_proof",
+            "eligility": [
+              "PARTNER"
+            ],
+            "isStringRequest": true,
+            "fields": [
+              {
+                "label": "Joining Letter"
+              },
+              {
+                "label": "Appointment Letter"
+              }
+            ]
+          },
+          {
+            "label": "Joining Date",
+            "type": "date_picker_image_picker",
+            "error": "Please select your Joining Date",
+            "requestKey": "p_organization_joining_date",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "Employment Relieving Proof *",
+            "type": "drop_down",
+            "input": "select",
+            "error": "Please select your Employment Relieving Proof",
+            "requestKey": "p_organization_reliving_proof",
+            "eligility": [
+              "PARTNER"
+            ],
+            "isStringRequest": true,
+            "fields": [
+              {
+                "label": "Reliving Letter"
+              },
+              {
+                "label": "None"
+              }
+            ]
+          },
+          {
+            "label": "Reliving Date",
+            "type": "date_picker_image_picker",
+            "error": "Please select your Reliving Date",
+            "requestKey": "p_organization_reliving_date",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Pay Slip Details (Last 3 Months)",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "1st Month Pay Slip",
+            "type": "date_picker_image_picker",
+            "error": "Please Enter Pay Slip Date",
+            "requestKey": "p_organization_payslip_1",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "2nd Month Pay Slip",
+            "type": "date_picker_image_picker",
+            "error": "Please Enter Pay Slip Date",
+            "requestKey": "p_organization_payslip_2",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "3rd Month Pay Slip",
+            "type": "date_picker_image_picker",
+            "error": "Please Enter Pay Slip Date",
+            "requestKey": "p_organization_payslip_3",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Bank Statment (Last 3 Months)",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "1st Month Bank Statement",
+            "type": "date_picker_image_picker",
+            "error": "Please Enter Bank Statement Date",
+            "requestKey": "p_organization_bankstatement_1_date",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "2nd Month Bank Statement",
+            "type": "date_picker_image_picker",
+            "error": "Please Enter Bank Statement Date",
+            "requestKey": "p_organization_bankstatement_2_date",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          },
+          {
+            "label": "3rd Month Bank Statement",
+            "type": "date_picker_image_picker",
+            "error": "Please Enter Bank Statement Date",
+            "requestKey": "p_organization_bankstatement_3_date",
+            "imageKey": "",
+            "eligility": [
+              "PARTNER"
+            ]
+          }
+        ]
+      }
     ]
-  }]}
-    ]
-  }, {
-    "title": "Previous Organisation Details",
- "eligility": [
-   "PARTNER"
- ],
- "details": [
-   {
-     "title": "Previous Organization Details",
-     "eligility": [
-       "PARTNER"
-     ],
-     "fields": [
-       {
-       "label": "Organization Name",
-       "type": "textbox",
-       "input": "text",
-       "requestKey": "p_organization_name",
-       "eligility": [
-         "PARTNER"
-       ]
-     }, {
-       "label": "Location",
-       "type": "textbox",
-       "input": "text",
-       "error": "Please Enter Town / City, State, Country Name",
-       "requestKey": "p_organization_location",
-       "eligility": [
-         "PARTNER"
-       ]
-     }, {
-       "label": "Employment Joining Proof *",
-       "type": "drop_down",
-       "input": "select",
-       "error": "Please select your Employment Joining Proof",
-       "requestKey": "p_organization_joining_proof",
-       "eligility": [
-         "PARTNER"
-       ],
-       "isStringRequest":true,
-
-       "fields": [
-         {"label": "Joining Letter"},{"label" :"Appointment Letter"}
-        
-       ]
-     }, {
-       "label": "Joining Date",
-       "type": "date_picker_image_picker",
-       "error": "Please select your Joining Date",
-       "requestKey": "p_organization_joining_date",
-       "imageKey": "",
-       "eligility": [
-         "PARTNER"
-       ]
-     },{
-       "label": "Employment Relieving Proof *",
-       "type": "drop_down",
-       "input": "select",
-       "error": "Please select your Employment Relieving Proof",
-       "requestKey": "p_organization_reliving_proof",
-       "eligility": [
-         "PARTNER"
-       ],
-       "isStringRequest":true,
-
-       "fields": [
-         {"label": "Reliving Letter"},{"label": "None"}
-        
-       ]
-     }, {
-       "label": "Reliving Date",
-       "type": "date_picker_image_picker",
-       "error": "Please select your Reliving Date",
-       "requestKey": "p_organization_reliving_date",
-       "imageKey": "",
-       "eligility": [
-         "PARTNER"
-       ]
-     }]
-   },{
-     "title": "Pay Slip Details (Last 3 Months)",
-     "eligility": [
-       "PARTNER"
-     ],
-     "fields": [
-       {
-       "label": "1st Month Pay Slip",
-       "type": "date_picker_image_picker",
-       "error": "Please Enter Pay Slip Date",
-       "requestKey": "p_organization_payslip_1",
-       "imageKey": "",
-       "eligility": [
-         "PARTNER"
-       ]
-     }, {
-       "label": "2nd Month Pay Slip",
-       "type": "date_picker_image_picker",
-       "error": "Please Enter Pay Slip Date",
-       "requestKey": "p_organization_payslip_2",
-       "imageKey": "",
-       "eligility": [
-         "PARTNER"
-       ]
-     }, {
-       "label": "3rd Month Pay Slip",
-       "type": "date_picker_image_picker",
-       "error": "Please Enter Pay Slip Date",
-       "requestKey": "p_organization_payslip_3",
-       "imageKey": "",
-       "eligility": [
-         "PARTNER"
-       ]
-     }
-   ]
-
-   },{
-     "title": "Bank Statment (Last 3 Months)",
-     "eligility": [
-       "PARTNER"
-     ],
-     "fields": [
-       {
-       "label": "1st Month Bank Statement",
-       "type": "date_picker_image_picker",
-       "error": "Please Enter Bank Statement Date",
-       "requestKey": "p_organization_bankstatement_1_date",
-       "imageKey": "",
-       "eligility": [
-         "PARTNER"
-       ]
-     }, {
-       "label": "2nd Month Bank Statement",
-       "type": "date_picker_image_picker",
-       "error": "Please Enter Bank Statement Date",
-       "requestKey": "p_organization_bankstatement_2_date",
-       "imageKey": "",
-       "eligility": [
-         "PARTNER"
-       ]
-     }, {
-       "label": "3rd Month Bank Statement",
-       "type": "date_picker_image_picker",
-       "error": "Please Enter Bank Statement Date",
-       "requestKey": "p_organization_bankstatement_3_date",
-       "imageKey": "",
-       "eligility": [
-         "PARTNER"
-       ]
-     }
-   ]
-
-   }
- ]
-},
+  },
   {
     "title": "Salary & Other Details",
     "eligility": [
@@ -405,9 +448,6 @@
             "eligility": [
               "PARTNER"
             ]
-
-    
-  
           },
           {
             "label": "Pay *",
@@ -415,15 +455,20 @@
             "input": "select",
             "requestKey": "salary_frequency",
             "error": "Please select your Pay Basis",
-            "isStringRequest":true,
-
+            "isStringRequest": true,
             "eligility": [
-  
               "PARTNER"
             ],
             "fields": [
-             {"label": "Daily"},{"label": "Weekly"},{"label" :"Monthly"}
-            
+              {
+                "label": "Daily"
+              },
+              {
+                "label": "Weekly"
+              },
+              {
+                "label": "Monthly"
+              }
             ]
           }
         ]
@@ -441,12 +486,12 @@
             "error": "Please enter your Joining Date",
             "requestKey": "joining_date",
             "eligility": [
-                "PARTNER"
+              "PARTNER"
             ]
-
-        }
+          }
         ]
-      },{
+      },
+      {
         "title": "PF Details",
         "eligility": [
           "PARTNER"
@@ -458,12 +503,12 @@
             "input": "text",
             "requestKey": "pfNo",
             "eligility": [
-                "PARTNER"
+              "PARTNER"
             ]
-
-        }
+          }
         ]
-      },{
+      },
+      {
         "title": "ESI Details",
         "eligility": [
           "PARTNER"
@@ -475,114 +520,108 @@
             "input": "text",
             "requestKey": "ESI",
             "eligility": [
-                "PARTNER"
-            ]
-
-        }
-        ]
-      }
-    ]
-  },{
-    "details": [
-        {"overridden":"true",
-          "overridden_id":"user_role",
-            "eligility": [
-                "PARTNER"
-            ],
-            "title": "Assign Role",
-            "fields": [
-                {
-                    "eligility": [
-                        "PARTNER"
-                    ],
-                    "title": "Role",
-                    "fields": [],
-                    "requestKey": "role"
-                },
-                {
-                  "eligility": [
-                      "PARTNER"
-                  ],
-                  "title": "Branches",
-                  "fields": [],
-                  "requestKey": "additional_branch_ids"
-              },
-                {
-                    "eligility": [
-                        "PARTNER"
-                    ],
-                    "title": "Module",
-                    "fields": [],
-                    "requestKey": "module"
-                }
-            ]
-        }
-    ],
-    "eligility": [
-        "PARTNER"
-    ],
-    "title": "Assign Role"
-},
-        
-        {
-          "overridden":"true",
-          "overridden_id":"user_reporting",
-          "title": "Reporting & Approval",
-          "eligility": [
-            "PARTNER"
-          ],
-          "details": [
-            {
-              "title": "Role",
-              "eligility": [
-                "PARTNER"
-              ],
-              "fields": [
-                {
-                  "label": "Reporting and Approval *",
-                  "type": "drop_down",
-                  "input": "select",
-                  "requestKey": "reporting_role",
-
-                  "isMandatory": true,
-                  "error": "Please Select Reporting and Approval",
-                  "eligility": [
-                      "PARTNER"
-                  ],
-                  "fields":[ 
-                    {
-                      "label": "Owner",
-                      "id": 1
-                    },
-                    {
-                    "label": "Partner",
-                    "id": 2
-                  },
-                  {
-                    "label": "GM",
-                    "id": 3
-                  },
-                  {
-                    "label": "Manager",
-                    "id": 4
-                  }
-                  ]
-              }, {
-                "label": "Select a User*",
-                "type": "user_selection",
-                "isMandatory": true,
-                "error": "Please Select a user",
-                "requestKey": "reporting",
-                "eligility": [
-                    "PARTNER"
-                ],
-                "fields":[ 
-                  
-                ]
-            }
-              
+              "PARTNER"
             ]
           }
         ]
-     }
+      }
+    ]
+  },
+  {
+    "details": [
+      {
+        "overridden": "true",
+        "overridden_id": "user_role",
+        "eligility": [
+          "PARTNER"
+        ],
+        "title": "Assign Role",
+        "fields": [
+          {
+            "eligility": [
+              "PARTNER"
+            ],
+            "title": "Role",
+            "fields": [],
+            "requestKey": "role"
+          },
+          {
+            "eligility": [
+              "PARTNER"
+            ],
+            "title": "Branches",
+            "fields": [],
+            "requestKey": "additional_branch_ids"
+          },
+          {
+            "eligility": [
+              "PARTNER"
+            ],
+            "title": "Module",
+            "fields": [],
+            "requestKey": "module"
+          }
+        ]
+      }
+    ],
+    "eligility": [
+      "PARTNER"
+    ],
+    "title": "Assign Role"
+  },
+  {
+    "overridden": "true",
+    "overridden_id": "user_reporting",
+    "title": "Reporting & Approval",
+    "eligility": [
+      "PARTNER"
+    ],
+    "details": [
+      {
+        "title": "Role",
+        "eligility": [
+          "PARTNER"
+        ],
+        "fields": [
+          {
+            "label": "Reporting and Approval *",
+            "type": "drop_down",
+            "input": "select",
+            "requestKey": "reporting_role",
+            "isMandatory": true,
+            "error": "Please Select Reporting and Approval",
+            "eligility": [
+              "PARTNER"
+            ],
+            "dependency": "reporting",
+            "fields": [
+              {
+                "label": "OWNER",
+                "id": 0
+              },
+              {
+                "label": "Partner",
+                "id": 8
+              },
+              {
+                "label": "Sales Manager",
+                "id": 13
+              }
+            ]
+          },
+          {
+            "label": "Select a User*",
+            "type": "user_selection",
+            "isMandatory": true,
+            "error": "Please Select a user",
+            "requestKey": "reporting",
+            "eligility": [
+              "PARTNER"
+            ],
+            "fields": []
+          }
+        ]
+      }
+    ]
+  }
 ]

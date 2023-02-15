@@ -11,6 +11,8 @@ const RoleService = require("../service/RoleService");
 const ItemService = require("../service/ItemService");
 const RoleuserService = require("../service/RoleuserService");
 const RolebranchService = require("../service/RolebranchService");
+const KitchenService = require("../service/KitchenService");
+
 const QRCode = require('qrcode')
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
@@ -70,6 +72,7 @@ class ProfileController {
     this.tableService = new TableService();
     this.itemCategoryService = new ItemcategoryService();
     this.kitchenbranchcategoriesService = new KitchenbranchcategoriesService();
+    this.kitchenService = new KitchenService()
 
     // this.addUser1();
 
@@ -620,7 +623,7 @@ addKitchen = async(req,res)=>{
 
   const { body } = req;
 
-  let { branch_id, categories } = body;
+  let { branch_id, categories,id } = body;
   // branch_id = getIdsFromArray(branch_id);
 
   const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
@@ -630,7 +633,18 @@ addKitchen = async(req,res)=>{
   }
 
   const branch = await this.branchService.getBranchFromBranchId(branch_id)
- const kitchen = await branch.createKitchen(body);
+let kitchen;
+  if(id){
+  kitchen = await this.kitchenService.kitchenDao.findById(id);
+  await kitchen.update(body)
+  if(categories){
+    await this.kitchenbranchcategoriesService.kitchenbranchcategoriesDao.deleteByWhere({kitchen_id:id})
+  }
+  }
+  else{
+    kitchen = await branch.createKitchen(body);
+
+  }
  for(let itemcategory of categories){
   const item = await this.itemCategoryService.itemcategoryDao.findById(itemcategory);
    await kitchen.addItemcategory(item, {through:{branch_id}})

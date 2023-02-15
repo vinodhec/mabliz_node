@@ -636,6 +636,7 @@ addKitchen = async(req,res)=>{
 let kitchen;
   if(id){
   kitchen = await this.kitchenService.kitchenDao.findById(id);
+  console.log({kitchen,id})
   await kitchen.update(body)
   if(categories){
     await this.kitchenbranchcategoriesService.kitchenbranchcategoriesDao.deleteByWhere({kitchen_id:id})
@@ -645,10 +646,13 @@ let kitchen;
     kitchen = await branch.createKitchen(body);
 
   }
- for(let itemcategory of categories){
-  const item = await this.itemCategoryService.itemcategoryDao.findById(itemcategory);
-   await kitchen.addItemcategory(item, {through:{branch_id}})
- }
+  if(categories){
+    for(let itemcategory of categories){
+      const item = await this.itemCategoryService.itemcategoryDao.findById(itemcategory);
+       await kitchen.addItemcategory(item, {through:{branch_id}})
+     }
+  }
+
 res.json(responseHandler.returnSuccess(httpStatus[200],"Success", kitchen))
 }
 

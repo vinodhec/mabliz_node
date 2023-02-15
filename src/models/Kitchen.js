@@ -1,4 +1,5 @@
 const { Model } = require("sequelize");
+const { itemStatus } = require("./../config/constant");
 
 module.exports = (sequelize, DataTypes) => {
   class  Kitchen extends Model {
@@ -11,7 +12,11 @@ module.exports = (sequelize, DataTypes) => {
 
    Kitchen.init(
     {
-      name:DataTypes.STRING
+      name:DataTypes.STRING,
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: itemStatus.STATUS_ACTIVE
+      }
     },
 
     {

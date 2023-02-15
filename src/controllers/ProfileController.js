@@ -448,7 +448,7 @@ class ProfileController {
   }
 
   findNextNum = (dish_code, k) => {
-    console.log(dish_code, typeof dish_code)
+    // console.log(dish_code, typeof dish_code)
     if (dish_code.includes(k)) {
       return this.findNextNum(dish_code, ++k)
     }
@@ -472,17 +472,19 @@ class ProfileController {
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
 
   }
-
+   onlyUnique(value, index, array) {
+    return array.indexOf(value) === index;
+  }
 
   uploadItems = async (req, res) => {
 
-    const { file } = req.body;
+    const { file,business_id } = req.body;
 
-    const { business_id } = req.user;
-    console.log({ file })
+ //TODO, check business acess
     let k = 0;
     const business = await this.businessService.businessDao.Model.findByPk(business_id);
-
+    console.log(business_id, business)
+    const categories = []
     readXlsxFile('registration/' + removeAbsolutePath(file)).then(async (rows) => {
       const header = rows[0];
       let item;
@@ -498,7 +500,9 @@ class ProfileController {
 
         if (value['item_generic_name']) {
           item = await business.createItem(value)
+          categories.push(item.category)
         }
+        
         if (value['name']) {
           const variant = await item.createItemvariant(value)
           dish_code.push(value['dish_code']);
@@ -506,7 +510,8 @@ class ProfileController {
         }
 
       }
-
+      const unique = categories.filter(this.onlyUnique);
+      console.log(unique);
       res.json(rows)
     })
 

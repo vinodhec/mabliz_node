@@ -41,13 +41,11 @@ const fileStorage = multer.diskStorage({
 });
 const imagesMiddleWare = (req, res, next) => {
 
-  console.log(req.path,req.method)
   if (req.is("multipart/form-data")) {
     const images = {};
     req.files?.forEach((file) => {
       images[file.fieldname] = utilHandler.getAbsolutePath(file.filename);
     });
-    console.log(images)
     req.body = { ...JSON.parse(req.body.details), ...images };
     req.headers["content-type"] = "application/json";
 

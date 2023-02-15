@@ -28,9 +28,9 @@ module.exports = (sequelize, DataTypes) => {
             kitchen_notes: DataTypes.TEXT,
             customize: DataTypes.TEXT,
             add_ons: DataTypes.TEXT,
-            status:{
-                type:DataTypes.STRING,
-defaultValue:itemStatus.STATUS_ACTIVE
+            status: {
+                type: DataTypes.STRING,
+                defaultValue: itemStatus.STATUS_ACTIVE
             }
         },
 
@@ -40,6 +40,8 @@ defaultValue:itemStatus.STATUS_ACTIVE
             underscored: true,
         }
     );
+
+  
     return Item;
 };
 

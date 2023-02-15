@@ -146,7 +146,10 @@ const Roleuser = models.roleuser;
 const Roleuserbranch = models.roleuserbranch;
 const Roleusermodule = models.roleusermodule;
 const Rolebranch = models.rolebranch;
-const Planaccess = models.planaccess;
+const Kitchenbranchcategory = models.kitchenbranchcategory;
+const Kitchen = models.kitchen;
+const Itemcategory = models.itemcategory;
+
 
 User.hasMany(Employment);
 Employment.belongsTo(User);
@@ -195,7 +198,11 @@ Itemvariant.belongsTo(Item);
 Business.hasMany(Item);
 Item.belongsTo(Business);
 
+Branch.hasMany(Kitchen)
+Kitchen.belongsTo(Branch)
 
+Kitchen.belongsToMany(Itemcategory,{through:Kitchenbranchcategory})
+Itemcategory.belongsToMany(Kitchen,{through:Kitchenbranchcategory})
 
 Branch.belongsToMany(Plan, { through: Planbranch });
 Plan.belongsToMany(Branch, { through: Planbranch });

@@ -43,6 +43,8 @@ const { omit } = require("lodash");
 const BusinessService = require("../service/BusinessService");
 const RoleuserbranchService = require("../service/RoleuserbranchService");
 const FloorService = require("../service/FloorService");
+const KitchenbranchcategoriesDao = require("../dao/KitchenbranchcategoriesDao");
+const KitchenbranchcategoriesService = require("../service/KitchenbranchcategoriesService");
 
 class ProfileController {
   constructor() {
@@ -67,6 +69,7 @@ class ProfileController {
     this.floorService = new FloorService();
     this.tableService = new TableService();
     this.itemCategoryService = new ItemcategoryService();
+    this.kitchenbranchcategoriesService = new KitchenbranchcategoriesService();
 
     // this.addUser1();
 
@@ -591,6 +594,49 @@ class ProfileController {
 
   }
 
+getAvailableItemCategoryForKitchen = async(req,res)=>{
+
+  let { branch_id } = req.query;
+  // branch_id = getIdsFromArray(branch_id);
+
+  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
+  console.log(shouldReturn, reason)
+  if (shouldReturn) {
+    return;
+  }
+
+  // const branch = await this.branchService.getBranchFromBranchId(branch_id)
+  const kitchencategories = await this.kitchenbranchcategoriesService.kitchenbranchcategoriesDao.findByWhere({where:{branch_id},raw:true})
+  console.log(kitchencategories)
+const ct = kitchencategories.map(({itemcategoryId})=>itemcategoryId)
+console.log({ct})
+  const availableitemcategories = await this.itemCategoryService.itemcategoryDao.findByWhere({where:{id:{[Op.notIn]:ct}}})
+
+  res.send(responseHandler.returnSuccess(httpStatus[200],"Success",availableitemcategories))
+
+}
+
+addKitchen = async(req,res)=>{
+
+  const { body } = req;
+
+  let { branch_id, categories } = body;
+  // branch_id = getIdsFromArray(branch_id);
+
+  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
+  console.log(shouldReturn, reason)
+  if (shouldReturn) {
+    return;
+  }
+
+  const branch = await this.branchService.getBranchFromBranchId(branch_id)
+ const kitchen = await branch.createKitchen(body);
+ for(let itemcategory of categories){
+  const item = await this.itemCategoryService.itemcategoryDao.findById(itemcategory);
+   await kitchen.addItemcategory(item, {through:{branch_id}})
+ }
+res.json(responseHandler.returnSuccess(httpStatus[200],"Success", kitchen))
+}
 
 
   addFloor = async (req, res) => {
@@ -1115,7 +1161,7 @@ class ProfileController {
 
 
   checkandupdateApproval = async ({ model, user, role, isApprovalFlow, body }, method) => {
-    const { need_approval, module, permission_name } = role;
+    const { need_approval, module, permission_name } = role ?? {};
     console.log({ module, permission_name })
     if (need_approval) {
 

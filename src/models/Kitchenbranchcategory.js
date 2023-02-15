@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
 
    Kitchenbranchcategory.init(
     {
-     branch_id:DataTypes.INTEGER
+     branch_id:DataTypes.INTEGER,
+     name:DataTypes.STRING
     },
 
     {

@@ -81,6 +81,7 @@ router.put('/user/disable-user', profileController.disableUser);
 router.delete('/user/delete-user', profileController.deleteUser);
 
 router.post('/user', profileController.addUser1);
+router.get('/get-kitchen', profileController.getKitchen);
 
 router.post('/kitchen', profileController.addKitchen);
 router.put('/kitchen', profileController.addKitchen);

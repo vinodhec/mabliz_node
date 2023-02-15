@@ -656,6 +656,27 @@ let kitchen;
 res.json(responseHandler.returnSuccess(httpStatus[200],"Success", kitchen))
 }
 
+getKitchen = async(req,res)=>{
+
+  const { body } = req;
+
+  let { branch_id, id } = body;
+  // branch_id = getIdsFromArray(branch_id);
+
+  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deleteKitchen' })
+  console.log(shouldReturn, reason)
+  if (shouldReturn) {
+    return;
+  }
+
+  // const branch = await this.branchService.getBranchFromBranchId(branch_id)
+ 
+ const kitchens = await this.kitchenService.kitchenDao.getAll({include:this.itemCategoryService.itemcategoryDao.Model})
+ 
+
+res.json(responseHandler.returnSuccess(httpStatus[200],"Success",kitchens))
+}
+
 deleteKitchen = async(req,res)=>{
 
   const { body } = req;
@@ -663,7 +684,7 @@ deleteKitchen = async(req,res)=>{
   let { branch_id, id } = body;
   // branch_id = getIdsFromArray(branch_id);
 
-  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
+  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deleteKitchen' })
   console.log(shouldReturn, reason)
   if (shouldReturn) {
     return;

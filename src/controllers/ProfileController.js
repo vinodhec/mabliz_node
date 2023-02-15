@@ -17,6 +17,7 @@ const fs = require('fs');
 
 const ApprovalService = require("../service/ApprovalService");
 const TableService = require("../service/TableService");
+const ItemcategoryService = require("../service/ItemcategoryService");
 
 
 const Sequelize = require("sequelize");
@@ -65,6 +66,7 @@ class ProfileController {
     this.itemService = new ItemService();
     this.floorService = new FloorService();
     this.tableService = new TableService();
+    this.itemCategoryService = new ItemcategoryService();
 
     // this.addUser1();
 
@@ -469,6 +471,7 @@ class ProfileController {
     if (isCategoryOnly) {
       items = items.rows.map(({ category }) => category)
     }
+
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
 
   }
@@ -511,7 +514,13 @@ class ProfileController {
 
       }
       const unique = categories.filter(this.onlyUnique);
-      console.log(unique);
+      for(let ct of unique){
+        if(!(await this.itemCategoryService.itemcategoryDao.checkExist({name:ct}))){
+          await this.itemCategoryService.itemcategoryDao.create({name:ct,business_id});
+
+        }
+      }
+
       res.json(rows)
     })
 

@@ -16,7 +16,7 @@ const rolePermissionConfig = {
     '/user_GET': { module: 'user', permission: 'get' }, '/user_POST': { module: 'user', permission: 'add' },'/user_PUT': { module: 'user', permission: 'edit' }, '/user/disable-user_PUT': { module: 'user', permission: 'edit' }, '/user/delete_user_DELETE': { module: 'user', permission: 'delete' },
     '/upload-items_POST': { module: 'user', permission: 'add' },'/get-all-items_POST':{module:'user',permission:'get'},
     '/floor_POST': { module: 'role', permission: 'add' }, '/get-floors_POST': { module: 'user', permission: 'add' },   '/floor_PUT': { module: 'user', permission: 'add' },
-    '/kitchen_POST': { module: 'user', permission: 'add' },    '/kitchen_PUT': { module: 'user', permission: 'add' },'/get-roles-eligible-for-reporting_GET': { module: 'user', permission: 'add' },   '/floor_PUT': { module: 'user', permission: 'add' },
+    '/kitchen_POST': { module: 'user', permission: 'add' },  '/kitchen_DELETE': { module: 'user', permission: 'add' },   '/kitchen_PUT': { module: 'user', permission: 'add' },'/get-roles-eligible-for-reporting_GET': { module: 'user', permission: 'add' },   '/floor_PUT': { module: 'user', permission: 'add' },
 
     '/generate-qr-code-for-tables_POST': { module: 'role', permission: 'add' },  '/get-tables_POST': { module: 'user', permission: 'add' }, '/table_POST': { module: 'user', permission: 'add' }, '/table_PUT': { module: 'role', permission: 'add' },   '/table_DELETE': { module: 'role', permission: 'add' }
 
@@ -84,6 +84,7 @@ router.post('/user', profileController.addUser1);
 
 router.post('/kitchen', profileController.addKitchen);
 router.put('/kitchen', profileController.addKitchen);
+router.delete('/kitchen', profileController.deleteKitchen);
 
 router.get('/get-available-item-category-for-kitchen', profileController.getAvailableItemCategoryForKitchen);
 

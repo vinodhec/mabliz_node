@@ -201,8 +201,8 @@ Item.belongsTo(Business);
 Branch.hasMany(Kitchen)
 Kitchen.belongsTo(Branch)
 
-Kitchen.belongsToMany(Itemcategory,{through:Kitchenbranchcategory})
-Itemcategory.belongsToMany(Kitchen,{through:Kitchenbranchcategory})
+Kitchen.belongsToMany(Itemcategory,{through:Kitchenbranchcategory,onDelete: 'cascade'})
+Itemcategory.belongsToMany(Kitchen,{through:Kitchenbranchcategory,onDelete: 'cascade'})
 
 Branch.belongsToMany(Plan, { through: Planbranch });
 Plan.belongsToMany(Branch, { through: Planbranch });

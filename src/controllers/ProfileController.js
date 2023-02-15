@@ -656,6 +656,28 @@ let kitchen;
 res.json(responseHandler.returnSuccess(httpStatus[200],"Success", kitchen))
 }
 
+deleteKitchen = async(req,res)=>{
+
+  const { body } = req;
+
+  let { branch_id, id } = body;
+  // branch_id = getIdsFromArray(branch_id);
+
+  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
+  console.log(shouldReturn, reason)
+  if (shouldReturn) {
+    return;
+  }
+
+  // const branch = await this.branchService.getBranchFromBranchId(branch_id)
+ 
+ await this.kitchenService.kitchenDao.deleteByWhere({id,branch_id})
+ 
+
+res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
+}
+
+
 
   addFloor = async (req, res) => {
     const { user, body, isApprovalFlow } = req;

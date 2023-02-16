@@ -1092,9 +1092,10 @@ class ProfileController {
       return;
     }
 
-    const floors = await this.floorService.floorDao.getAll({ where: { branch_id }, include: { model: this.tableService.tableDao.Model } });
+    const printers = await this.printerService.printerDao.getAll({ where: { branch_id } });
 
-    res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', floors));
+    
+    res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', printers));
 
   }
 

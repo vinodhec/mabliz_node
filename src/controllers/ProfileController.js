@@ -752,12 +752,12 @@ class ProfileController {
     const branch = await this.branchService.getBranchFromBranchId(branch_id)
     let printer;
     if (printers) {
- for(let pp of printers){
-  printer = await this.printerService.printerDao.findById(pp.id);
-  await printer.update(pp)
- }
-  
-    
+      for (let pp of printers) {
+        printer = await this.printerService.printerDao.findById(pp.id);
+        await printer.update(pp)
+      }
+
+
     }
     else {
       const lastPrinter = await this.printerService.printerDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
@@ -767,25 +767,30 @@ class ProfileController {
       printer = await branch.createPrinter({ ...body, sNo: lastPrinterVal !== null ? lastPrinterVal + 1 : 1 });
 
     }
-   
+
     res.json(responseHandler.returnSuccess(httpStatus[200], "Success", printer))
 
   }
 
   deletePrinter = async (req, res) => {
 
-    const { body } = req
-    let { branch_id, floor_id } = body;
+    const { body } = req;
 
-
-    const { id } = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
-    if (!id) {
-      return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, "Error"))
-    }
+    let { branch_id, id } = body;
     // branch_id = getIdsFromArray(branch_id);
-    await this.floorService.floorDao.deleteByWhere({ id })
 
-    res.json(responseHandler.returnSuccess(httpStatus[200], "Success", {}))
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deletePrinter' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+
+    // const branch = await this.branchService.getBranchFromBranchId(branch_id)
+
+    await this.printerService.printerDao.deleteByWhere({ id, branch_id })
+
+
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success"))
 
   }
 
@@ -848,7 +853,7 @@ class ProfileController {
     const floors = await this.floorService.floorDao.findByWhere({ branch_id })
     const kitchen = await this.kitchenService.kitchenDao.findByWhere({ branch_id })
 
-    const data = [{name:'Cash', type:'others'}, ...floors.map(({ name, id }) => ({ name, id, type: 'floor' })), ...kitchen.map(({ name, id }) => ({ name, id, type: 'kitchen' }))]
+    const data = [{ name: 'Cash', type: 'others' }, ...floors.map(({ name, id }) => ({ name, id, type: 'floor' })), ...kitchen.map(({ name, id }) => ({ name, id, type: 'kitchen' }))]
     res.json(responseHandler.returnSuccess(httpStatus[200], "Success", data))
 
 

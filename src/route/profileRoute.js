@@ -91,9 +91,20 @@ router.get('/get-available-item-category-for-kitchen', profileController.getAvai
 
 router.post('/floor', profileController.addFloor);
 router.put('/floor', profileController.addFloor);
+router.delete('/floor', profileController.deleteFloor);
 
 router.post('/get-tables', profileController.getTable);
 router.post('/get-floors', profileController.getFloor);
+
+
+router.post('/printer', profileController.addPrinter);
+router.put('/printer', profileController.addPrinter);
+router.delete('/printer', profileController.deletePrinter);
+
+router.post('/get-printer', profileController.getPrinter);
+
+
+router.get('/get-printer-locations', profileController.getPrinterLocations);
 
 router.post('/table', profileController.addTable);
 router.put('/table', profileController.addTable);

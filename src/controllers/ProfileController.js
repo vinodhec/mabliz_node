@@ -12,6 +12,7 @@ const ItemService = require("../service/ItemService");
 const RoleuserService = require("../service/RoleuserService");
 const RolebranchService = require("../service/RolebranchService");
 const KitchenService = require("../service/KitchenService");
+const PrinterService = require("../service/PrinterService");
 
 const QRCode = require('qrcode')
 const PDFDocument = require('pdfkit');
@@ -29,7 +30,6 @@ const capitalize = require("capitalize");
 const { groupBy } = require("lodash");
 
 const UserService = require("../service/UserService");
-const logger = require("../config/logger");
 const { branchStatus, approvalStatus, userConstant } = require("../config/constant");
 const readXlsxFile = require('read-excel-file/node')
 const { removeAbsolutePath, itemMappings, getIdsFromArray } = require("./../helper/utilHelper");
@@ -45,7 +45,6 @@ const { omit } = require("lodash");
 const BusinessService = require("../service/BusinessService");
 const RoleuserbranchService = require("../service/RoleuserbranchService");
 const FloorService = require("../service/FloorService");
-const KitchenbranchcategoriesDao = require("../dao/KitchenbranchcategoriesDao");
 const KitchenbranchcategoriesService = require("../service/KitchenbranchcategoriesService");
 
 class ProfileController {
@@ -73,6 +72,7 @@ class ProfileController {
     this.itemCategoryService = new ItemcategoryService();
     this.kitchenbranchcategoriesService = new KitchenbranchcategoriesService();
     this.kitchenService = new KitchenService()
+    this.printerService = new PrinterService()
 
     // this.addUser1();
 
@@ -177,7 +177,7 @@ class ProfileController {
 
     try {
 
-      const { query, user } = req;
+      const { user } = req;
       console.log(user.dataValues?.id)
 
       const data = await this.userService.userDao.findAll({ where: { reporting_user_id: user.dataValues?.id } })
@@ -195,7 +195,7 @@ class ProfileController {
 
     try {
 
-      const { query, user } = req;
+      const { user } = req;
 
       const { branch_id, business_type_id } = user;
 
@@ -214,7 +214,7 @@ class ProfileController {
 
     let approval;
     try {
-      let { user, query, body } = req;
+      let { user, body } = req;
       body = { role_id: '', role_name: '', branch_id: '', businessId_: "" }
       const isApproval = true
 
@@ -248,7 +248,7 @@ class ProfileController {
 
     let approval;
     try {
-      let { user, query, body } = req;
+      let { user, body } = req;
       body = { status: userConstant.STATUS_DISABLED }
       const isApproval = user.role_id !== 'OWNER'
 
@@ -284,7 +284,7 @@ class ProfileController {
   addUser = async (req, res) => {
 
     try {
-      let { user, query, body } = req;
+      let { user, body } = req;
       body = { ...body, status: userConstant.STATUS_ACTIVE }
       console.log(body)
       const isApproval = user.role_id !== 0
@@ -373,7 +373,6 @@ class ProfileController {
 
     }
 
-    const emp = await employee.createEmployment(details);
     const roleuser = await employee.createRoleuser({ role_id });
     employee.update({ roleuser_id: roleuser.dataValues.id })
     await roleuser.addBranches(branches);
@@ -481,15 +480,15 @@ class ProfileController {
     res.json(responseHandler.returnSuccess(httpStatus.OK, 'Success', items))
 
   }
-   onlyUnique(value, index, array) {
+  onlyUnique(value, index, array) {
     return array.indexOf(value) === index;
   }
 
   uploadItems = async (req, res) => {
 
-    const { file,business_id } = req.body;
+    const { file, business_id } = req.body;
 
- //TODO, check business acess
+    //TODO, check business acess
     let k = 0;
     const business = await this.businessService.businessDao.Model.findByPk(business_id);
     console.log(business_id, business)
@@ -511,18 +510,17 @@ class ProfileController {
           item = await business.createItem(value)
           categories.push(item.category)
         }
-        
+
         if (value['name']) {
-          const variant = await item.createItemvariant(value)
           dish_code.push(value['dish_code']);
 
         }
 
       }
       const unique = categories.filter(this.onlyUnique);
-      for(let ct of unique){
-        if(!(await this.itemCategoryService.itemcategoryDao.checkExist({name:ct}))){
-          await this.itemCategoryService.itemcategoryDao.create({name:ct,business_id});
+      for (let ct of unique) {
+        if (!(await this.itemCategoryService.itemcategoryDao.checkExist({ name: ct }))) {
+          await this.itemCategoryService.itemcategoryDao.create({ name: ct, business_id });
 
         }
       }
@@ -533,7 +531,7 @@ class ProfileController {
   }
 
   getModulesForRole = async (req, res) => {
-    const { user, query } = req;
+    const { query } = req;
     const { roleId: role_id } = query;
 
     const rolePermission = await this.rolePermissionService.rolepermissionDao.Model.findAll({
@@ -597,111 +595,111 @@ class ProfileController {
 
   }
 
-getAvailableItemCategoryForKitchen = async(req,res)=>{
+  getAvailableItemCategoryForKitchen = async (req, res) => {
 
-  let { branch_id } = req.query;
-  // branch_id = getIdsFromArray(branch_id);
+    let { branch_id } = req.query;
+    // branch_id = getIdsFromArray(branch_id);
 
-  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
-  console.log(shouldReturn, reason)
-  if (shouldReturn) {
-    return;
-  }
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
 
-  // const branch = await this.branchService.getBranchFromBranchId(branch_id)
-  const kitchencategories = await this.kitchenbranchcategoriesService.kitchenbranchcategoriesDao.findByWhere({where:{branch_id},raw:true})
-  console.log(kitchencategories)
-const ct = kitchencategories.map(({itemcategoryId})=>itemcategoryId)
-console.log({ct})
-  const availableitemcategories = await this.itemCategoryService.itemcategoryDao.findByWhere({where:{id:{[Op.notIn]:ct}}})
+    // const branch = await this.branchService.getBranchFromBranchId(branch_id)
+    const kitchencategories = await this.kitchenbranchcategoriesService.kitchenbranchcategoriesDao.findByWhere({ where: { branch_id }, raw: true })
+    console.log(kitchencategories)
+    const ct = kitchencategories.map(({ itemcategoryId }) => itemcategoryId)
+    console.log({ ct })
+    const availableitemcategories = await this.itemCategoryService.itemcategoryDao.findByWhere({ where: { id: { [Op.notIn]: ct } } })
 
-  res.send(responseHandler.returnSuccess(httpStatus[200],"Success",availableitemcategories))
-
-}
-
-addKitchen = async(req,res)=>{
-
-  const { body } = req;
-
-  let { branch_id, categories,id } = body;
-  // branch_id = getIdsFromArray(branch_id);
-
-  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
-  console.log(shouldReturn, reason)
-  if (shouldReturn) {
-    return;
-  }
-
-  const branch = await this.branchService.getBranchFromBranchId(branch_id)
-let kitchen;
-  if(id){
-  kitchen = await this.kitchenService.kitchenDao.findById(id);
-  console.log({kitchen,id})
-  await kitchen.update(body)
-  if(categories){
-    await this.kitchenbranchcategoriesService.kitchenbranchcategoriesDao.deleteByWhere({kitchen_id:id})
-  }
-  }
-  else{
-    kitchen = await branch.createKitchen(body);
+    res.send(responseHandler.returnSuccess(httpStatus[200], "Success", availableitemcategories))
 
   }
-  if(categories){
-    for(let itemcategory of categories){
-      const item = await this.itemCategoryService.itemcategoryDao.findById(itemcategory);
-       await kitchen.addItemcategory(item, {through:{branch_id}})
-     }
+
+  addKitchen = async (req, res) => {
+
+    const { body } = req;
+
+    let { branch_id, categories, id } = body;
+    // branch_id = getIdsFromArray(branch_id);
+
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addKitchen' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+
+    const branch = await this.branchService.getBranchFromBranchId(branch_id)
+    let kitchen;
+    if (id) {
+      kitchen = await this.kitchenService.kitchenDao.findById(id);
+      console.log({ kitchen, id })
+      await kitchen.update(body)
+      if (categories) {
+        await this.kitchenbranchcategoriesService.kitchenbranchcategoriesDao.deleteByWhere({ kitchen_id: id })
+      }
+    }
+    else {
+      kitchen = await branch.createKitchen(body);
+
+    }
+    if (categories) {
+      for (let itemcategory of categories) {
+        const item = await this.itemCategoryService.itemcategoryDao.findById(itemcategory);
+        await kitchen.addItemcategory(item, { through: { branch_id } })
+      }
+    }
+
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success", kitchen))
   }
 
-res.json(responseHandler.returnSuccess(httpStatus[200],"Success", kitchen))
-}
+  getKitchen = async (req, res) => {
 
-getKitchen = async(req,res)=>{
+    const { body } = req;
 
-  const { body } = req;
+    let { branch_id } = body;
+    // branch_id = getIdsFromArray(branch_id);
 
-  let { branch_id, id } = body;
-  // branch_id = getIdsFromArray(branch_id);
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deleteKitchen' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
 
-  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deleteKitchen' })
-  console.log(shouldReturn, reason)
-  if (shouldReturn) {
-    return;
+    // const branch = await this.branchService.getBranchFromBranchId(branch_id)
+
+    const kitchens = await this.kitchenService.kitchenDao.getAll({ include: this.itemCategoryService.itemcategoryDao.Model })
+
+
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success", kitchens))
   }
 
-  // const branch = await this.branchService.getBranchFromBranchId(branch_id)
- 
- const kitchens = await this.kitchenService.kitchenDao.getAll({include:this.itemCategoryService.itemcategoryDao.Model})
- 
+  deleteKitchen = async (req, res) => {
 
-res.json(responseHandler.returnSuccess(httpStatus[200],"Success",kitchens))
-}
+    const { body } = req;
 
-deleteKitchen = async(req,res)=>{
+    let { branch_id, id } = body;
+    // branch_id = getIdsFromArray(branch_id);
 
-  const { body } = req;
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deleteKitchen' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
 
-  let { branch_id, id } = body;
-  // branch_id = getIdsFromArray(branch_id);
+    // const branch = await this.branchService.getBranchFromBranchId(branch_id)
 
-  const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'deleteKitchen' })
-  console.log(shouldReturn, reason)
-  if (shouldReturn) {
-    return;
+    await this.kitchenService.kitchenDao.deleteByWhere({ id, branch_id })
+
+
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success"))
   }
-
-  // const branch = await this.branchService.getBranchFromBranchId(branch_id)
- 
- await this.kitchenService.kitchenDao.deleteByWhere({id,branch_id})
- 
-
-res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
-}
 
 
 
   addFloor = async (req, res) => {
-    const { user, body, isApprovalFlow } = req;
+    const { body } = req;
 
     let { branch_id, floors, tables } = body;
     // branch_id = getIdsFromArray(branch_id);
@@ -739,14 +737,67 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
   }
 
 
+  addPrinter = async (req, res) => {
+    const { body } = req;
+
+    let { branch_id, printers } = body;
+    // branch_id = getIdsFromArray(branch_id);
+
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'addPrinter' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+
+    const branch = await this.branchService.getBranchFromBranchId(branch_id)
+    let printer;
+    if (printers) {
+ for(let pp of printers){
+  printer = await this.printerService.printerDao.findById(pp.id);
+  await printer.update(pp)
+ }
+  
+    
+    }
+    else {
+      const lastPrinter = await this.printerService.printerDao.findOneByWhere({ order: ['sNo', 'DESC'], attributes: ['sNo'], raw: true });
+      console.log(lastPrinter)
+      const lastPrinterVal = lastPrinter?.sNo;
+
+      printer = await branch.createPrinter({ ...body, sNo: lastPrinterVal !== null ? lastPrinterVal + 1 : 1 });
+
+    }
+   
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success", printer))
+
+  }
+
+  deletePrinter = async (req, res) => {
+
+    const { body } = req
+    let { branch_id, floor_id } = body;
+
+
+    const { id } = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
+    if (!id) {
+      return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, "Error"))
+    }
+    // branch_id = getIdsFromArray(branch_id);
+    await this.floorService.floorDao.deleteByWhere({ id })
+
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success", {}))
+
+  }
+
+
+
 
   deleteTable = async (req, res) => {
 
-    const { body, user, role } = req
+    const { body } = req
     let { branch_id, floor_id, table_id } = body;
 
 
-    const branch = await this.branchService.getBranchFromBranchId(branch_id);
     const { id } = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
     console.log(id, { floor_id: id, id: table_id });
     if (!id) {
@@ -760,14 +811,51 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
       return;
     }
 
-    const deleteTable = await this.tableService.tableDao.deleteByWhere({ floor_id: id, id: table_id })
 
     res.json(responseHandler.returnSuccess(httpStatus[200], "Success", {}))
 
   }
 
+  deleteFloor = async (req, res) => {
+
+    const { body } = req
+    let { branch_id, floor_id } = body;
+
+
+    const { id } = await this.floorService.getFloorFromFloorandBranchId({ floor_id, branch_id })
+    if (!id) {
+      return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED, "Error"))
+    }
+    // branch_id = getIdsFromArray(branch_id);
+    await this.floorService.floorDao.deleteByWhere({ id })
+
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success", {}))
+
+  }
+
+  getPrinterLocations = async (req, res) => {
+
+    const { body } = req;
+    let { branch_id } = body;
+
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'getPrinterLocations' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+
+    // branch_id = getIdsFromArray(branch_id);
+    const floors = await this.floorService.floorDao.findByWhere({ branch_id })
+    const kitchen = await this.kitchenService.kitchenDao.findByWhere({ branch_id })
+
+    const data = [{name:'Cash', type:'others'}, ...floors.map(({ name, id }) => ({ name, id, type: 'floor' })), ...kitchen.map(({ name, id }) => ({ name, id, type: 'kitchen' }))]
+    res.json(responseHandler.returnSuccess(httpStatus[200], "Success", data))
+
+
+  }
+
   addTable = async (req, res) => {
-    const { user, body } = req;
+    const { body } = req;
 
     let { branch_id, floor_id, tables } = body;
     // branch_id = getIdsFromArray(branch_id);
@@ -799,7 +887,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
             tt = { ...tt, user_id: tt.userId }
 
           }
-          console.log({tt})
+          console.log({ tt })
 
           await this.tableService.tableDao.updateById(tt, tt.id)
         }
@@ -813,7 +901,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
 
 
   generateQrCodeForTables = async (req, res) => {
-    const { user, body } = req;
+    const { body } = req;
 
     let { branch_id, floor_id, tables } = body;
     // branch_id = getIdsFromArray(branch_id);
@@ -837,13 +925,11 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
 
     // Embed a font, set the font size, and render some text
 
-    let i = 0;
     for (let tt of tables) {
       const table = await this.tableService.tableDao.findById(tt.id);
       if (table) {
         const { name, id, capacity, status } = table.dataValues
         console.log({ name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name })
-        const data = await QRCode.toFile('./filename.png', JSON.stringify({ type: 'TABLE_QR', name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name, business_name: business.business_name }), { scale: 7 })
         console.log('done', JSON.stringify({ type: 'TABLE_QR', name, id, capacity, status, floor_name: floor.name, floor_id, branch_id, branch_name: branch.branch_name, business_name: business.business_name }))
 
 
@@ -947,7 +1033,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
 
 
   getTable = async (req, res) => {
-    const { user, body } = req;
+    const { body } = req;
 
     let { branch_id, floor_id } = body;
     // branch_id = getIdsFromArray(branch_id);
@@ -960,7 +1046,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
       return;
     }
 
-    const tables = await this.tableService.tableDao.getAll({ where: { floor_id },include:{model:this.userService.userDao.Model,attributes:['name','id', 'owner_id','user_status']} });
+    const tables = await this.tableService.tableDao.getAll({ where: { floor_id }, include: { model: this.userService.userDao.Model, attributes: ['name', 'id', 'owner_id', 'user_status'] } });
 
     res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', tables));
 
@@ -968,7 +1054,28 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
 
   getFloor = async (req, res) => {
 
-    const { user, body } = req;
+    const { body } = req;
+
+    let { branch_id } = body;
+    // branch_id = getIdsFromArray(branch_id);
+
+
+    const { shouldReturn, reason } = await this.initalChecks({ req, res, branch_id: [branch_id], method: 'getFloor' })
+    console.log(shouldReturn, reason)
+    if (shouldReturn) {
+      return;
+    }
+
+    const floors = await this.floorService.floorDao.getAll({ where: { branch_id }, include: { model: this.tableService.tableDao.Model } });
+
+    res.json(responseHandler.returnSuccess(httpStatus[200], 'Success', floors));
+
+  }
+
+
+  getPrinter = async (req, res) => {
+
+    const { body } = req;
 
     let { branch_id } = body;
     // branch_id = getIdsFromArray(branch_id);
@@ -987,7 +1094,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
   }
 
   assignUsersToTables = async (req, res) => {
-    const { user, body } = req;
+    const { body } = req;
 
     let { branch_id, floor_id, tables } = body;
     // branch_id = getIdsFromArray(branch_id);
@@ -1036,7 +1143,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
   }
 
   updateItems = async (req, res) => {
-    const { user, body } = req;
+    const { body } = req;
 
     const { id, itemvariants } = body;
     await this.itemService.itemDao.updateWhere(body, { id })
@@ -1051,7 +1158,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
   }
 
   deleteItem = async (req, res) => {
-    const { user, body } = req;
+    const { body } = req;
 
     const { id } = body;
 
@@ -1062,7 +1169,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
   }
 
   deleteItemVariants = async (req, res) => {
-    const { user, body } = req;
+    const { body } = req;
 
     const { id, itemvariants } = body;
 
@@ -1221,7 +1328,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
   }
 
 
-  checkandupdateApproval = async ({ model, user, role, isApprovalFlow, body }, method) => {
+  checkandupdateApproval = async ({ model, user, role, body }, method) => {
     const { need_approval, module, permission_name } = role ?? {};
     console.log({ module, permission_name })
     if (need_approval) {
@@ -1273,7 +1380,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
   };
 
   updateRole = async (req, res) => {
-    const { user, body } = req;
+    const { body } = req;
     console.log(body);
     const { id, permissions } = body;
     console.log(id, permissions);
@@ -1467,7 +1574,7 @@ res.json(responseHandler.returnSuccess(httpStatus[200],"Success"))
 
     const { body, user: reporting } = req;
     for (let item of body) {
-      const { id, is_present, review, rating, rejoinDate } = item
+      const { id, is_present, rating, rejoinDate } = item
       const user = await this.userService.userDao.Model.findByPk(id);
       const userDetails = user.get()
       if (userDetails.reporting_user_id === reporting.id || true) {

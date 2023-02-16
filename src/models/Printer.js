@@ -1,4 +1,5 @@
 const { Model } = require("sequelize");
+const { itemStatus } = require("./../config/constant");
 
 module.exports = (sequelize, DataTypes) => {
   class  printer extends Model {
@@ -11,13 +12,22 @@ module.exports = (sequelize, DataTypes) => {
 
    printer.init(
     {
+      sNo:DataTypes.INTEGER,
      name:DataTypes.STRING,
-     title:DataTypes.STRING,
+     location:DataTypes.INTEGER,
+     location_type:DataTypes.STRING,
+     type:DataTypes.STRING,
      ip_address :DataTypes.STRING,
      portnumber :DataTypes.INTEGER,
-     service_type:DataTypes.STRING,
-     
-    
+     bill:DataTypes.BOOLEAN,
+     settlement:DataTypes.BOOLEAN,
+     waiter:DataTypes.BOOLEAN,
+     kot:DataTypes.BOOLEAN,
+     token:DataTypes.BOOLEAN,
+     status: {
+      type: DataTypes.STRING,
+      defaultValue: itemStatus.STATUS_ACTIVE
+    }
     },
 
     {

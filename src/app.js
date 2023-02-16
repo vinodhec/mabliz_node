@@ -150,6 +150,7 @@ const Kitchenbranchcategory = models.kitchenbranchcategory;
 const Kitchen = models.kitchen;
 const Itemcategory = models.itemcategory;
 
+const Printer = models.printer;
 
 User.hasMany(Employment);
 Employment.belongsTo(User);
@@ -212,6 +213,8 @@ Addon.belongsToMany(Planbranch, { through: Planbranchaddon });
 User.hasMany(Roleuser);
 Roleuser.belongsTo(User);
 
+Branch.hasMany(Printer);
+Printer.belongsTo(Branch);
 
 Roleuser.belongsToMany(Branch,{  through: Roleuserbranch, onDelete: 'cascade', hooks:true });
 Branch.belongsToMany(Roleuser,{  through: Roleuserbranch, onDelete: 'cascade', hooks:true });

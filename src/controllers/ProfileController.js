@@ -351,10 +351,10 @@ class ProfileController {
     const { user, body } = req;
 
 
-    const { branch_id, business_id, phone_number, additional_branches, modules, role_id } = body;
+    const { branch_id, business_id, phone_number, additional_branch_ids, modules, role_id } = body;
     const { id, owner_id, is_owner, roleuser_id } = user;
     const dao = this.userService.userDao
-    const branches = [branch_id, ...additional_branches]
+    const branches = [branch_id, ...additional_branch_ids]
     const hasAccess = await this.roleuserService.hasAccessToBranchandBusiness({ is_owner, id, roleuser_id, branch_id: branches, businesses: [business_id] });
 
     if (!hasAccess) {
@@ -531,7 +531,7 @@ class ProfileController {
   }
 
   getModulesForRole = async (req, res) => {
-    const { query } = req;
+    const { query,user } = req;
     const { roleId: role_id } = query;
 
     const rolePermission = await this.rolePermissionService.rolepermissionDao.Model.findAll({
@@ -551,10 +551,11 @@ class ProfileController {
     //   where: { role_id }
     // })
 
-    const roleBranch = await this.roleService.roleDao.findOneByWhere({ where: { id: role_id }, include: { model: this.branchService.branchDao.Model, attributes: ['id', 'branch_name', "businessId"] } })
+    const roleBranch = await this.roleService.roleDao.findByWhere({ where: { id: role_id }, include: { model: this.branchService.branchDao.Model, attributes: ['id', 'branch_name', "businessId"] } })
     console.log(roleBranch)
-
-    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", { modules: rolePermission.map(({ module }) => module), branches: roleBranch.dataValues.branches }))
+const rolebranches = await this.roleuserbranchService.getBranches(user);
+const branches = roleBranch.filter((branch)=>rolebranches.includes(branch.dataValues.id));
+    res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", { modules: rolePermission.map(({ module }) => module), branches }))
 
   }
 

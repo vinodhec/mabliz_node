@@ -379,7 +379,7 @@ class ProfileController {
     await roleuser.addModules(modules);
 
 
-    res.json(hasAccess)
+    res.json(responseHandler.returnSuccess(httpStatus.OK,"Success", user))
 
 
   }

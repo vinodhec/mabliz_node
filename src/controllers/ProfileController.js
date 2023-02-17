@@ -555,6 +555,10 @@ class ProfileController {
     console.log(roleBranch)
 const rolebranches = await this.roleuserbranchService.getBranches(user);
 const branches = roleBranch.filter((branch)=>rolebranches.includes(branch.dataValues.id));
+
+if(branches.length ===0){
+  return res.json(responseHandler.returnError(httpStatus.UNAUTHORIZED,"User dont have access to the branches assigned to this role"))
+}
     res.json(responseHandler.returnSuccess(httpStatus.OK, "Success", { modules: rolePermission.map(({ module }) => module), branches }))
 
   }

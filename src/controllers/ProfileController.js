@@ -731,7 +731,7 @@ if(branches.length ===0){
     else {
       for (let tt of floors) {
         await this.floorService.floorDao.updateById(tt, tt.id)
-        for (let t of tt.tables) {
+        for (let t of tt.tables??[]) {
           await this.tableService.tableDao.updateById(t, t.id)
         }
 
